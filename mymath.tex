@@ -50,6 +50,43 @@
 \def\valpha{\vec{\alpha}}
 \def\vgamma{\vec{\gamma}}
 
+%%%% Well-used matrices
+\def\mA{\mat{A}}
+\def\mB{\mat{B}}
+\def\mC{\mat{C}}
+\def\mD{\mat{D}}
+\def\mI{\mat{I}}
+\def\mJ{\mat{J}}
+\def\mK{\mat{K}}
+\def\mE{\mat{E}}
+\def\mP{\mat{P}}
+\def\mQ{\mat{Q}}
+\def\mU{\mat{U}}
+\def\mV{\mat{V}}
+\def\mR{\mat{R}}
+\def\mS{\mat{S}}
+\def\mX{\mat{X}}
+\def\msig{\mat{\Sigma}}
+\def\mPhi{\mat{\Phi}}
+
+
+%%%%% vector caculus useful macro
+% ...\d, which typesets a derivative. ex: \d{y}{x}, instead of \frac{dx}{dy}.
+\renewcommand{\d}[2]{\frac{\text{d} #1}{\text{d} #2}}
+
+% ...similar for double-derivatives. ex: \dd{y}{x}.
+\newcommand{\dd}[2]{\frac{\text{d}^2 #1}{\text{d} #2^2}}
+
+% ...similar for partial derivatives. ex: \pd{y}{x}.
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+
+% ...similar for partial double derivatives. ex: \pdd{y}{x}.
+\newcommand{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+% pdd with argument
+\newcommand{\pdda}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+
+\usepackage{xparse}
+
 %%%% caligraphic fonts
 \def\cL{\ensuremath{{\cal L}}}
 \def\cN{\ensuremath{{\cal N}}}
