@@ -1,0 +1,1732 @@
+%\pdfminorversion=4
+\documentclass[fleqn,aspectratio=169]{beamer}
+
+\input{../myhead}
+
+
+
+\title[]{Lecture 2: Linear Algebra}
+\author{Yi, Yung (이융)}
+\institute{Mathematics for Machine Learning\\ KAIST EE}
+\date{\today}
+
+\input{../mymath}
+\input{../macro}
+
+
+\begin{document}
+
+\input{../mydefault}
+
+% START START START START START START START START START START START START START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item Systems of Linear Equations
+
+\item Matrices
+
+\item Solving Systems of Linear Equations
+
+\item Vector Spaces
+
+\item Linear Independence
+
+\item Basis and Rank
+
+\item Linear Mappings
+
+\item Affine Spaces
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L2(1)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \redf{Systems of Linear Equations}
+
+\item \grayf{Matrices
+
+\item Solving Systems of Linear Equations
+
+\item Vector Spaces
+
+\item Linear Independence
+
+\item Basis and Rank
+
+\item Linear Mappings
+
+\item Affine Spaces
+}
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Basic Notations}
+
+\plitemsep 0.1in
+
+\bci 
+\item Scalars: $a,b,c,\alpha,\beta,\gamma$
+
+\item Vectors: $\vec{x},\vec{y},\vec{z}$
+
+\item Matrices: $\mat{X},\mat{Y},\mat{Z}$
+
+\item Sets: $\set{A}, \set{B}, \set{C}$
+
+\item (Ordered) tuple: $B=(\bm{b}_1, \bm{b}_2, \bm{b}_3)$
+
+\item Matrix of column vectors: $\mat{B} = [\vec{b}_1, \vec{b}_2, \vec{b}_3]$ or 
+$\mB = \rowvec{\vb_1 & \vb_2 & \vb_3}$
+
+\item Set of vectors:  $\set{B} = \sets{\vec{b}_1, \vec{b}_2, \vec{b}_3}$
+
+\item $\real,$ $\complex,$ $\integer,$ $\natu,$ $\real^n$, etc
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Linear Algebra}
+
+\plitemsep 0.1in
+
+\bci 
+\item Algebra: a set of objects and a set of rules or operations to manipulate those objects
+
+\item Linear algebra
+\plitemsep 0.05in
+\bci
+\item Object: vectors $\vec{v}$
+\item Operations: their additions ($\vec{v} + \vec{w}$) and scalar multiplication ($k\vec{v}$)
+\eci
+
+\item Examples
+
+\mysmalltwocols{0.3}
+{
+\bci
+\item Geometric vectors
+
+- High school physics
+\item Polynomials
+\item Audio signals
+\item Elements of $\real^n$
+\eci
+}
+{
+\centering
+\mypic{0.97}{L2_vector_ex.png}
+}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{System of Linear Equations}
+
+\plitemsep 0.1in
+
+
+\bci 
+\item For unknown variables $(x_1, \cdots, x_n) \in \real^n,$
+\aleq{
+a_{11} x_1 + \cdots &+ a_{1n}x_n = b_1 \cr
+&\vdots \cr
+a_{m1} x_1 + \cdots &+ a_{mn}x_n = b_m 
+}
+
+\item Three cases of solutions
+
+\mythreecols{0.25}
+{
+- No solution
+$$
+\begin{linsys}{3}
+x_1 &+ &x_2 &+ &x_3 &= &3 \cr
+x_1 &- &x_2 &+ &2x_3 &= &2 \cr
+2x_1 & & &+ &3x_3 &= &1 
+\end{linsys}
+$$
+}
+{
+- Unique solution
+$$
+\begin{linsys}{3}
+x_1 &+ &x_2 &+ &x_3 &= &3 \cr
+x_1 &- &x_2 &+ &2x_3 &= &2 \cr
+ & &x_2 &+ &3x_3 &= &1 
+\end{linsys}
+$$
+}
+{
+- Infinitely many solutions 
+$$
+\begin{linsys}{3}
+x_1 &+ &x_2 &+ &x_3 &= &3 \cr
+x_1 &- &x_2 &+ &2x_3 &= &2 \cr
+2x_1 & & &+ &3x_3 &= &5 
+\end{linsys}
+$$
+}
+\item Question: Under what conditions, one of the above three cases occur.
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Matrix Representation}
+
+\plitemsep 0.1in
+
+\bci 
+\item A collection of linear equations
+\aleq{
+a_{11} x_1 + \cdots &+ a_{1n}x_n = b_1 \cr
+&\vdots \cr
+a_{m1} x_1 + \cdots &+ a_{mn}x_n = b_m 
+}
+
+\item Matrix representations: 
+\aleq{
+\colvec{a_{11} \\ \vdots \\ a_{m1}} x_1 + \cdots + \colvec{a_{1n} \\ \vdots \\ a_{mn}} x_n = 
+\colvec{b_1 \\ \vdots \\ b_m} \Longleftrightarrow 
+\underbrace{
+\begin{nmat}
+ a_{11} &\cdots &a_{1n} \\
+\vdots & & \vdots \\
+a_{m1}  & \cdots  &a_{mn}
+\end{nmat}}_{\mat{A}} \underbrace{\colvec{x_1 \\ \vdots \\ x_n}}_{\vec{x}} = 
+\underbrace{\colvec{b_1 \\ \vdots \\ b_m}}_{\vec{b}}
+}
+\item Understanding $\mat{A}$ is the key to answering various questions about this linear system $\mat{A}\vec{x} = \vec{b}$.
+
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L2(2)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Systems of Linear Equations}
+
+\item \redf{Matrices}
+
+\item \grayf{Solving Systems of Linear Equations
+
+\item Vector Spaces
+
+\item Linear Independence
+
+\item Basis and Rank
+
+\item Linear Mappings
+
+\item Affine Spaces
+}
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Matrix: Addition and Multiplication}
+
+\plitemsep 0.1in
+
+\bci 
+\item For two matrices $\mat{A} \in \real^{m \times n}$ and $\mat{B} \in \real^{m \times n}$, 
+\aleq{
+\mat{A} + \mat{B} \eqdef \begin{nmat}
+ a_{11} + b_{11} &\cdots &a_{1n} + b_{1n} \\
+\vdots & & \vdots \\
+a_{m1} + b_{m1}  & \cdots  &a_{mn} + b_{mn}
+\end{nmat}
+\in \real^{m \times n}
+}
+
+\item For two matrices $\mat{A} \in \real^{m \times n}$ and $\mat{B} \in \real^{n \times k}$, 
+the elements $c_{ij}$ of the product $\mat{C} = \mat{A}\mat{B} \in \real^{m \times k}$ is:
+$$
+c_{ij} = \sum_{l=1}^n a_{il} b_{lj}, \quad i = 1, \ldots, m, \quad j = 1, \ldots, k.
+$$
+
+\item \exam 
+$\mat{A} = 
+\begin{nmat} 
+ 1 &2 &3 \\
+ 3  &2  &1
+\end{nmat}
+$ and 
+$\mat{B} = 
+\begin{nmat} 
+ 0 &2 \\
+ 1  &-1\\
+ 0  & 1
+\end{nmat}
+$, compute $\mat{AB}$ and $\mat{BA}.$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Identity Matrix and Matrix Properties}
+
+\plitemsep 0.1in
+
+\bci 
+\item A square matrix\footnote{\# of rows = \# of cols} $\mat{I}_n$ with $I_{ii} = 1$ and $I_{ij=0}$ for $i \neq j,$ where $n$ is the number of rows and columns. For example, 
+\aleq{
+\mat{I}_2 = 
+\begin{nmat} 
+ 1 &0 \\
+ 0  &1
+\end{nmat}
+, \quad 
+\mat{I}_4 = 
+\begin{nmat} 
+ 1 &0 & 0 & 0\\
+ 0  &1 & 0 & 0 \\
+ 0  &0 & 1 & 0 \\
+ 0  &0 & 0 & 1
+\end{nmat}
+}
+
+\bigskip
+\item \bluef{Associativity}: For $\mat{A} \in \real^{m \times n}$, $\mat{B} \in \real^{n \times p},$ $\mat{C} \in \real^{p \times q},$ $(\mat{AB})\mat{C} = \mat{A}(\mat{BC})$
+
+\item \bluef{Distributivity}: For $\mat{A}, \mat{B} \in \real^{m \times n},$ and $\mat{C}, \mat{D} \in \real^{n \times p},$\\ \hspace{2.2cm}(i) $(\mat{A} + \mat{B})\mat{C} = \mat{AC} + \mat{BC}$ and (ii) $\mat{A}(\mat{C} + \mat{D}) = \mat{AC} + \mat{AD}$
+
+\item \bluef{Multiplication with the identity matrix}: For $\mat{A} \in \real^{m \times n}$, $\mat{I}_m \mat{A} = \mat{A} \mat{I}_n = \mat{A}$
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Inverse and Transpose}
+
+\mytwocols{0.75}
+{
+\plitemsep 0.1in
+\bci 
+\item For a square matrix $\mat{A} \in \real^{n \times n},$ $\mat{B}$ is the \redf{inverse} of $A$, denoted by $\inv{\mat{A}},$ if $$\mat{AB} = \mat{I}_n = \mat{BA}.$$
+
+\item Called \bluef{regular/invertible/nonsingular}, if it exists.  
+
+\item If it exists, it is unique. 
+
+\item \redf{(Q)}. How to compute?
+
+\item For $2\times 2$ matrix, 
+\aleq{
+\inv{\mat{A}} = \frac{1}{a_{11}a_{22} - a_{12}a_{21}} 
+\begin{nmat} 
+ a_{22} &-a_{12} \\
+ -a_{21}  &a_{11}
+\end{nmat}
+}
+\eci
+}
+{
+\plitemsep 0.1in
+\bci 
+\item For a matrix $\mat{A} \in \real^{m \times n},$ the $\mat{B} \in \real^{n \times m}$ with $b_{ij} = a_{ji}$ is the \redf{transpose} of $\mat{A},$ which we denote by $\trans{\mat{A}}.$ 
+
+\item \exam For 
+$\mat{A} = 
+\begin{nmat} 
+ 0 &2 \\
+ 1  &-1\\
+ 0  & 1
+\end{nmat}
+$,
+\aleq{
+\trans{\mat{A}} = \begin{nmat} 
+ 0 &1 & 0 \\
+ 2  &-1 & 1
+\end{nmat}
+}
+
+\item If $\mat{A} = \trans{\mat{A}},$ $\mat{A}$ is called \redf{symmetric}.
+\eci
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Inverse and Transpose: More Properties}
+
+\plitemsep 0.2in
+\bci 
+\item $\mat{A}\inv{\mat{A}} = \mat{I} = \inv{\mat{A}}\mat{A}$
+
+\item $\inv{(\mat{AB})} = \inv{\mat{B}} \inv{\mat{A}}$
+
+\item $\inv{(\mat{A} + \mat{B})} \neq \inv{\mat{A}} + \inv{\mat{B}}$
+
+\item $\trans{(\trans{\mA})} = \mA$  
+
+\item $\trans{(\mA + \mB)} = \trans{\mA} + \trans{\mB}$
+
+\item $\trans{(\mA\mB)} = \trans{\mB}\trans{\mA}$
+
+\item If $\mA$ is invertible, so is $\trans{\mA}.$
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Scalar Multiplication}
+
+\plitemsep 0.1in
+\bci 
+    \item Multiplication by a scalar $\lambda \in \real$ to $\mA \in \real^{m \times n}$
+    \item \exam For 
+$\mat{A} = 
+\begin{nmat} 
+ 0 &2 \\
+ 1  &-1\\
+ 0  & 1
+\end{nmat}
+$,
+$
+3 \times \mA = \begin{nmat} 
+ 0 &6 \\
+ 3  &-3\\
+ 0  & 3
+\end{nmat}
+$
+
+\bigskip
+
+\item \bluef{Associativity}
+\bci
+\item $(\lambda \psi) \mC = \lambda (\psi \mC)$
+\item $\lambda(\mB \mC) = (\lambda \mB) \mC = \mB (\lambda \mC) = (\mB \mC) \lambda$
+\item $\trans{(\lambda C)} = \trans{\mC} \trans{\lambda} = \trans{\mC} \lambda = \lambda \trans{\mC}$
+\eci
+
+\item \bluef{Distributivity}
+\bci
+\item $(\lambda + \psi) \mC = \lambda \mC + \psi \mC$
+\item $\lambda(\mB + \mC) = \lambda \mB + \lambda \mC$
+\eci
+
+
+\eci
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L2(3)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Systems of Linear Equations
+
+\item Matrices}
+
+\item \redf{Solving Systems of Linear Equations}
+
+\item \grayf{Vector Spaces
+
+\item Linear Independence
+
+\item Basis and Rank
+
+\item Linear Mappings
+
+\item Affine Spaces
+}
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\mysmalltwocols{0.2}
+{
+\begin{equation*}
+  \begin{linsys}{3}
+       -3x   &   &   &+  &2z  &=  &-1  \\
+         x   &-  &2y &+  &2z  &=  &-5/3  \\
+        -x   &-  &4y &+  &6z  &=  &-13/3
+  \end{linsys}
+\end{equation*}
+}
+{
+\bci
+\item $\rho_i$: $i$-th equation
+\item Express the equation as its \redf{augmented matrix}.
+\eci
+}
+\vspace{-0.5cm}
+\begin{eqnarray*}
+    \begin{amat}[r]{3}
+     -3  &0  &2  &-1  \\
+      1  &-2 &2  &-5/3  \\
+     -1  &-4 &6  &-13/3
+    \end{amat}
+  &\grstep[-(1/3)\rho_1+\rho_3]{(1/3)\rho_1+\rho_2}
+  &\begin{amat}[r]{3}
+     -3  &0  &2    &-1  \\
+      0  &-2 &8/3  &-2  \\
+      0  &-4 &16/3 &-4
+    \end{amat}                      \\
+  &\grstep{-2\rho_2+\rho_3}
+  &\begin{amat}[r]{3}
+     -3  &0  &2    &-1  \\
+      0  &-2 &8/3  &-2  \\
+      0  &0  &0    &0
+    \end{amat} 
+\end{eqnarray*}
+The two nonzero rows give
+$-3x+2z=-1$ and $-2y+(8/3)z=-2$.
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\small
+\noindent - Parametrizing
+$-3x+2z=-1$ and $-2y+(8/3)z=-2$
+gives:
+\mysmalltwocols{0.2}
+{
+\vspace{-0.4cm}
+\aleq{
+  x &= (1/3)+(2/3)z  \\
+  y &= 1+(4/3)z   \\
+  z &= z
+}
+}
+{
+%The solution set in vectors.
+\vspace{-0.1cm}
+\aleq{
+  \{\colvec{x \\ y \\ z}=\colvec{1/3 \\ 1 \\ 0}+\colvec{2/3 \\ 4/3 \\ 1}z 
+                 \mid z\in \real \}
+}
+}
+This helps us understand the set of solutions, e.g., each value of $z$ gives a different solution.
+\begin{center}\renewcommand{\arraystretch}{1.2}%
+  \begin{tabular}{r|cccc}
+    $z$\,                    &$0$  &$1$  &$2$  &$-1/2$ \\
+    \cline{2-5}
+    solution $\colvec{x \\ y \\ z}$ &$\colvec{1/3 \\ 1 \\ 0}$ 
+                           &$\colvec{1 \\ 7/3 \\ 1}$
+                           &$\colvec{5/3 \\ 11/3 \\ 2}$
+                           &$\colvec{0 \\ 1/3 \\ -1/2}$
+    \setbox0=\hbox{$\colvec{1 \\ 7/3 \\ 1}$}
+      \rule{0em}{1.1\ht0}
+  \end{tabular}
+\end{center}
+\vspace{-0.9cm}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Form of solution sets} 
+
+\bci
+\item The system $
+  \begin{linsys}{4}
+    x &+  &2y  &- &z  &  &  &= &2 \\
+   2x &-  &y   &- &2z &+ &w &= &5
+  \end{linsys}
+$ \hspace{0.5cm} reduces in this way.
+\begin{equation*}
+    \begin{amat}[r]{4}
+      1  &2  &-1  &0  &2  \\
+      2  &-1 &-2  &1  &5  
+    \end{amat}
+  \grstep{-2\rho_1+\rho_2}
+  \begin{amat}[r]{4}
+      1  &2  &-1  &0  &2  \\
+      0  &-5 &0   &1  &1  
+    \end{amat}
+\end{equation*}
+\item It 
+has solutions of this form. 
+\begin{equation*}
+     \colvec{x  \\  y  \\  z  \\  w}
+     =
+     \colvec{12/5 \\ -1/5 \\ 0 \\ 0}
+       +\colvec{1 \\ 0 \\ 1 \\ 0}z
+       +\colvec{-2/5 \\ 1/5 \\ 0 \\ 1}w
+   \qquad
+   \text{for $z,w\in\Re$}
+\end{equation*}
+\item Note that taking $z=w=0$ 
+shows that the first vector is a \redf{particular solution} of the
+system.
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{General $=$ Particular $+$ Homogeneous} 
+
+\bci
+\item General approach
+\bce
+\item Find a particular solution to $\mA \vec{x} = \vec{b}$
+\item Find all solutions to the homogeneous equation $\mA \vec{x} = \vec{0}$
+\bci
+\item $\vec{0}$ is a trivial solution 
+\eci
+\item Combine the solutions from steps 1. and 2. to the general solution
+\ece
+
+\item Questions: A formal algorithm that performs the above?
+\bci
+\item \redf{Gauss-Jordan method:} convert into a ``beautiful" form 
+
+(formally \bluef{reduced row-echelon} form)
+
+\item Elementary transformations: (i) row swapping (ii) multiply by a constant (iii) row addition
+\eci
+
+\item Such a form allows an algorithmic way of solving linear equations
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Unique Solution} 
+
+\plitemsep 0.1in
+\small
+\bci
+\item Start as usual by getting echelon form.
+\aleq{
+&  \begin{linsys}{3}
+    x  &+  &y  &-  &z  &=  &2   \\
+   2x  &-  &y  &   &   &=  &-1  \\
+    x  &-  &2y &+  &2z &=  &-1
+  \end{linsys}
+  \grstep[-1\rho_1+\rho_3]{-2\rho_1+\rho_2}
+  \begin{linsys}{3}
+    x  &+  &y  &-  &z  &=  &2   \\
+       &-  &3y &+  &2z &=  &-5  \\
+       &-  &3y &+  &3z &=  &-3
+  \end{linsys}                         
+  \grstep{-1\rho_2+\rho_3}
+  \begin{linsys}{3}
+    x  &+  &y  &-  &z  &=  &2   \\
+       &-  &3y &+  &2z &=  &-5  \\
+       &   &   &   &z  &=  &2
+  \end{linsys}
+}
+\vspace{-0.4cm}
+\item Make all the leading entries one.
+\aleq{
+ & \grstep{(-1/3)\rho_2}
+  \begin{linsys}{3}
+    x  &+  &y  &-  &z      &=  &2   \\
+       &   &y  &-  &(2/3)z &=  &5/3  \\
+       &   &   &   &z      &=  &2
+  \end{linsys}
+}
+\vspace{-0.4cm}
+\item Finish by using the leading entries to eliminate upwards,
+until we can read off the solution.
+\aleq{
+  \begin{linsys}{3}
+    x  &+  &y  &-  &z      &=  &2   \\
+       &   &y  &-  &(2/3)z &=  &5/3  \\
+       &   &   &   &z      &=  &2
+  \end{linsys}
+  \grstep[(2/3)\rho_3+\rho_2]{\rho_3+\rho_1}
+  \begin{linsys}{3}
+    x  &+  &y  &\spaceforemptycolumn   &       &=  &4   \\
+       &   &y  &   &       &=  &3  \\
+       &   &   &   &z      &=  &2
+  \end{linsys}                                                
+  \grstep{-\rho_2+\rho_1}
+  \begin{linsys}{3}
+    x  &\spaceforemptycolumn   &   &\spaceforemptycolumn   &       &=  &1   \\
+       &   &y  &   &       &=  &3  \\
+       &   &   &   &z      &=  &2
+  \end{linsys}
+}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Infinite Number of Solutions} 
+
+\mytwocols{0.8}
+{
+\plitemsep 0.01in
+\small
+%\exam 
+$$
+  \begin{linsys}{4}
+    x  &-  &y  &   &   &-  &2w  &=  &2   \\
+    x  &+  &y  &+  &3z &+  &w   &=  &1  \\
+       &-  &y  &+  &z  &-  &w   &=  &0
+  \end{linsys}
+$$
+
+\bci
+\item Start by getting echelon form and turn the leading entries to $1$'s.
+%\hspace*{-2em}
+\aleq{
+ & \grstep{-1\rho_1+\rho_2}
+  \begin{amat}{4}
+    1  &-1  &0  &-2  &2  \\
+    0  &2   &3  &3   &-1   \\
+    0  &-1  &1  &-1  &0
+  \end{amat} \cr
+&  \grstep{(1/2)\rho_2+\rho_3} 
+  \begin{amat}{4}
+    1  &-1  &0    &-2   &2  \\
+    0  &2   &3    &3    &-1   \\
+    0  &0   &5/2  &1/2  &-1/2
+  \end{amat}\cr
+&  \grstep[(2/5)\rho_3]{(1/2)\rho_2}
+  \begin{amat}{4}
+    1  &-1  &0    &-2    &2  \\
+    0  &1   &3/2  &3/2   &-1/2   \\
+    0  &0   &1    &1/5   &-1/5
+  \end{amat}
+}
+
+\eci
+}
+{
+\plitemsep 0.1in
+\small
+\bci
+\item Eliminate upwards.
+\aleq{
+ & \grstep{-(3/2)\rho_3+\rho_2}
+  \begin{amat}{4}
+    1  &-1  &0    &-2    &2  \\
+    0  &1   &0    &6/5   &-1/5   \\
+    0  &0   &1    &1/5   &-1/5
+  \end{amat} \cr
+&  \grstep{\rho_2+\rho_1}
+  \begin{amat}{4}
+    1  &0   &0    &-4/5  &9/5  \\
+    0  &1   &0    &6/5   &-1/5   \\
+    0  &0   &1    &1/5   &-1/5
+  \end{amat}
+}
+\item The parameterized solution set is:
+\begin{equation*}
+  \{\colvec{9/5 \\ -1/5 \\ -1/5 \\ 0}
+       +\colvec{4/5  \\ -6/5 \\ -1/5 \\ 1} w
+       \mid w\in\real \}
+\end{equation*}
+
+\eci
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Cases of Solution Sets} 
+
+\Large
+\begin{center} 
+\begin{tabular}{r@{}c}
+  &\hspace*{2.5em}\begin{tabular}{c}
+      \textit{number of solutions of the} \\[-.5ex]
+      \textit{homogeneous system}
+    \end{tabular}                            \\[1.7ex]
+  \begin{tabular}{r@{\hspace*{.5em}}}
+     \ \\[.6ex]
+     \textit{particular} \\[-.55ex]
+     \textit{solution}   \\[-.5ex]
+     \textit{exists?}
+  \end{tabular}
+  &\begin{tabular}{r|c@{\hspace*{1em}}c} % \cline{2-3}
+     \multicolumn{1}{c}{\ }
+         &\textit{\bluef{one}}    &\textit{\bluef{infinitely many}}                    \\
+     \cline{2-3}
+     \textit{\bluef{yes}}
+        &\rule{0ex}{16pt}\begin{tabular}{@{}c@{}} \redf{unique} \\[-.5ex] solution \end{tabular}
+        &\begin{tabular}{@{}c@{}} \redf{infinitely many} \\[-.5ex] solutions \end{tabular}
+         \\[2ex] % \hline
+     \textit{\bluef{no}}
+        &\begin{tabular}{@{}c@{}} \redf{no} \\[-.5ex] solutions \end{tabular}
+        &\begin{tabular}{@{}c@{}} \redf{no} \\[-.5ex] solutions \end{tabular}
+         \\ % \hline
+   \end{tabular}
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Algorithms for Solving System of Linear Equations} 
+
+\plitemsep 0.05in
+
+\bce
+\item Pseudo-inverse
+\aleq{
+\mA \vec{x} = \vec{b} \Longleftrightarrow \trans{\mA} \mA \vec{x} = \trans{\mA} \vec{b} 
+\Longleftrightarrow \vec{x} = \inv{(\trans{\mA} \mA)} \trans{\mA} \vec{b}
+}
+\vspace{-0.6cm}
+\bci
+\item $\inv{(\trans{\mA} \mA)} \trans{\mA}$: \bluef{\em Moore-Penrose pseudo-inverse}
+\item many computations: matrix product, inverse, etc
+\eci
+
+\item Gaussian elimination
+\bci
+\item intuitive and constructive way
+\item cubic complexity (in terms of \# of simultaneous equations)
+\eci
+
+\item Iterative methods
+\bci
+\item practical ways to solve indirectly
+
+\item[(a)] stationary iterative methods: Richardson method, Jacobi method, Gaus-Seidel method, successive over-relaxation method
+\item[(b)] Krylov subspace methods: conjugate gradients, generalized minimal residual, biconjugate gradients  
+\eci
+
+\ece
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L2(4)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Systems of Linear Equations
+
+\item Matrices
+
+\item Solving Systems of Linear Equations}
+
+\item \redf{Vector Spaces}
+
+\item \grayf{Linear Independence
+
+\item Basis and Rank
+
+\item Linear Mappings
+
+\item Affine Spaces
+}
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Group} 
+
+\plitemsep 0.1in
+
+\bci
+\item A set $\set{G}$ and an operation $\otimes: \set{G} \times \set{G} \mapsto \set{G}.$ $G \eqdef (\set{G},\otimes)$ is called a \redf{group}, if:
+
+\bce
+\item \bluef{Closure.} $\forall x,y \in \set{G},$ $x \otimes y \in \set{G}$
+\item \bluef{Associativity.} $\forall x,y,z \in \set{G}$, $(x \otimes y) \otimes z = x \otimes (y \otimes z)$
+\item \bluef{Neutral element.} $\exists e \in \set{G},$ $\forall x \in \set{G},$ $x \otimes e = x$ and $e \otimes x = x$
+\item \bluef{Inverse element.} $\forall x \in \set{G},$ $\exists y \in \set{G},$  $x \otimes y = e$ and $y \otimes x = e.$ We often use $x^{-1} =y.$
+\ece
+
+\vspace{1cm}
+
+\item $G = (\set{G},\otimes)$ is an \redf{Abelian group,} if the following is additionally met:
+\bci
+\item \bluef{Communicativity.} $\forall x,y \in \set{G},$ $x \otimes y = y \otimes x$
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Examples} 
+
+\plitemsep 0.05in
+
+\bci
+\item $(\integer,+)$ is an Abelian group
+\item $(\natu \cup \{ 0\}, +)$ is not a group (because inverses are missing)
+\item $(\integer,\cdot)$ is not a group
+\item $(\real,\cdot)$ is not a group (because of no inverse for 0)
+\item $(\real^n,+)$, $(\integer^n,+)$ are Abelian, if $+$ is defined componentwise
+
+\item $(\real^{m \times n},+)$ is Abelian (with componentwise $+$)
+\item $(\real^{n \times n},\cdot)$
+\bci
+\item Closure and associativity follow directly 
+\item Neutral element: $\mat{I}_n$
+\item The inverse $\inv{\mA}$ may exist or not. So, generally, it is not a group. 
+However, the set of invertible matrices in $\real^{n \times n}$ with matrix multiplication  is a group, called \bluef{general linear group.}
+
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Vector Spaces} 
+
+\plitemsep 0.1in
+
+\defi A real-valued vector space $V=(\set{V},+,\cdot)$ is a set $\set{V}$ with two operations
+\aleq{
++ &: \set{V} \times \set{V} \mapsto \set{V} \quad \text{(vector addition)}\cr
+\cdot &:  \real \times \set{V} \mapsto \set{V} \quad \text{(scalar multiplication)},
+}
+where
+\vspace{-0.5cm}
+\bce
+\item  $(\set{V},+)$ is an Abelian group
+\item \bluef{Distributivity.} 
+\bci
+\item $\forall \lambda \in \real, \vec{x},\vec{y} \in \set{V},$ $\lambda \cdot(\vec{x} + \vec{y}) = \lambda \cdot \vec{x} + \lambda \vec{y}$
+\item $\forall \lambda, \psi \in \real, \vec{x} \in \set{V},$ $(\lambda + \psi) \cdot \vec{x} = \lambda \cdot \vec{x} + \psi \cdot \vec{x}$
+\eci
+\item \bluef{Associativity.} $\forall \lambda, \psi \in \real, \vec{x \in \set{V}},$ $\lambda \cdot (\psi \cdot \vec{x}) = (\lambda \psi) \cdot \vec{x}$
+\item \bluef{Neutral element.} $\forall \vec{x} \in \set{V},$ $1 \cdot \vec{x} = \vec{x}$
+\ece
+
+%  A vector space (over $\real$) consists of a set $\set{V}$ along with
+% two operations `+' and `\( \cdot \)', if, 
+% for all vectors $\vec{v},\vec{w},\vec{u}\in \set{V},$
+% and all scalars $r,s\in \real$:
+
+% %\vspace{-0.5cm}
+% \bce
+% \item $\set{V}$ is \redf{closed} under
+%   vector addition:  $\vec{v}+\vec{w}\in \set{V}$
+% \item vector addition is commutative:  $\vec{v}+\vec{w}=\vec{w}+\vec{v} $
+% \item vector addition is associative: $(\vec{v}+\vec{w})+\vec{u}=\vec{v}+(\vec{w}+\vec{u}) $
+%  \item there is a \redf{zero vector}
+%       $\vec{0} \in \set{V}$  such that
+%       $\vec{v}+\vec{0}=\vec{v},$ for all $\vec{v}\in \set{V}$ 
+%  \item each $\vec{v}\in \set{V} $ has an
+%      \redf{additive inverse}
+%      $ \vec{w}\in \set{V} $ such that $ \vec{w}+\vec{v}=\vec{0} $
+%  \item  $\set{V}$ is closed under
+%      scalar multiplication, that is,
+%   $ r\cdot\vec{v}\in \set{V} $
+%  \item scalar multiplication distributes over addition of scalars
+%   $(r+s)\cdot\vec{v}=r\cdot\vec{v}+s\cdot\vec{v} $
+%  \item scalar multiplication distributes over vector addition
+%   $ r\cdot(\vec{v}+\vec{w})=r\cdot\vec{v}+r\cdot\vec{w} $
+%  \item ordinary multiplication of scalars associates with
+%   scalar multiplication $ (rs)\cdot\vec{v} =r\cdot(s\cdot\vec{v}) $
+%  \item multiplication by the scalar~$1$ is the
+%   identity operation $ 1\cdot\vec{v}=\vec{v}$.
+% \ece
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example} 
+
+\plitemsep 0.1in
+
+\bci
+\item  $\set{V} = \real^n$ with 
+\bci
+\item Vector addition: $\vec{x} + \vec{y} = (x_1 + y_1, \ldots, x_n + y_n)$ 
+\item Scalar multiplication: $\lambda \vec{x} = (\lambda x_1, \ldots, \lambda x_n)$
+\eci
+
+\bigskip
+\item $\set{V} = \real^{m \times n}$ with 
+\bci
+\item Vector addition: $\mat{A} + \vec{B} 
+= 
+\begin{nmat}
+a_{11} + b_{11} & \cdots & a_{1n} + b_{1n} \cr
+\vdots & & \vdots \cr
+a_{m1} + b_{m1} & \cdots & a_{mn} + b_{mn}
+\end{nmat}
+$ 
+\item Scalar multiplication: $\lambda\mat{A}
+= 
+\begin{nmat}
+\lambda a_{11}  & \cdots & \lambda a_{1n} \cr
+\vdots & & \vdots \cr
+\lambda a_{m1}  & \cdots & \lambda a_{mn} 
+\end{nmat}
+$ 
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Vector Subspaces} 
+
+\defi Consider a vector space $V=(\set{V},+,\cdot)$ and $\set{U} \subset \set{V}.$
+Then, $U=(\set{U},+,\cdot)$ is called \redf{vector subspace} (simply linear subspace or subspace) of $V$ if $U$ is a vector space with two operations `$+$' and `$\cdot$' restricted to $\set{U} \times \set{U}$ and $\real \times \set{U}.$
+
+\bigskip
+
+
+
+\plitemsep 0.1in
+
+Examples
+
+\bci
+
+\item For every vector space $V,$ $V$ and $\{\vec{0} \}$ are the trivial subspaces. 
+
+\item The solution set of $\mA \vec{x} = \vec{0}$ is the subspace of $\real^n.$
+
+\item The solution of $\mA \vec{x} = \vec{b}$ ($\vec{b} \neq \vec{0}$) is not a subspace of $\real^n.$
+
+\item The intersection of arbitrarily many subspaces is a subspace itself. 
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L2(5)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(5)] 
+\item \grayf{Systems of Linear Equations
+
+\item Matrices
+
+\item Solving Systems of Linear Equations
+
+\item Vector Spaces}
+
+\item \redf{Linear Independence}
+
+\item \grayf{Basis and Rank
+
+\item Linear Mappings
+
+\item Affine Spaces
+}
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Linear Independence}
+
+\plitemsep 0.1in
+
+\bci 
+\item \defi For a vector space $V$ and vectors $\vec{x}_1, \ldots, \vec{x}_n \in V,$ every $\vec{v} \in V$ of the form
+$
+\vec{v} = \lambda_1 \vec{x}_1 + \cdots + \lambda_k \vec{x}_k
+$
+with $\lambda_1, \ldots, \lambda_k \in \real$ is a \bluef{linear combination} of the vectors  $\vec{x}_1, \ldots, \vec{x}_n \in V.$
+\item \defi If there is a non-trivial linear combination such that $\vec{0}=\sum_{i=1}^k \lambda_i \vec{x}_i$ with at least one $\lambda_i \neq 0,$ the vectors $\vec{x}_1, \ldots, \vec{x}_n$ are \bluef{linearly dependent}. If only the trivial solution exists, i.e., $\lambda_1 = \ldots = \lambda_k =0,$ $\vec{x}_1, \ldots, \vec{x}_n$ are \bluef{linearly independent.}
+
+\item \redf{Meaning.} A set of linearly independent vectors consists of vectors that have no redundancy.  
+
+\item \redf{Useful fact.} The vectors $\{\vec{x}_1, \ldots, \vec{x}_n \}$ are linearly dependent, iff
+(at least) one of them is a linear combination of the others. 
+\bci
+\item $x-2y = 2$ and $2x-4y=4$ are linearly dependent. 
+\eci
+
+\eci
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Checking Linear Independence}
+
+\plitemsep 0.1in
+
+\bci 
+\item Gauss elimination to get the row echelon form
+
+\item \bluef{All column vectors are linearly independent iff all columns are pivot columns (why?).}
+
+\item \exam
+{\small
+\aleq{
+&\vec{x}_1 = \colvec{1 \\ 2 \\ -3 \\ 4}, \quad \vec{x}_2 = \colvec{1 \\ 1 \\ 0 \\ 2}, \quad \vec{x}_3 = \colvec{-1 \\ -2 \\ 1 \\ 1} \cr
+&
+\begin{nmat}
+1 & 1 & -1 \cr
+2 & 1 & -2 \cr
+-3& 0 & 1 \cr 
+4 & 2 & 1 
+\end{nmat}
+\quad \leadsto \cdots \leadsto \quad
+\begin{nmat}
+1 & 1 & -1 \cr
+0 & 1 & 0 \cr
+0& 0 & 1 \cr 
+0 & 0 & 0 
+\end{nmat}
+}}
+\item Every column is a pivot column. Thus, $\vec{x}_1,$ $\vec{x}_2,$ $\vec{x}_3$ are linearly independent.  
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Linear Combinations of Linearly Independent Vectors}
+
+\plitemsep 0.1in
+
+\bci 
+\item Vector space $V$ with $k$ linearly independent vectors $\vec{b}_1, \vec{b}_2, \ldots, \vec{b}_k$
+
+\item $m$ linear combinations $\vec{x}_1, \vec{x}_2, \ldots, \vec{x}_m.$ \redf{(Q)} Are they linearly independent?
+
+\bigskip
+\mysmalltwocols{0.25}
+{
+\small
+\vspace{-0.3cm}
+\aleq{
+\vec{x}_1 &=\lambda_{11} \vec{b}_1 + \lambda_{21} \vec{b}_2+ \cdots + \lambda_{k1} \vec{b}_k \cr
+\vdots & \cr
+\vec{x}_m &=\lambda_{1m} \vec{b}_1 + \lambda_{2m} \vec{b}_2+ \cdots + \lambda_{km} \vec{b}_k 
+}
+}
+{
+\small
+\vspace{-0.3cm}
+\aleq{
+\vec{x}_j &= \overbrace{\rowvec{\vec{b}_1, & \cdots, & \vec{b}_k}}^{\vec{B}} \overbrace{\colvec{\lambda_{1j} \\ \vdots \\ \lambda_{kj}}}^{\vec{\lambda}_j}, \quad 
+\vec{x}_j = \vec{B} \vec{\lambda}_j
+}
+}
+\bigskip
+
+\item $\sum_{j=1}^m \psi_j \vec{x}_j = \sum_{j=1}^m \psi_j \vec{B} \vec{\lambda}_j = \vec{B} \sum_{j=1}^m \psi_j \vec{\lambda}_j$
+\item $\{\vec{x}\}$ linearly independent $\Longleftrightarrow$ $\{\vec{\lambda}\}$ linearly independent
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.1in
+
+$$
+\begin{linsys}{4}
+\vec{x}_1 &=& \vec{b}_1 &-& 2\vec{b}_2 &+& \vec{b}_3 &-& \vec{b}_4 \cr
+\vec{x}_2 &=& -4\vec{b}_1 &-& 2\vec{b}_2 &&  &+& 4\vec{b}_4 \cr
+\vec{x}_3 &=& 2\vec{b}_1 &+& 3\vec{b}_2 &-& \vec{b}_3 &-& 3\vec{b}_4 \cr
+\vec{x}_4 &=& 17\vec{b}_1 &-& 10\vec{b}_2 &+& 11\vec{b}_3 &+& \vec{b}_4 \cr
+\end{linsys}
+$$
+\aleq{
+\mat{A} = \rowvec{\vec{\lambda}_1 & \vec{\lambda}_2 & \vec{\lambda}_3 & \vec{\lambda}_4} =
+\begin{nmat}
+1 & -4 & 2 & 17 \cr
+-2 & -2 & 3 & -10 \cr
+1 & 0 & -1 & 11 \cr
+-1 & -4 & -3 & 1 
+\end{nmat}
+\leadsto \cdots \leadsto
+\begin{nmat}
+1 & 0 & 0 & -7 \cr
+0 & 1 & 0 & -15 \cr
+0 & 0 & 1 & -18 \cr
+0 & 0 & 0 & 0 
+\end{nmat}
+}
+
+\bci 
+\item The last column is not a pivot column. Thus, $\vec{x}_1, \vec{x}_2, \vec{x}_3, \vec{x}_3$ are linearly dependent. 
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L2(6)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Systems of Linear Equations
+
+\item Matrices
+
+\item Solving Systems of Linear Equations
+
+\item Vector Spaces
+
+\item Linear Independence}
+
+\item \redf{Basis and Rank}
+
+\item \grayf{Linear Mappings
+
+\item Affine Spaces
+}
+\ece
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Generating Set and Basis}
+
+\plitemsep 0.1in
+
+\bci 
+\item \defi A vector space $V=(\set{V}, +, \cdot)$ and a set of vectors $\set{A} = \{\vec{x}_1, \ldots, \vec{x}_k \} \subset \set{V}.$
+\vspace{-0.3cm}
+\bci
+\item If every $v \in \set{V}$ can be expressed as a linear combination of $\vec{x}_1, \ldots, \vec{x}_k,$ $\set{A}$ is called a \bluef{generating set} of $V.$
+\item The set of all linear combinations of $\set{A}$ is called the \bluef{span} of $\set{A}.$
+\item If $\set{A}$ spans the vector space $V,$ we use $V = \spn{\set{A}}$ or $V = \spn{\vec{x}_1, \ldots, \vec{x}_k}$
+\eci
+
+\item \defi The minimal generating set $\set{B}$ of $V$ is called \bluef{basis} of $V.$ We call each element of $\set{B}$ \bluef{basis vector}. The number of basis vectors is called \bluef{dimension} of $V.$
+
+\item Properties
+\bci
+\item $\set{B}$ is a maximally\footnote{Adding any other vector to this set will make it linearly dependent.} linearly independent set of vectors in $V.$
+\item Every vector $x \in V$ is a linear combination of $\set{B}$, which is unique. 
+\eci
+\eci
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Examples}
+
+\plitemsep 0.1in
+
+\bci 
+\item Different bases $\real^3$
+\aleq{
+&\set{B}_1 = \{
+\colvec{1 \\ 0 \\ 0}, \colvec{0 \\ 1 \\ 0}, \colvec{0 \\ 0 \\ 1} 
+\}, 
+\set{B}_2 = \{
+\colvec{1 \\ 0 \\ 0}, \colvec{1 \\ 1 \\ 0}, \colvec{1 \\ 1 \\ 1} 
+\}, \cr
+&\set{B}_3 = \{
+\colvec{0.5 \\ 0.8 \\ 0.4}, \colvec{1.8 \\ 0.3 \\ 0.3}, \colvec{-2.2 \\ -1.3 \\ 3.5} 
+\} 
+}
+\item Linearly independent, but not maximal. Thus, not a basis. 
+\aleq{
+\set{A} = \{
+\colvec{1 \\ 2 \\ 3 \\ 4},\colvec{2\\ -1 \\ 0 \\2},\colvec{1 \\ 1\\ 0 \\ -4} 
+\}
+}
+
+\eci
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Determining a Basis}
+
+\plitemsep 0.1in
+
+\bci 
+\item Want to find a basis of a subspace $U = \spn{\vec{x}_1, \vec{x}_2, \ldots, \vec{x}_m}$
+
+\bce
+\item Construct a matrix $\mat{A} = \rowvec{\vec{x}_1 & \vec{x}_2 & \cdots & \vec{x}_m}$
+\item Find the row-echelon form of $\mat{A}.$
+\item Collect the pivot columns.
+\ece
+
+\item Logic: Collect $\vec{x}_i$ so that we have only trivial solution. Pivot columns tell us which set of vectors is linearly independent. 
+
+\item See example 2.17 (pp. 35)
+\eci
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Rank (1)}
+
+\plitemsep 0.15in
+
+\bci 
+\item \defi The \bluef{rank}  of $\mat{A} \in \real^{m \times n}$ denoted by $\rk{\mat{A}}$ is \# of linearly independent columns 
+\bci
+\item Same as the number of linearly independent rows
+\eci
+
+\item $\mat{A} = 
+\begin{nmat}
+1 & 2 & 1 \cr
+-2 & -3 & 1 \cr
+3 & 5 & 0 
+\end{nmat}$
+$\leadsto \cdots \leadsto$
+$\begin{nmat}
+1 & 2 & 1 \cr
+0 & 1 & 3 \cr
+0 & 0 & 0 
+\end{nmat}$
+
+\bigskip
+Thus, $\rk{\mat{A}}=2.$
+
+\item $\rk{\mat{A}} = \rk{\mat{\trans{\mat{A}}}}$
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Rank (2)}
+
+\plitemsep 0.2in
+
+\bci 
+
+\item The \bluef{columns} (resp. \redf{rows}) of $\mat{A}$ span a subspace \bluef{$U$} (resp. \redf{$W$}) with  \bluef{$\dimm{U} = \rk{\mat{A}}$} (resp. \redf{$\dimm{W} = \rk{\mat{A}}$}), and 
+a basis of \bluef{$U$} (resp. \bluef{$W$}) can be found by Gauss elimination of \bluef{$\mat{A}$} (resp. \redf{$\mat{\trans{A}}$}).
+
+\item For all $\mat{A} \in \real^{n \times n},$ $\rk{\mat{A}} =n,$ iff $\mat{A}$ is regular (invertible). 
+
+\item The linear system $\mat{A} \vec{x} = \vec{b}$ is solvable, iff $\rk{\mat{A}} = \rk{\mat{A|b}}.$
+
+\item For $\mat{A} \in \real^{m \times n},$ the subspace of solutions for $\mat{A} \vec{x} = \vec{0}$ possesses dimension $n - \rk{\mat{A}}.$
+
+\item $\mat{A} \in \real^{m \times n}$ has \bluef{full rank} if its rank equals the largest possible rank for a matrix of the same dimensions. The rank of the full-rank matrix $\mat{A}$ is \bluef{$\min(\text{\# of cols, \# of rows}).$}
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L2(7)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Systems of Linear Equations
+
+\item Matrices
+
+\item Solving Systems of Linear Equations
+
+\item Vector Spaces
+
+\item Linear Independence
+
+\item Basis and Rank}
+
+\item \redf{Linear Mappings}
+
+\item \grayf{Affine Spaces}
+
+\ece
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Linear Mapping (1)}
+
+\plitemsep 0.1in
+
+\bci 
+\item Interest: A mapping that preserves the structure of the vector space
+\item \defi For vector spaces $V,W,$ a mapping $\Phi: V \mapsto W$ is called a \bluef{linear mapping} (or homomorphism/linear transformation), if, for all $\vec{x}, \vec{y} \in V$ and all $\lambda \in \real,$
+\bci
+\item $\Phi(\vec{x} + \vec{y}) = \Phi(\vec{x}) + \Phi(\vec{y})$
+\item $\Phi(\lambda \vec{x}) = \lambda \Phi(\vec{x})$
+\eci
+
+\item \defi A mapping $\Phi: \set{V} \mapsto \set{W}$ is called
+\bci
+\item \bluef{Injective} (단사), if $\forall \vec{x},\vec{y} \in \set{V},$ $\Phi(\vec{x}) = \Phi(\vec{y}) \implies \vec{x} = \vec{y}$
+
+\item \bluef{Surjective} (전사), if $\Phi(\set{V}) = \set{W}$
+
+\item \bluef{Bijective} (전단사), if it is injenctive and surjective. 
+\eci
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Linear Mapping (2)}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item For bjective mapping, there exists an inverse mapping $\Phi^{-1}.$
+
+\item \bluef{Isomorphism} if $\Psi$ is linear and bijective.
+
+\item \redf{Theorem.} Vector spaces $V$ and $W$ are isomorphic, iff $\dimm{V} = \dimm{W}.$
+\bci
+\item Vector spaces of the same dimension are kind of the same thing. 
+\eci
+
+\item Other properties
+\bci
+\item For two linear mappings $\Phi$ and $\Psi,$ $\Phi \circ \Psi$ is also a linear mapping.
+\item If $\Phi$ is an isomorphism, so is $\Phi^{-1}.$
+\item For two linear mappings $\Phi$ and $\Psi,$ $\Phi + \Psi$ and $\lambda \Psi$ for $\lambda \in \real$ are linear. 
+\eci
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Coordinates}
+
+\plitemsep 0.1in
+
+\bci 
+
+\mysmalltwocols{0.25}
+{
+\item A basis defines a coordinate system.
+}
+{
+\vspace{-0.2cm}
+\begin{center}
+\mypic{0.8}{L2_coordinate.png}
+\end{center}
+}
+
+\item Consider an ordered basis $B=(\vec{b}_1, \vec{b}_2, \ldots, \vec{b}_n)$ of vector space $V.$ Then, for any $\vec{x} \in V,$ there exists a unique linear combination
+\aleq{
+\vec{x} = \alpha_1 \vec{b}_1 + \ldots + \alpha_n \vec{b}_n.
+}
+
+\item We call $\vec{\alpha} = \colvec{\alpha_1 \\ \vdots \\ \alpha_n}$ the coordinate of $\vec{x}$ with respect to $B =(\vec{b}_1, \vec{b}_2, \ldots, \vec{b}_n) .$
+
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Basis Change}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Consider a vector space $V$ and two coordinate systems defined by $B =(\vec{b}_1, \ldots, \vec{b}_n)$ and $B' =(\vec{b}'_1, \ldots, \vec{b}'_n).$
+
+\item \question For $(x_1, \ldots, x_n)_B $ $\rightarrow$ $(y_1, \ldots, y_n)_{B'},$ what is $(y_1, \ldots, y_n)_{B'}$?
+
+\item \thm 
+$
+\colvec{y_1 \\ \vdots \\ y_n} = \inv{\rowvec{\vec{b}'_1 & \ldots &\vec{b}'_n}} \rowvec{\vec{b}_1 & \ldots &\vec{b}_n} \colvec{x_1 \\ \vdots \\ x_n}
+$
+
+\item Regard $\mat{A}_{\Phi} = \inv{\rowvec{\vec{b}'_1 & \ldots &\vec{b}'_n}} \rowvec{\vec{b}_1 & \ldots &\vec{b}_n}$ as a linear map
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item $B=((1,0), (0,1)$ and $B'=((2,1), (1,2))$
+
+\item $(4,2)_B$ $\rightarrow$ $(x,y)_{B'}$?
+\item Using
+$
+\colvec{y_1 \\ \vdots \\ y_n} = \inv{\rowvec{\vec{b}'_1 & \ldots &\vec{b}'_n}} \rowvec{\vec{b}_1 & \ldots &\vec{b}_n} \colvec{x_1 \\ \vdots \\ x_n},
+$
+\aleq{
+\colvec{x \\ y} = 
+\inv{\begin{nmat}
+2 & 1 \cr
+1 & 2
+\end{nmat}}
+\begin{nmat}
+1 & 0 \cr
+0 & 1
+\end{nmat}
+\colvec{4 \\ 2}
+ = 
+\begin{nmat}
+\frac{2}{3} & -\frac{1}{3} \cr
+-\frac{1}{3} & \frac{2}{3}
+\end{nmat}
+\colvec{4 \\ 2} = \colvec{2 \\ 0}
+}
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Transformation Matrix}
+
+\plitemsep 0.05in
+
+\bci 
+\item Two vector spaces 
+\bci
+\item $V$ with basis $B=(\vec{b}_1, \ldots, \vec{b}_n)$ and $W$ with basis $C=(\vec{c}_1, \ldots, \vec{c}_m)$
+\eci
+
+\item What is the coordinate in $C$-system for each basis $\vec{b}_j$? For $j=1, \ldots, n,$
+{\small
+\aleq{
+\vec{b}_j = \alpha_{1j} \vec{c}_1 + \cdots + \alpha_{mj}\vec{c}_m &\Longleftrightarrow 
+\vec{b}_j = \rowvec{\vec{c}_1 & \cdots & \vec{c}_m} \colvec{\alpha_{1j} \\ \vdots \\ \alpha_{mj}}\cr
+& \implies \rowvec{\vec{b}_1 & \cdots & \vec{b}_n} = \rowvec{\vec{c}_1 & \cdots & \vec{c}_m}  
+\overbrace{\begin{nmat}
+\alpha_{11} & \cdots & \alpha_{1n} \cr
+\vdots & &\vdots \cr
+\alpha_{m1} & \cdots & \alpha_{mn}
+\end{nmat}}^{\mat{A}_{\Phi}}
+}}
+
+\item $\hat{x} = \mat{A}_{\Phi} \hat{y}$, where $\hat{x}$ is the vector w.r.t $B$ and $\hat{y}$ is the vector w.r.t. $C$
+% \item There exists a linear mapping $\Phi: V \mapsto W$ which can be represented by a matrix, called 
+% \bluef{transformation matrix} $\mat{A}_{\Phi}$.
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Basis Change: General Case}
+
+\plitemsep 0.1in
+
+\bci 
+\item For linear mapping $\Phi: V \mapsto W,$ consider bases $B,B'$ of $V$ and $C,C'$ of $W$ 
+\aleq{
+B = \rowvec{\vec{b}_1 & \cdots & \vec{b}_n}, \ B' = \rowvec{\vec{b}'_1 & \cdots & \vec{b}'_n}\quad 
+C = \rowvec{\vec{c}_1 & \cdots & \vec{c}_m}, \ C' = \rowvec{\vec{c}'_1 & \cdots & \vec{c}'_m}.
+}
+\item (inter) transformation matrices $\mat{A}_{\Phi}$ from $B$ to $C$ and $\mat{A}'_{\Phi}$ from $B'$ to $C'$
+\item (intra) transformation matrices $S$ from $B'$ to $B$ and $T$ from $C'$ to $C$
+\item \thm $\mat{A}'_{\Phi} = \inv{T} \mat{A}_{\Phi} S$
+
+\mypic{0.6}{L2_basischange.png}
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Image and Kernel}
+
+\plitemsep 0.1in
+
+\bci 
+
+
+\item Consider a linear mapping $\Phi: V \mapsto W.$ The \bluef{kernel} (or \bluef{null space}) is the set of vectors in $V$ that maps to $\vec{0} \in W$ (i.e., neutral element).
+
+\medskip
+\defi  $\ker(\Phi) \eqdef \Phi^{-1}(\vec{0}_W) = \{\vec{v} \in V : \Phi(\vec{v}) = \vec{0}_W \}$
+
+\item \bluef{Image/range}: set of vectors $w \in W$ that can be reached by $\Phi$ from any vector in $V$
+
+\item $V$: \bluef{domain}, $W$: \bluef{codomain}
+
+\centering
+\mypic{0.45}{L2_image_kernel.png}
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Image and Kernel: Properties}
+
+\plitemsep 0.2in
+
+\bci 
+
+\item $\vec{0}_V \in \ker(\Phi)$ (because $\Phi(\vec{0}_V) = \vec{0}_W$)
+\item Both $\img{\Phi}$ and $\ker(\Phi)$ are subspaces of $W$ and $V,$ respectively. 
+\item $\Phi$ is one-to-one (injective) $\Longleftrightarrow$ $\ker(\Phi) = \{0\}$ (i.e., only $\vec{0}$ is mapped to $\vec{0}$)
+
+\item Since $\Phi$ is a linear mapping, there exists $\mat{A} \in \real^{m \times n}$ such that $\Phi: \vec{x} \mapsto \mat{A}\vec{x}.$ Then, $\img{\Phi} = \text{column space of } \mat{A}$ which is the span of column vectors of $\mat{A}.$
+
+\item $\rk{\mat{A}} = \dimm{\img{\Phi}}$
+
+\item $\ker(\Phi)$ is the solution set of the homogeneous system of linear equations $\mat{A}\vec{x} = \vec{0}$
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Rank-Nullity Theorem}
+
+\plitemsep 0.07in
+\myvartwocols{0.7}{0.7}{0.29}
+{
+\plitemsep 0.07in
+\thm 
+$$\dimm{\ker(\Phi)} + \dimm{\img{\Phi}} = \dimm{V}$$
+\vspace{-0.5cm}
+\small
+\bci 
+\item If $\dimm{\img{\Phi}} < \dimm{V}$, the kernel contains more than just $\vec{0.}$
+\item If $\dimm{\img{\Phi}} < \dimm{V}$, $\mat{A}_{\Phi} \vec{x} = \vec{0}$ has infinitely many solutions.
+
+\item If $\dimm{V} = \dimm{W}$ (e.g., $V=W=\real^n$), the followings are equivalent: $\Phi$ is
+\plitemsep 0.01in
+\bci
+\item (1) injective, (2) surjective, (3) bijective, 
+
+\item In this case, $\Phi$ defines $\vec{y} = \mat{A}\vec{x},$ where $\mat{A}$ is regular. 
+\eci
+
+\item \redf{Simplified version.} For $\mat{A} \in \real^{m \times n},$
+$$
+\rk{\mat{A}} + \text{nullity}(\mat{A}) = n
+$$
+\eci
+}
+{
+\centering
+\mypic{0.95}{L2_rank_nullity.png}
+}
+\footnotetext{Nullity: the dimension of null space (kernel)}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L2(8)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Systems of Linear Equations
+
+\item Matrices
+
+\item Solving Systems of Linear Equations
+
+\item Vector Spaces
+
+\item Linear Independence
+
+\item Basis and Rank
+
+\item Linear Mappings}
+
+\item \redf{Affine Spaces}
+
+\ece
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Linear vs. Affine Function}
+
+\plitemsep 0.1in
+\mytwocols{0.4}
+{
+\bci 
+\item \redf{linear function}: $f(x) = ax$ 
+\item \redf{affine function}: $f(x) = ax + b$ 
+\item sometimes (ignorant) people refer to affine functions as linear
+\eci
+}
+{
+\centering
+\mypic{0.95}{L2_affine_linear.png}
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Affine Subspace}
+
+\plitemsep 0.1in
+\bci 
+\item Spaces that are offset from the origin. Not a vector space.
+
+\item \defi Consider a vector space $V,$ $\vec{x}_0 \in V$ and a subspace $U \subset V.$ Then, the subset $L  = \vec{x_0} + U \eqdef \{\vec{x_0} + \vec{u} : \vec{u} \in U \}$ is called \bluef{affine subspace} or \bluef{linear manifold} of $V.$
+
+\item $U$ is called \bluef{direction} or \bluef{direction space}, and $\vec{x}_0$ is \bluef{support}. point.
+
+\item An affine subspace is not a vector subspace of $V$ for $\vec{x}_0 \notin U.$
+
+\item {\bf \em Parametric equation.} A $k$-dimensional affine space $L = \vec{x_0} + U.$ If $(\vec{b}_1, \ldots, \vec{b}_k)$ is an ordered basis of $U,$ any element $\vec{x} \in L$ can be uniquely described as
+\aleq{
+\vec{x} = \vec{x}_0 + \lambda_1 \vec{b}_1 + \cdots + \lambda_k \vec{b}_k, \quad \lambda_1, \ldots, \lambda_k \in \real
+}
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\small
+\plitemsep 0.05in
+\bci 
+\item In $\real^2,$ one-dimensional affine subspace: \bluef{line}. $\vec{y} = \vec{x}_0 + \lambda \vec{b}_1.$ $U = \spn{\vec{b}_1}$
+
+\item In $\real^3,$ two-dimensional affine subspace: \bluef{plane}. $\vec{y} = \vec{x}_0 + \lambda_1 \vec{b}_1 + \lambda_2 \vec{b}_2.$ $U = \spn{\vec{b}_1, \vec{b}_2}$
+
+\item In $\real^n,$ $(n-1)$-dimensional affine subspace: \bluef{hyperplane}. $\vec{y} = \vec{x}_0 + \sum_{k=1}^{n-1} \lambda_i \vec{b}_i.$ $U = \spn{\vec{b}_1, \ldots, \vec{b}_n}$
+
+\medskip
+\begin{center}
+\mypic{0.4}{L2_affine.png}
+\end{center}
+
+\item For a linear mapping $\Phi: V \mapsto W$ and a vector $\vec{a} \in W,$ the mapping $\phi: V \mapsto W$ with $\phi(\vec{x}) = \vec{a} + \Phi(\vec{x})$ is an \bluef{affine mapping} from $V$ to $W.$ The vector $\vec{a}$ is called the \bluef{translation vector.}
+\eci
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\vspace{2cm}
+\LARGE Questions?
+
+
+\end{frame}
+
+\begin{frame}{Review Questions}
+% \tableofcontents
+%\plitemsep 0.1in
+\bce[1)]
+\item 
+
+\ece
+\end{frame}
+
+
+\end{document}

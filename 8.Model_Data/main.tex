@@ -1,0 +1,781 @@
+%\pdfminorversion=4
+\documentclass[handout,fleqn,aspectratio=169]{beamer}
+
+\input{../myhead}
+
+\title[]{Lecture 8: When Models Meet Data}
+\author{Yi, Yung (이융)}
+\institute{Mathematics for Machine Learning\\ KAIST EE}
+\date{MONTH DAY, 2021}
+
+
+\input{../mymath}
+\input{../macro}
+
+
+%\addtobeamertemplate{footline}{\rule{0.94\paperwidth}{1pt}}{}
+
+\begin{document}
+
+\input{../mydefault}
+
+
+
+% START START START START START START START START START START START START START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Data, Models, and Learning 
+\item Models as Functions: Empirical Risk Minimization 
+\item Models as Probabilistic Models: Parameter Estimation (ML and MAP)
+\item Probabilistic Modeling and Inference 
+\item Directed Graphical Models 
+\item Model Selection
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \redf{Data, Models, and Learning}
+\item \grayf{Models as Functions: Empirical Risk Minimization 
+\item Models as Probabilistic Models: Parameter Estimation (ML and MAP)
+\item Probabilistic Modeling and Inference 
+\item Directed Graphical Models 
+\item Model Selection
+}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Data, Models, and Learning}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Three major components of a machine learning system
+
+\bce
+\item Data:  $\{(\vx_1, y_1), \ldots, (\vx_n,y_n), \ldots, (\vx_N,y_N) \}$
+\item Models: functions or probabilistic models
+\item Learning: Training, and prediction/inference
+\ece
+\item Good machine learning models: Perform well for unseen (untrained) data
+
+\item Machine learning algorithm: training and prediction
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Data as Vectors}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Tabular format or not, numerical or not, good feature extraction etc. 
+
+\item Assume that data is given as $D$-dimensional vector $\vx_n$ of real numbers, each called \bluef{features}, \bluef{attributes}, or \bluef{covariates}.
+
+\item Dataset: consisting of data points or examples $\vx_1,$ $\vx_2,$ \ldots, $\vx_N$
+\item In supervised learning, $\{(\vx_1, y_1), \ldots, (\vx_n,y_n), \ldots, (\vx_N,y_N) \},$ where $y_n$ is the label (or target, response variable, or annotation). 
+\item Better representation of data as vectors
+\bci
+\item finding lower-dimensional approximations of the original feature vector (PCA via SVD or EVD)
+\item using nonlinear higher-dimensional combinations of the original feature vector (feature map and kernel)
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Models: Functions vs. Probabilistic Models}
+
+\myvartwocols{0.7}{0.65}{0.31}
+{
+\plitemsep 0.07in
+
+\bci 
+
+\item Now, the business of constructing a predictor. 
+
+\item Models as \bluef{functions}
+\bci
+\item $f: \realD \mapsto \real.$ 
+\item \exam $f(\vx) = \trans{\vth}\vx + \theta_0,$ Unknown parameter: $\vth,\theta_0$
+
+\eci
+
+\item Models as \bluef{probabilistic models}
+
+\bci
+\item model our uncertainty due to the \bluef{observation process} and our uncertainty in the \bluef{parameters of our model}
+
+\item predictors should be able to express some sort of uncertainty via probabilistic models
+\item Parameters: parameters of a chosen probabilistic model (mean and variance of Gaussian)
+\eci
+
+\eci
+
+}
+{
+\vspace{-0.3cm}
+\mypic{0.99}{L8_model_function.png}
+\mypic{0.99}{L8_model_pmodel.png}
+
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Learning Algorithms}
+
+\plitemsep 0.07in
+
+\bci 
+
+\item Three algorithmic phases
+
+\item[(1)] Prediction or inference: via function or probabilitic models
+
+\item[(2)] Training or parameters estimation 
+
+\bci
+\item fixed parameter assumption (non-probabilistic) or Bayesisan approach (probabilistic)
+\item Non-probabilistic: e.g., empirical risk minimization
+\item Probabilistic: e.g., ML (Maximum Likelihood), MAP (Maximum A Posteriori)
+\item Cross-validation: Simulation of performing for unseen data
+\item Regularization/Prior: Balancing models between training and unseen data
+
+\eci
+\item[(3)] Hyperparameter tuning or model selection
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \grayf{Data, Models, and Learning}
+\item \redf{Models as Functions: Empirical Risk Minimization} 
+\item \grayf{Models as Probabilistic Models: Parameter Estimation (ML and MAP)
+\item Probabilistic Modeling and Inference 
+\item Directed Graphical Models 
+\item Model Selection
+}
+
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Empirical Risk Minimization}
+
+\plitemsep 0.07in
+
+\bci 
+
+\item Predictor as a function
+
+\item Given $\{(\vx_1, y_1), \ldots, (\vx_n,y_n), \ldots, (\vx_N,y_N) \},$ estimate a predictor $f(\cdot, \vth): \realD \mapsto \real$
+
+\item Find a good parameter $\vth^*,$ such that $f(\vx_n,\vth^*) = \hat{y}_n \approx y_n,$ for all $n=1,\ldots, N$
+
+\item \exam Affine function: By adding the unit feature $x^{(0)}=1$ and $\theta_0$, i.e., $\vx_n = \trans{[1, x_n^{(1)}, \ldots, x_n^{(D)}]},$ $\vth = \trans{[\theta_0, \theta_1, \ldots, \theta_D]}$
+\aleq
+{
+f(\vx_n,\vth) = \trans{\vth} \vx_n = \theta_0 + \sum_{d=1}^D \theta_d x_n^{(d)}
+}
+
+\item \exam Neural network: Complex non-linear function
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Loss Function}
+
+\plitemsep 0.07in
+
+\bci 
+
+\item Training set: $\{(\vx_1, y_1), \ldots, (\vx_n,y_n), \ldots, (\vx_N,y_N) \},$ an example matrix 
+$\mat{X} \eqdef \trans{[\vx_1, \ldots, \vx_N]} \in \real^{N \times D},$ a label vector $\vy \eqdef 
+\trans{[y_1, \ldots, y_N]},$
+
+\item Average loss, empirical risk
+$$
+\bm{R}_{\text{emp}}(f,\mat{X},\vy) = \frac{1}{N} \sum_{n=1}^N \ell(y_n,\hat{y}_n)
+$$
+
+\item Goal: Minimizing empirical risk
+
+\item \exam The squared loss function $\ell(y_n,\hat{y}_n) = (y_n - \hat{y}_n)^2$ leads to:
+$$
+\min_{\vth \in \realD} \frac{1}{N} \norm{\vy - \mat{X}\vth}^2
+$$
+
+\item \question Ultimgate goal: Minimizing expected risk (for unseen data) $\bm{R}_{\text{true}} = \expecti{\vx,y}{\ell(y,f(\vx))}$? 
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Overfitting and Regularization}
+
+\plitemsep 0.07in
+
+\bci 
+
+\item The predictor fits too closely to the training data and does not generalize well to new data
+
+\item Need to somehow bias the search for the minimizer of empirical risk by introducing a penalty term
+
+\item Regularization: Compromise between accurate solution of empirical risk minimization and the size or complexity of the solution.
+
+\item \exam Regularized Least Squares
+$$
+\min_{\vth \in \realD} \frac{1}{N} \norm{\vy - \mat{X}\vth}^2 + \lambda \norm{\vth}^2
+$$
+\bci
+\item $\norm{\vth}^2$: regularizer, $\lambda$: regularization parameter
+\eci
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Cross-Validation for Generalization Performance}
+
+\bigskip
+
+
+\mypic{0.8}{L8_cross_validation.png}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \grayf{Data, Models, and Learning}
+\item \grayf{Models as Functions: Empirical Risk Minimization} 
+\item \redf{Models as Probabilistic Models: Parameter Estimation (ML and MAP)}
+\item \grayf{Probabilistic Modeling and Inference 
+\item Directed Graphical Models 
+\item Model Selection
+}
+
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{MLE (Maximum Likelihood Estimation): Concepts}
+
+\plitemsep 0.07in
+
+\bci 
+
+\item Idea: define a function of the parameters called \bluef{likelihood function}.
+
+\item Negative log-likelihood for data $\vx$ and a family of probability densities $\cprob{\vx \mid \vth}$ parameterized by $\vth$:
+$$
+\cL_{\vx}(\vth) = \cL(\vth) \eqdef - \log \cprob{\vx \mid \vth}
+$$
+\bci
+\item $\cL(\vth)$: how likely a particular setting of $\vth$ is for the observations $\vx$.
+\eci
+
+\bigskip
+\item MLE: Find $\vth$ such that $\cL(\vth)$ is minimized (i.e., likelihood is maximized)
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{MLE: Supervised Learning}
+
+\plitemsep 0.05in
+
+\bci 
+
+\item The set of iid examples $(\vx_1, y_1), \ldots, (\vx_N,y_N)$
+
+\item $\set{X} = \{\vx_1, \ldots, \vx_N \}$ and $\set{Y} = \{y_1, \ldots, y_N \}$
+
+\item Negative log-likelihood
+$$
+\cL(\vth) = - \log \cprob{\set{Y} \mid \set{X}, \vth} = \sum_{n=1}^N \log \cprob{y_n \mid \vx_n, \vth}
+$$
+
+\item \exam Assume independent Gaussian noise $\set{N}(0,\sigma^2)$ and linear model $y_n = \trans{\vx}_n \vth$ for prediction. Then, $Y_n| (\vx_n,\vth) \sim \set{N}(\trans{\vx}_n\vth, \sigma^2).$
+{\small
+\aleq{
+\cL(\vth) &= - \sum_{n=1}^N \log \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_n-\trans{\vx}_n\vth )^2}{2\sigma^2} \right)= \frac{1}{2\sigma^2} \sum_{n=1}^N (y_n-\trans{\vx}_n\vth )^2 - \sum_{n=1}^N \log \frac{1}{\sqrt{2\pi\sigma^2}}
+}}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{MAP (Maximum A Posteriori)}
+
+\plitemsep 0.07in
+
+\bci 
+
+\item What if we have some prior knowledge about $\vth$? Then, how should we change our knowledge about $\vth$ after observing data $\vx$?
+
+\item Compute a posteriori distribution (using Bayes' Theorem) and find $\vth$ that maximizes the distribution:
+$$
+\max_{\vth} \cprob{\vth \mid \vx} = \max_{\vth} \frac{\cprob{\vx \mid \vth}\cprob{\vth}}{\cprob{\vx}} 
+\Longleftrightarrow \min_{\vth}\Big (  -\log \cprob{\vth \mid \vx} \Big )
+$$
+\bci
+\item In finding the optimal $\vth,$ $\cprob{\vx}$ can be ignored
+\eci
+\item ML and MAP: Bridging the non-probabilistic and probabilistic worlds as it explicitly acknowledges the need for a prior distribution, yet producing a point estimate (one single parameter return). 
+
+\item We later see the full parameter distributions
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Model Fitting}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Model class $M_{\vth}$ vs. Right model $M^*$
+\mypic{0.3}{L8_model_class.png}
+
+\item Overfitting vs. Underfitting vs. Good fitting
+\mypic{0.7}{L8_fittings.png}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \grayf{Data, Models, and Learning}
+\item \grayf{Models as Functions: Empirical Risk Minimization} 
+\item \grayf{Models as Probabilistic Models: Parameter Estimation (ML and MAP)}
+\item \redf{Probabilistic Modeling and Inference} 
+\item \grayf{Directed Graphical Models 
+\item Model Selection
+}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Modeling Generative Process and Probabilistic Models}
+
+\plitemsep 0.2in
+
+\bci 
+
+\item Many machine learning tasks: prediction of future events and decision making
+
+\item Often build (probabilistic) models that describe the generative process that generates the observed data
+
+\item In probabilistic modeling, the joint distribution $\cprob{\vx,\vth}$ of the observed variables 
+$\vx$ and the hidden parameters $\vth$ encapsulate the key infomration
+\bci
+\item the prior and likelihood, marginal distribution, and the posterior 
+\eci
+
+\item Essentially, if we know the joint distribution, we know all about its probabilistic model
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Bayesian Inference}
+
+\plitemsep 0.05in
+
+\bci 
+
+\item Earlier, two ways of estimating the parameter $\vth$: ML and MAP. Essentially, it is solving an optimization problem to get a single best value $\vth^*.$ $\implies$ Prediction through $\cprob{\vx \mid \vth^*}.$
+
+\item Rather than just a likelihood, having the full posterior distribution can be useful. For a data set $\set{X},$ a parameter prior $\cprob{\vth},$ and a likelihood function, the posterior is:
+$$
+\cprob{\vth \mid \set{X}} = \frac{\cprob{\set{X} \mid \vth} \cprob{\vth}}{\cprob{\set{X}}}, \quad 
+\cprob{\set{X}} = \int \cprob{\set{X} \mid \vth} \cprob{\vth} \; \text{d}\vth
+$$
+
+\item \question \bluef{Examples of prediction using the posterior distribution?}
+
+\item Bayesian inference requires to solving integration, which is often challenging. In particuluar, a conjugate prior is not chosen, the integration is not analytically tractable.
+
+\item Approximation technqiues: MCMC (Markov Chain Monte Carlo), Laplance approximation, variational inference, expectation propagation
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Bayesian Prediction}
+Given the data set $\set{X},$ we want to predict $A,$ we want to do the following prediction: 
+$$
+\cprob{A \mid \set{X}}
+$$
+\vspace{-1.2cm}
+\plitemsep 0.05in
+\bci 
+\item \redf{ML}: Easy (high), Exact (low)
+$$
+\cprob{A \mid \set{X}} \approx \cprob{A \mid \vth}, \quad \vth = \arg\max \cprob{\set{X} \mid \vth}
+$$
+
+\item \redf{MAP}: Easy (mid), Exact (mid)
+$$
+\cprob{A \mid \set{X}} \approx \cprob{A \mid \vth}, \quad \vth = \arg\max \cprob{\vth \mid \set{X}}
+$$
+
+\item \redf{Fully Bayesian}: Easy (low), Exact (high)
+
+\medskip
+- predictive inference, use of posterior predictive distribution, bayesian prediction
+
+$$
+\cprob{A \mid \set{X}} = \int \cprob{A \mid \vth} \cprob{\vth \mid \set{X}}\text{d}\vth
+$$
+
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Latent-Variable Models (1)}
+
+\plitemsep 0.05in
+
+\bci 
+
+\item Including latent variables in the model: Contributing to the interpretability of the model
+
+\item Examples: PCA for dimensionality reduction, Gaussian mixture models for density estimation
+
+\item Offers data generation process through parameters: $\cprob{\vx \mid \vth, \vz}$, $\cprob{z}$
+
+\item Marginalization over the latent variables, which allows parameter estimation by ML and MAP (using the prior $\cprob{\vth}$)
+$$
+\cprob{\vx \mid \vth} = \int \cprob{\vx \mid \vth, \vz} \cprob{\vz}\; \text{d}\vz
+$$
+
+\item We can compute a posterior on the latent variables, but marginalizing over both $\vz$ and $\vth$ is hard:
+$$
+\cprob{\vz \mid \set{X}} = \frac{\cprob{\set{X}\mid \vz} \cprob{\vz}}{\cprob{X}}, \quad 
+\cprob{\set{X} \mid \vz} = \int \cprob{\set{X} \mid \vz, \vth} \cprob{\vth} \text{d}\vth
+$$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Latent-Variable Models (2)}
+
+\plitemsep 0.05in
+
+\bci 
+
+\item Instead, it is easier to compute the latent-variable posterior, but conditioned on the model parameters, i.e., 
+$$
+\cprob{\vz \mid \set{X},\vth} = \frac{\cprob{\set{X}\mid \vz,\vth} \cprob{\vz}}{\cprob{\set{X} \mid \vth}}
+$$
+
+\item \question How do we use the posteriors $\cprob{\vz \mid \set{X}}$ or $\cprob{\vz \mid \set{X},\vth}$ in practice? Any examples?
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \grayf{Data, Models, and Learning}
+\item \grayf{Models as Functions: Empirical Risk Minimization} 
+\item \grayf{Models as Probabilistic Models: Parameter Estimation (ML and MAP)}
+\item \grayf{Probabilistic Modeling and Inference} 
+\item \redf{Directed Graphical Models }
+\item \grayf{Model Selection}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Graphical Models}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Joint distribution of a probabilistic model: key quantity of interest, but quite complicated without structural properties
+
+\item However, there exist relations of \bluef{independence}, \bluef{conditional independence} among random variables.  
+
+\item (Probabilistic) graphical models: Roughly speaking, a graph of random variables.
+
+\bci
+\item Simple ways to visualize the structure of the model
+\item Insights into the structural properties, e.g., conditional independence
+\item Computations for inference and learning can be expressed in terms of graphical manipulations
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Graph Semantics}
+
+\mytwocols{0.4}
+{
+\aleq{
+\cprob{a,b,c} = \cprob{c| a,b} \cprob{b | a}\cprob{a}
+}
+\mypic{0.4}{L8_gmodel_ex1.png}
+}
+{
+%\vspace{-0.3cm}
+\aleq{
+&\cprob{x_1, x_2, x_3, x_4, x_5} = \cr
+&\cprob{x_1}\cprob{x_5}\cprob{x_2 | x_5}\cprob{x_3 | x_1, x_2} \cprob{x_4 | x_2}}
+\mypic{0.6}{L8_gmodel_ex2.png}
+}
+\vspace{-0.3cm}
+\plitemsep 0.03in
+\bci 
+\item Nodes: random variables
+\item Directed edge for direct dependence: $b$ directly depends on $a$: $a \rightarrow b$
+\item Graph layout: factorization of the joint distribution
+$$
+\cprob{x_1, \ldots, x_K} = \prod_{k=1}^K \cprob{x_k \mid \mathbf{Pa}_k}, \quad\text{$\mathbf{Pa}_k$ are the parent nodes of $x_k.$}
+$$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: $N$ coin-flip experiments}
+
+\mypic{0.75}{L8_coinflip.png}
+\plitemsep 0.07in
+\bci 
+\item Shaded nodes: observables, $\mu$: probability of head, a (latent) random variable
+\item Joint distribution
+$$
+\cprob{x_1, \ldots, x_N \mid \mu} = \prod_{n=1}^N \cprob{x_n \mid \mu}
+$$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Conditional Independence and $d$-Separation}
+
+\plitemsep 0.07in
+\bci 
+\item \question How can we see conditional independence in the directed graphical models? For example, $\set{A} \indep \set{B} \mid \set{C}$?
+\item \bluef{$d$-separation}
+\bci
+\item All possible trails\footnote{paths that ignore the direction of the arrows} from any node $\set{A}$ to any node in $\set{B}$
+\item Any such path is blocked if it includes any node such that either of the following is true:
+\bci
+\item The arrows on the path meet either head to tail or tail to tail at the node, and the node is in \set{C}
+\item The arrows meet head to head at the node, and neither the node nor any of its descendants is in \set{C}
+\eci
+\item If all the paths are blocked, then $\set{A}$ is $d$-separated from $\set{B}$ by $\set{C}.$
+\item If $d$-separated, $\set{A} \indep \set{B} \mid \set{C}$
+\eci
+\eci
+
+% \myvartwocols{0.4}{0.7}{0.26}
+% {
+% \small
+
+% }
+% {
+% \mypic{0.7}{L8_dsep.png}
+% }
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\mypic{0.25}{L8_dsep.png}
+% \vspace{-0.8cm}
+% \raggedleft{\scriptsize Source: \url{http://www.causality.inf.ethz.ch/data/LUCAS.html}}
+\plitemsep 0.1in
+\bci 
+\item $b \indep d \mid a,c$
+\item $a \indep c \mid b$
+\item $b \not\indep d \mid c$
+\item $a \not\indep c \mid b,e$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example in Healthcare}
+
+\mypic{0.6}{L8_lung_cancer.png}
+\vspace{-0.8cm}
+\raggedleft{\scriptsize Source: \url{http://www.causality.inf.ethz.ch/data/LUCAS.html}}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Three Types of Graphical Models}
+
+\mypic{0.7}{L8_all_gmodels.png}
+
+\plitemsep 0.15in
+\bci
+\item \bluef{Directed graphical models (or Bayesian Networks)}
+
+\item Undirected graphical models (Markov Random Fields)
+
+\item Factor graphs
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \grayf{Data, Models, and Learning}
+\item \grayf{Models as Functions: Empirical Risk Minimization} 
+\item \grayf{Models as Probabilistic Models: Parameter Estimation (ML and MAP)}
+\item \grayf{Probabilistic Modeling and Inference} 
+\item \grayf{Directed Graphical Models }
+\item \redf{Model Selection}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Nested Cross-Validation}
+
+
+\mypic{0.65}{L8_nested_cross_validation.png}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Model selection
+\bci
+\item Tradeoff between model complexity and data fit
+
+\item \bluef{Occam's razor.} Find the simplest model that explains the data resonably well. 
+\eci
+
+
+\item Test set: estimate the generalization performance
+
+\item Validation set: choose the best model
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Bayesian Model Selection}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item A set of models $\bm{M} = \{M_1, \ldots, M_k \},$ where each $M_k$ has $\vth_k$ parameters. A prior $\cprob{M}$ on each model $M \in \bm{M}.$ 
+$$
+M_k \sim \cprob{M}, \quad \vth_k \sim \cprob{\vth \mid M_k}, \quad \set{D} \sim \cprob{\set{D} \mid \vth_k}
+$$
+\item Posterior distribution $\cprob{M_k \mid \set{D}} \propto \cprob{M_k} \cprob{\set{D} \mid M_k},$ where we have the following \bluef{model evidence} or \bluef{marginal likelihood}:
+$$
+\cprob{\set{D} \mid M_k}  = \int \cprob{\set{D} \mid \vth_k} \cprob{\vth_k \mid M_k} \text{d}\vth_k \quad \text{(***)}
+$$
+\item MAP for the model: $M^* = \arg \max_{M_k} \cprob{M_k \mid \set{D}}$
+\item With the uniform model prior (i.e., $\cprob{M_k} = 1/k$), the MAP estimate equals to maximization of model evidence. 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Bayes Factors for Model Comparison}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Compare two probabilistic models $M_1$ and $M_2$:
+$$
+\text{(Posterior odds)} = \frac{\cprob{M_1 \mid \set{D}}}{\cprob{M_2 \mid \set{D}}} = \frac
+{
+\frac{\cprob{\set{D} \mid M_1}\cprob{M_1}}{\cprob{\set{D}}}
+}
+{
+\frac{\cprob{\set{D} \mid M_2}\cprob{M_2}}{\cprob{\set{D}}}
+}
+= \underbrace{\frac{\cprob{M_1}}{\cprob{M_2}}}_{\text{Prior odds}} 
+\underbrace{\frac{\cprob{\set{D} \mid M_1}}{\cprob{\set{D} \mid M_2}}}_{\text{Bayes factor}}
+$$
+\item $\cprob{\set{D} \mid M_k}$: How well the data is predicted by the model $M_k$
+\item With the uniform model prior, the prior odds $= 1$
+
+\item Computation of Bayes factor requires the complex integration (***) in the previous slide. In this case, we rely on some approximations such as MCMC (Markov Chain Monte Carlo). 
+\eci
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Summary}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item 
+\eci
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\vspace{2cm}
+\LARGE Questions?
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Review Questions}
+% \tableofcontents
+%\plitemsep 0.1in
+\bce[1)]
+\item 
+
+\ece
+\end{frame}
+
+
+\end{document}

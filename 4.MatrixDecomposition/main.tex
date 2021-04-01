@@ -1,0 +1,1265 @@
+%\pdfminorversion=4
+\documentclass[fleqn,aspectratio=169]{beamer}
+
+\input{../myhead}
+
+
+\title[]{Lecture 4: Matrix Decompositions}
+\author{Yi, Yung (이융)}
+\institute{Mathematics for Machine Learning\\ KAIST EE}
+\date{\today}
+
+\input{../mymath}
+\input{../macro}
+
+\begin{document}
+
+\input{../mydefault}
+
+% START START START START START START START START START START START START START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item Determinant and Trace 
+
+\item Eigenvalues and Eigenvectors
+
+\item Cholesky Decomposition
+
+\item Eigendecomposition and Diagonalization
+
+\item Singular Value Decomposition
+
+\item Matrix Approximation
+
+\item Matrix Phylogeny
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Summary}
+
+\plitemsep 0.1in
+
+\bci 
+\item How to summarize matrices: determinants and eigenvalues
+
+\item How matrices can be decomposed: Cholesky decomposition, diagonalization, singular value decomposition
+
+\item How these decompositions can be used for matrix approximation
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L4(1)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \redf{Determinant and Trace}
+
+\item \grayf{Eigenvalues and Eigenvectors
+
+\item Cholesky Decomposition
+
+\item Eigendecomposition and Diagonalization
+
+\item Singular Value Decomposition
+
+\item Matrix Approximation
+
+\item Matrix Phylogeny}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Determinant: Motivation (1)}
+
+\plitemsep 0.1in
+
+\bci 
+\item For $\mat{A} = 
+\begin{nmat}
+a_{11}&a_{12}\cr
+a_{21} & a_{22}
+\end{nmat},
+$
+$\inv{\mat{A}} =\frac{1}{a_{11}a_{22} - a_{12}a_{21}}
+\begin{nmat}
+a_{22}&-a_{12}\cr
+-a_{21} & a_{11}
+\end{nmat}.
+$
+
+\item $\mat{A}$ is invertible iff $a_{11}a_{22} - a_{12}a_{21} \neq 0$
+
+\item  Let's define $\det(\mat{A}) = a_{11}a_{22} - a_{12}a_{21}.$
+
+\item Notation: $\det(\mat{A})$ or $|\text{whole matrix}|$
+
+\item What about $3 \times 3$ matrix? By doing some algebra (e.g., Gaussian elimination), 
+\aleq{
+\begin{vmat}
+a_{11} & a_{12} & a_{13} \cr
+a_{21} & a_{22} & a_{23} \cr
+a_{31} & a_{32} & a_{33} 
+\end{vmat}
+&= a_{11}a_{22}a_{33} + a_{21} a_{32}a_{13} + a_{31}a_{12}a_{23} \cr
+& - a_{31}a_{22}a_{13} - a_{11}a_{32}a_{23} - a_{21} a_{12} a_{33}
+}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Determinant: Motivation (2)}
+
+\plitemsep 0.1in
+
+\bci 
+\item Try to find some pattern ... 
+
+\mytwocols{0.55}
+{
+\aleq{
+&a_{11}a_{22}a_{33} + a_{21} a_{32}a_{13} + a_{31}a_{12}a_{23} \cr
+& - a_{31}a_{22}a_{13} - a_{11}a_{32}a_{23} - a_{21} a_{12} a_{33}=\cr
+& a_{11} (-1)^{1+1} \det(\mA_{1,1}) + a_{12}(-1)^{1+2} \det(\mA_{1,2}) \cr
+& + a_{13}(-1)^{1+3} \det(\mA_{1,3})
+}
+
+- $\mA_{k,j}$ is the submatrix of $\mA$ that we obtain when deleting row $k$ and column $j.$
+}
+{
+\centering
+\mypic{0.9}{L4_cofactor_ex.png}
+{\scriptsize source: www.cliffsnotes.com}
+}
+
+\item This is called \bluef{Laplace expansion}.
+
+\item Now, we can generalize this and provide the formal definition of determinant. 
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Determinant: Formal Definition }
+
+\plitemsep 0.1in
+
+\myblock{Determinant}
+{
+For a matrix $\mA \in \real^{n \times n},$ for all $j=1, \ldots, n,$
+\bce
+\item Expansion along column $j$: 
+$
+\det(\mA) = \sum_{k=1}^n (-1)^{k+j} a_{kj} \det(\mA_{k,j})
+$
+\item Expansion along row $j$: 
+$
+\det(\mA)= \sum_{k=1}^n (-1)^{k+j} a_{jk} \det(\mA_{j,k})
+$
+\ece
+}
+
+\bci 
+\item All expansion are equal, so no problem with the definition.  
+\item \thm $\det(\mA) \neq 0 \Longleftrightarrow \rk{\mA} = n \Longleftrightarrow$ $\mA$ is invertible. 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Determinant: Properties}
+
+\plitemsep 0.05in
+
+\bce[(1)]
+\item $\det(\mA\mB) = \det(\mA) \det(\mB)$
+\item $\det(\mA) = \det(\trans{\mA})$
+\item For a regular $\mA$, $\det(\inv{\mA}) = 1/\det(\mA)$
+\item For two similar matrices $\mA,\mA'$ (i.e., $\mA' = \inv{\mat{S}}\mA \mat{S}$ for some $\mat{S}$), $\det(\mA) = \det(\mA')$
+\item For a triangular matrix\footnote{This includes diagonal matrices.} $\mat{T},$ $\det(\mat{T}) = \prod_{i=1}^n T_{ii}$
+\item Adding a multiple of a column/row to another one does not change $\det(\mA)$
+\item Multiplication of a column/row with $\lambda$ scales $\det(\mA)$: $\det(\lambda \mA) = \lambda^n \mA$
+\item Swapping two rows/columns changes the sign of $\det(\mA)$
+\item[$\circ$] Using (5)-(8), Gaussian elimination (reaching a triangular matrix) enables to compute the determinant. 
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Trace}
+
+\plitemsep 0.1in
+
+\bci
+\item \defi The trace of a square matrix $\mA \in \real^{n \times n}$ is defined as
+$$
+\tr(\mA) \eqdef \sum_{i=1}^n a_{ii}
+$$
+
+\item $\tr(\mA + \mB) = \tr(\mA) + \tr(\mB)$
+\item $\tr(\alpha \mA) = \alpha \tr(\mA)$
+\item $\tr(\vec{I}_n) = n$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Invariant under Cyclic Permutations}
+
+\plitemsep 0.1in
+
+\bci
+\item $\tr(\mA\mB) = \tr(\mB \mA)$ for $\mA \in \real^{n \times k}$ and $\mB \in \real^{k \times n}$
+\item $\tr(\mA \mat{K} \mat{L}) = \tr(\mat{K} \mat{L} \mat{A}),$ for $\mat{A} \in \real^{a \times k},$ $\mat{K} \in \real^{k \times l},$ $\mat{L} \in \real^{l \times a}$
+\item $\tr(\vec{x}\trans{\vec{y}}) = \tr(\trans{\vec{y}} \vec{x}) = \trans{\vec{y}} \vec{x} \in \real$
+
+\medskip
+\item A linear mapping $\Phi: V \mapsto V$, represented by a matrix $\mA$ and another matrix $\mB.$ 
+\bci
+\item $\mA$ and $\mB$ use different bases, where $\mB = \inv{\mat{S}} \mA \mat{S}$ 
+$$
+\tr(\mB) = \tr(\inv{\mat{S}} \mA \mat{S}) = \tr( \mA \mat{S}\inv{\mat{S}}) = \tr(\mA)
+$$
+\item \redf{Message.} While matrix representations of linear mappings are basis dependent, but their traces are not. 
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Background: Characteristic Polynomial}
+
+\plitemsep 0.1in
+
+\bci
+\item \defi For $\lambda \in \real$ and a matrix $\mA \in \real^{n \times n},$ the characteristic polynomial of $\mA$ is defined as:
+\aleq{
+p_{\mA}(\lambda) &\eqdef \det(\mA - \lambda \mI) \cr
+& = c_0 + c_1 \lambda + c_2\lambda^2 + \cdots + c_{n-1} \lambda^{n-1} + (-1)^n \lambda^n,
+}
+where $c_0 = \det(\mA)$ and $c_{n-1} = (-1)^{n-1}\tr(\mA).$
+
+\item \exam For $\mA = \begin{nmat}
+4&2 \cr
+1&3
+\end{nmat},$ 
+\aleq{
+p_{\mA}(\lambda) = 
+\begin{vmat}
+4-\lambda & 2 \cr
+1 & 3-\lambda
+\end{vmat}
+= (4-\lambda)(3-\lambda) -2 \cdot 1
+}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L4(2)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Determinant and Trace}
+
+\item \redf{Eigenvalues and Eigenvectors}
+
+\item \grayf{Cholesky Decomposition
+
+\item Eigendecomposition and Diagonalization
+
+\item Singular Value Decomposition
+
+\item Matrix Approximation
+
+\item Matrix Phylogeny}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Eigenvalue and Eigenvector}
+
+\plitemsep 0.1in
+
+\bci
+\item \defi Consider a square matrix $\mA \in \real^{n \times n}.$ Then, $\lambda \in real$ is an eigenvalue of $\mA$ and $\vec{x} \in \real^n \setminus \{0 \}$ is the corresponding eigenvector of $\mA$ if 
+$$
+\mA \vec{x} = \lambda \vec{x}
+$$
+
+\item Equivalent statements
+\bci
+\item $\lambda$ is an eigenvalue.
+\item $(\mA - \lambda \mI_n)\vec{x}=0$ can be solved non-trivially, i.e., $\vec{x} \neq \vec{0}.$
+\item $\rk{\mA - \lambda\mI_n} < n.$
+\item $\det(\mA - \lambda\mI_n) =0$ $\Longleftrightarrow$ The characteristic polynomial $p_{\mA}(\lambda)=0.$
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.1in
+
+\bci
+\item For $\mA = (\begin{smallmatrix}
+4&2 \cr
+1&3
+\end{smallmatrix}),$ 
+$
+p_{\mA}(\lambda) = 
+\begin{vmat}
+4-\lambda & 2 \cr
+1 & 3-\lambda
+\end{vmat}
+= (4-\lambda)(3-\lambda) -2 \cdot 1 = \lambda^2 -7\lambda +10 
+$
+\item Eigenvalues $\lambda=2$ or $\lambda=5.$
+\item Eigenvector $E_5$ for $\lambda =5$
+\aleq{
+\begin{nmat}
+4-\lambda & 2 \cr
+1 & 3-\lambda 
+\end{nmat}
+\vec{x} =0
+\implies 
+\begin{nmat}
+-1 & 2 \cr
+1 & -2 
+\end{nmat}
+\colvec{x_1 \\ x_2} =0
+\implies
+E_5 = \spn{\colvec{2 \\ 1}}
+}
+
+\item Eigenvector $E_2$ for $\lambda =2.$ Similarly, we get $E_2 = \spn{\colvec{1 \\ -1}}$
+
+\item \redf{Message.} Eigenvectors are not unique. 
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Properties (1)}
+
+\plitemsep 0.1in
+
+\bci
+\item If $\vec{x}$ is an eigenvector of $\mA$, so are all vectors that are collinear\footnote{Two vectors are collinear if they point in the same or the opposite direction.}. 
+
+\item $E_\lambda$: the set of all eigenvectors for eigenvalue $\lambda$, spanning a subspace of $\real^n.$ We call this \bluef{eigensapce} of $\mA$ for $\lambda.$
+
+\item $E_\lambda$ is the solution space of $(\mA - \lambda \mI)\vec{x}=0,$ thus $E_\lambda = \ker(\mA -\lambda \mI)$
+
+\item \redf{Geometric interpretation}
+\bci
+\item The eigenvector corresponding to a nonzero eigenvalue points in a direction \bluef{stretched} by the linear mapping.
+
+\item The eigenvalue is the factor of stretching.
+\eci
+
+\item Identity matrix $\mI$: one eigvenvalue $\lambda =1$ and all vectors $\vec{x} \neq \vec{0}$ are eigenvectors. 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Properties (2)}
+
+\plitemsep 0.2in
+
+\bci
+\item $\mA$ and $\trans{\mA}$ share the eigenvalues, but not necessarily eigenvectors. 
+
+\item For two similar matrices $\mA,\mA'$ (i.e., $\mA' = \inv{\mat{S}}\mA \mat{S}$ for some $\mat{S}$), they possess the same eigenvalues. 
+
+\bci
+\item Meaning: A linear mapping $\Phi$ has eigenvalues that are \bluef{independent} of the choice of basis of its transformation matrix. 
+
+
+\item Symmetric, positive definite matrices always have \bluef{positive}, \bluef{real} eigenvalues.
+\eci
+\eci
+
+\mycolorbox{
+determinant, trace, eigenvalues: all \bluef{invariant} under basis change 
+}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Examples for Geometric Interpretation (1)}
+
+%\plitemsep 0.1in
+\plitemsep 0.03in
+\myvartwocols{0.75}{0.6}{0.37}
+{
+%\medskip
+\small
+\bce
+\item $\mA = 
+(\begin{smallmatrix}
+\frac{1}{2} & 0 \cr
+0 & 2
+\end{smallmatrix})$, $\det(\mA) = 1$ 
+
+\bci
+\item $\lambda_1 = \frac{1}{2}, \lambda_2 = 2$
+\item eigenvectors: canonical basis vectors
+\item area preserving, just vertical horizontal) stretching. 
+\eci
+
+\item $\mA = 
+(\begin{smallmatrix}
+1 & \frac{1}{2} \cr
+0 & 1
+\end{smallmatrix})$, $\det(\mA) = 1$
+\bci
+\item $\lambda_1 = \lambda_2 = 1$
+\item eigenvectors: colinear over the horiontal line
+\item area preserving, shearing
+\eci
+
+\item $\mA = 
+\left(\begin{smallmatrix}
+\cos(\frac{\pi}{6}) & -\sin(\frac{\pi}{6}) \cr
+\sin(\frac{\pi}{6}) & \cos(\frac{\pi}{6})
+\end{smallmatrix} \right)$, $\det(\mA) = 1$
+\bci
+\item Rotation by $\pi/6$ counter-clockwise
+\item only complex eigenvalues (no eigenvectors)
+\item area preserving
+\eci
+
+\ece
+}
+{
+\vspace{-0.4cm}
+\centering
+\mypic{0.99}{L4_ev_ex1.png}
+
+\vspace{0.1cm}
+
+\mypic{0.99}{L4_ev_ex2.png}
+
+\vspace{0.1cm}
+
+\mypic{0.99}{L4_ev_ex3.png}
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Examples for Geometric Interpretation (2)}
+
+%\plitemsep 0.1in
+\plitemsep 0.03in
+\bigskip
+\myvartwocols{0.5}{0.6}{0.37}
+{
+%\medskip
+\small
+\bce[4.]
+\item $\mA = 
+(\begin{smallmatrix}
+1 & -1 \cr
+-1 & 1
+\end{smallmatrix})$, $\det(\mA) = 0$ 
+
+\bci
+\item $\lambda_1 = 0, \lambda_2 = 2$
+\item Mapping that collapses a 2D onto 1D
+\item area collapses
+\eci
+
+\bigskip
+\item[5.] $\mA = 
+(\begin{smallmatrix}
+1 & \frac{1}{2} \cr
+\frac{1}{2} & 1
+\end{smallmatrix})$, $\det(\mA) = 3/4$
+\bci
+\item $\lambda_1 = 0.5, \lambda_2 = 1.5$
+\item area scales by 75\%, shearing and stretching
+\eci
+\ece
+}
+{
+\vspace{-0.5cm}
+\centering
+\mypic{0.99}{L4_ev_ex4.png}
+
+\vspace{0.5cm}
+
+\mypic{0.99}{L4_ev_ex5.png}
+}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Properties (3)}
+
+\plitemsep 0.05in
+
+\bci
+\item For $\mA \in \real^{n \times n},$ $n$ distinct eigenvalues $\implies$ eigenvectors are linearly independent, which form a basis of $\real^n.$
+ \bci
+ \item Converse is not true.
+ \item \bluef{Example of $n$ linearly independent eigenvectors for less than $n$ eigenvalues???} 
+ \eci
+
+\item \redf{Determinant}. For (possibly repeated) eigenvalues $\lambda_i$ of $\mA \in \real^{n \times n},$ 
+\mycolorbox{
+$
+\det(\mA) = \prod_{i=1}^n \lambda_i.
+$
+}
+\item \redf{Trace}. For (possibly repeated) eigenvalues $\lambda_i$ of $\mA \in \real^{n \times n},$ 
+\mycolorbox{
+$
+\tr(\mA) = \sum_{i=1}^n \lambda_i.
+$
+}
+\item \msg $\det(\mA)$ is the \bluef{area scaling} and $\tr(\mA)$ is the \bluef{circumference scaling}
+
+\eci
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{Properties (4): Spectral Theorem}
+
+% \plitemsep 0.1in
+
+% \bci
+% \item \thm If $\mA \in \real^{n \times n}$ is symmetric, 
+% \bci
+% \item the eigenvalues are all real 
+% \item the eigenvectors to different eigenvalues are perpendicular. 
+% \item there exists an orthogonal eigenbasis
+% \eci
+
+
+% \item \exam $\mA = 
+% \left(\begin{smallmatrix}
+% 3&2&2 \cr
+% 2&3&2 \cr
+% 2&2&3 
+% \end{smallmatrix}\right)$. $p_{\mA}(\lambda) = -(\lambda-1)^2(\lambda-7),$ thus $\lambda_1=1,\lambda_2=7$
+% \aleq{
+% E_1 = \spn{\smallcolvec{-1\\1\\0}, \smallcolvec{-1\\0\\1}}, \quad E_7 = \spn{\smallcolvec{1\\1\\1}}
+% }
+% \vspace{-0.3cm}
+% \bci
+% \item $\trans{(1 1 1)}$ is perpendicular to $\trans{(-1 1 0)}$ and $\trans{(-1 0 1)}$
+% \item $\smallcolvec{-1\\1\\0}$ and $\smallcolvec{-1/2\\ -1/2\\ 1}$ (for $\lambda=1$) and $\smallcolvec{1\\1\\1}$ (for $\lambda=7)$ are the orthogonal basis in $\real^3.$
+% \eci
+% \eci
+% \end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{Properties (4): Determinant and Trace}
+
+% \plitemsep 0.1in
+
+% \bci
+% \item \redf{Determinant}. For (possibly repeated) eigenvalues $\lambda_i$ of $\mA \in \real^{n \times n},$ 
+% $$
+% \det(\mA) = \prod_{i=1}^n \lambda_i.
+% $$
+
+% \item \redf{Trace}. For (possibly repeated) eigenvalues $\lambda_i$ of $\mA \in \real^{n \times n},$ 
+% $$
+% \tr(\mA) = \sum_{i=1}^n \lambda_i.
+% $$
+
+% \item \msg $\det(\mA)$ is the \bluef{area scaling} and $\tr(\mA)$ is the \bluef{circumference scaling}
+% \eci
+% \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L4(3)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Determinant and Trace}
+
+\item \grayf{Eigenvalues and Eigenvectors}
+
+\item \redf{Cholesky Decomposition}
+
+\item \grayf{Eigendecomposition and Diagonalization
+
+\item Singular Value Decomposition
+
+\item Matrix Approximation
+
+\item Matrix Phylogeny}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{LU Decomposition}
+
+\plitemsep 0.05in
+
+% \item Triangular matrix
+
+\mypic{0.35}{L4_UTM_LTM.png}
+
+\vspace{-0.9cm}
+\hfill{\scriptsize Source: \url{http://mathonline.wikidot.com/}}
+    \vspace{-0.3cm}
+\bci
+\item The Gaussian elimination is the processing of reaching an upper triangular matrix
+\item Gaussian elimination: multiplying the matrices corresponding to two elementary operations 
+((i) row multiplication by $a$ and (ii) adding two rows downward)
+\item The above elementary operations are the low triangular matrices (LTM), and their inverses and their product are all LTMs.
+
+\item $(\mE_k \mE_{k-1}\cdot \mE_1) \mA = \vec{U}$ $\implies$ $\mA = \underbrace{(\inv{\mE_1}\cdots \inv{\mE_{k-1}} \inv{\mE_{k}} )}_{\vec{L}}\vec{U}$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Cholesky Decomposition}
+
+\plitemsep 0.1in
+
+\bci
+
+\item A real number: decomposition of two identical numbers, e.g., $9=3\times 3$
+
+\item \thm For a symmetric, positive definite matrix $\mA,$ $\mA = \mat{L}\trans{\mat{L}},$ where
+\bci
+\item $\mat{L}$ is a lower-triangular matrix with positive diagonals
+\item Such a $\mat{L}$ is unique, called \bluef{Cholesky factor} of $\mA.$
+\eci
+
+\item Applications
+\bce[(a)]
+\item factorization of covariance matrix of a multivariate Gaussian variable
+\item linear transformation of random variables
+\item fast determinant computation: $\det(\mA) = \det(\mat{L})\det(\trans{\mat{L}}) = \det(\mat{L})^2,$ where $\det(\mat{L}) = \prod_{i} l_{ii}.$ Thus, $\det(\mA) = \prod_{i} l_{ii}^2.$
+\ece
+\eci
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L4(4)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Determinant and Trace}
+
+\item \grayf{Eigenvalues and Eigenvectors}
+
+\item \grayf{Cholesky Decomposition}
+
+\item \redf{Eigendecomposition and Diagonalization}
+
+\item \grayf{Singular Value Decomposition
+
+\item Matrix Approximation
+
+\item Matrix Phylogeny}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Diagonal Matrix and Diagonalization}
+
+\plitemsep 0.1in
+
+\bci
+
+\item \redf{Diagonal matrix.} zero on all off-diagonal elements, $\mat{D} = 
+\begin{nmat}
+d_1 & \cdots & 0 \cr
+\vdots &  & \vdots \cr
+0 & \cdots & d_n \cr
+\end{nmat}$
+\aleq{
+\mD^k = \begin{nmat}
+d_1^k & \cdots & 0 \cr
+\vdots &  & \vdots \cr
+0 & \cdots & d_n^k \cr
+\end{nmat}, \quad
+\inv{\mD} = 
+\begin{nmat}
+1/d_1 & \cdots & 0 \cr
+\vdots &  & \vdots \cr
+0 & \cdots & 1/d_n \cr
+\end{nmat},\quad
+\det(\mD) = d_1d_2\cdots d_n
+}
+
+%\item \question How can we transform $\mA$ into a diagonal form?
+
+\item \defi $\mA \in \realnn$ is \bluef{diagonalizable} if it is similar to a diagonal matrix $\mD,$ i.e., $\exists$ an \bluef{invertible} $\mP \in \realnn,$ such that $\mD = \inv{\mP} \mA \mP.$
+
+\item \defi $\mA \in \realnn$ is \bluef{orthogonally diagonalizable} if it is similar to a diagonal matrix $\mD,$ i.e., $\exists$ an \bluef{orthogonal}  $\mP \in \realnn,$ such that $\mD = \inv{\mP} \mA \mP = \trans{\mP} \mA \mP.$
+
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Power of Diagonalization}
+
+\plitemsep 0.2in
+
+\bci
+
+
+\item $\mA^k = \mP \mD^k \inv{\mP}$
+
+\item $\det(\mA) = \det(\mP)\det(\mD)\det(\inv{\mP}) = \det(\mD) = \prod_i d_{ii}$ 
+
+\item Many other things ...
+
+\item \question \bluef{Under what condition is $\mA$ diagonalizable (or orthogonally diagonalizable) and how can we find $\mP$ (thus $\mD$)?}
+
+\eci
+
+\end{frame}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Diagonalizablity, Algebraic/Geometric Multiplicity}
+
+\plitemsep 0.1in
+
+\bci
+
+\item \defi For a matrix $\mA \in realnn$ with an eigenvalue $\lambda_i,$ 
+\bci
+\item the \bluef{algebraic multiplicity} $\alpha_i$ of $\lambda_i$ is the number of times the root appears in the characteristic polynomial. 
+\item the \bluef{geometric multiplicity} $\zeta_i$ of $\lambda_i$ is the number of linearly independent eigenvectors associated with $\lambda_i$ (i.e., the dimension of the eigenspace spanned by the eigenvectors of $\lambda_i$) 
+
+\eci
+
+\item \exam The matrix $\mA = \begin{nmat}
+2 &1 \cr
+0 &2
+\end{nmat}$ has two repeated eigenvalues $\lambda_1 = \lambda_2 = 2,$ thus $\alpha_1 = 2.$ However, it has only one distinct unit eigenvector $\vec{x} = \colvec{1 \\0},$ thus $\zeta_1 =1.$
+
+\item \thm $\mA \in \realnn$ is \bluef{diagonalizable} $\Longleftrightarrow$ $\sum_{i} \alpha_i = \sum_{i} \zeta_i = n.$
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Orthogonally Diagonaliable and Symmetric Matrix}
+
+\plitemsep 0.1in
+
+\vspace{0.2cm}
+\mycolorbox{
+\thm $\mA \in \realnn$ is \bluef{orthogonally diagonalizable} $\Longleftrightarrow$ $\mA$ is symmetric.
+}
+\vspace{-0.3cm}
+\bci
+
+\item \question. How to find $\mP$ (thus $\mD$)?
+
+\item \redf{Spectral Theorem.} If $\mA \in \real^{n \times n}$ is symmetric, 
+\bce[(a)]
+\item the eigenvalues are all real 
+\item the eigenvectors to different eigenvalues are perpendicular. 
+\item there exists an orthogonal eigenbasis
+\ece
+
+\item For (c), from each set of eigenvectors, say $\{\vec{x}_1, \ldots, \vec{x}_k \}$ associated with a particular eigenvalue, say $\lambda_j$, we can construct another set of eigenvectors $\{\vec{x}'_1, \ldots, \vec{x}'_k \}$ that are orthonormal, using the Gram-Schmidt process.  
+
+\item Then, all eigenvectors can form an orthornormal basis. 
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.1in
+
+\bci
+
+\item \exam $\mA = 
+\left(\begin{smallmatrix}
+3&2&2 \cr
+2&3&2 \cr
+2&2&3 
+\end{smallmatrix}\right)$. $p_{\mA}(\lambda) = -(\lambda-1)^2(\lambda-7),$ thus $\lambda_1=1,\lambda_2=7$
+\aleq{
+E_1 = \spn{\smallcolvec{-1\\1\\0}, \smallcolvec{-1\\0\\1}}, \quad E_7 = \spn{\smallcolvec{1\\1\\1}}
+}
+\vspace{-0.3cm}
+\bci
+\item $\trans{(1 1 1)}$ is perpendicular to $\trans{(-1 1 0)}$ and $\trans{(-1 0 1)}$
+\item $\smallcolvec{-1\\1\\0}$ and $\smallcolvec{-1/2\\ -1/2\\ 1}$ (for $\lambda=1$) and $\smallcolvec{1\\1\\1}$ (for $\lambda=7)$ are the orthogonal basis in $\real^3.$
+
+\item After normalization, we can make the orthonormal basis. 
+\eci
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Eigendecomposition}
+
+\plitemsep 0.2in
+
+\bci
+\item \thm The following is equivalent.
+\bci
+\item[(a)] A square matrix $\mA \in \realnn$ can be factorized into $\mA = \mP \mD \inv{\mP},$ where $\mP \in \realnn$ and $\mD$ is the diagonal matrix whose diagonal entries are eigenvalues of $\mA.$
+
+\item[(b)] The eigenvectors of $\mA$ form a basis of $\realn$ (i.e., 
+The $n$ eigenvectors of $\mA$ are linearly independent) 
+
+\eci
+
+\item The above implies the columns of $\mP$ are the $n$ eigenvectors of $\mA$ (because $\mA \mP = \mP \mD$)
+
+\item $\mP$ is an orthogonal matrix, so $\trans{\mP} = \inv{\mP}$
+
+\item $\mA$ is symmetric, then (b) holds (Spectral Theorem).
+
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example of Orthogonal Diagonalization (1)}
+
+\plitemsep 0.05in
+
+\bci
+\item Eigendecomposition for $\mA = 
+\begin{nmat}
+2&1 \cr
+1&2 
+\end{nmat}$
+
+\item Eigenvalues: $\lambda_1 = 1, \lambda_2=3$ 
+
+\item (normalized) eigenvectors: $\vec{p}_1 = \frac{1}{\sqrt{2}} \colvec{1 \\ -1},$ $\vec{p}_2 = \frac{1}{\sqrt{2}} \colvec{1 \\ 1}.$ 
+
+\item $\vec{p}_1$ and $\vec{p}_2$ linearly independent, so $A$ is diagonalizable.  
+
+\item $\mP = \rowvec{\vec{p}_1 & \vec{p}_2} = \frac{1}{\sqrt{2}} \begin{nmat}
+1 & 1\cr
+-1 & 1
+\end{nmat} $
+
+\item $\mD = \inv{\mP} \mA \mP = \begin{nmat}
+1 & 0\cr
+0 & 3
+\end{nmat}$. Finally, we get $\mA = \mP \mD \inv{\mP}$
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example of Orthogonal Diagonalization (2)}
+
+
+\mytwocols{0.7}
+{
+\plitemsep 0.05in
+\small
+\bci
+\item $\mA = 
+\begin{nmat}
+1&2&2 \cr
+2&1&2 \cr
+2&2&1 
+\end{nmat}$
+
+\item Eigenvalues: $\lambda_1 = -1, \lambda_2=5$ ($\alpha_1 =2, \alpha_2=1$)
+
+\item $E_{-1} = \spn{\colvec{-1\\1\\0}, \colvec{-1\\0\\1}}$
+$\xrightarrow{\text{Gram-Schmidt}}$ $\spn{\frac{1}{\sqrt{2}}\colvec{-1\\ 1 \\0}, \frac{1}{\sqrt{6}}\colvec{-1\\ 1\\ 2}}$
+
+\eci
+}
+{
+\plitemsep 0.05in
+\bci
+
+\item $E_{5} = \spn{\frac{1}{\sqrt{3}}\colvec{1 \\1\\1 }}$
+
+\item $\mP = \begin{nmat}
+-1/\sqrt{2} & -1/\sqrt{6}& 1/\sqrt{3} \cr
+1/\sqrt{2} & -1/\sqrt{6}& 1/\sqrt{3} \cr
+0 & 2/\sqrt{6}& 1/\sqrt{3} 
+\end{nmat}$
+
+\item $\mD = \trans{\mP} \mA \mP = \begin{nmat}
+-1 & 0 & 0\cr
+0 & -1 & 0\cr
+0 & 0 & 5
+\end{nmat}$
+\eci
+
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Eigendecomposition: Geometric Interpretation}
+
+\mypic{0.5}{L4_eigendecomposition.png}
+
+\vspace{-0.4cm}
+\question Can we generalize this beautiful result to a general matrix \bluef{$\mA \in \realmn$}?
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L4(5)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Determinant and Trace}
+
+\item \grayf{Eigenvalues and Eigenvectors}
+
+\item \grayf{Cholesky Decomposition}
+
+\item \grayf{Eigendecomposition and Diagonalization}
+
+\item \redf{Singular Value Decomposition
+
+\item Matrix Approximation}
+
+\item \grayf{Matrix Phylogeny}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Storyline}
+
+\plitemsep 0.1in
+
+\bci 
+\item Eigendecomposition (also called EVD: EigenValue Decomposition): (Orthogoanl) Diagonalization for symmetric matrices $\mA \in \realnn.$
+
+
+\item Extensions: Singular Value Decomposition (SVD)
+\bce
+\item First extension: diagonalization for non-symmetric, but still square matrices $\mA \in \realnn$
+\item Second extension: diagonalization for non-symmeric, and non-square matrices $\mA \in \realmn$
+\ece
+
+\medskip
+\item \redf{Background.} For $\mA \in \real^{m \times n},$ a matrix $\mat{S} \eqdef \trans{\mA} \mA \in \real^{n \times n}$ is always symmetric, positive semidefinite. 
+\bci
+\item Symmetric, because $\trans{\mat{S}} = \trans{(\trans{\mA} \mA)} = \trans{\mA} \mA = \mat{S}.$
+\item Positive semidefinite, because $\trans{\vec{x}} \mat{S} \vec{x} = \trans{\vec{x}} \trans{\mA}\mA \vec{x} = \trans{(\mA \vec{x})} (\mA \vec{x}) \ge 0.$
+
+\item If $\rk{\mA} = n$, then symmetric and positive definite. 
+\eci
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Singular Value Decomposition}
+
+\plitemsep 0.1in
+
+\bci 
+\item \thm $\mA \in \realmn$ with rank $r \in [0,\min(m,n)].$ The SVD of $\mA$ is a decomposition of the form 
+\mysmalltwocols{0.1}
+{
+$$
+\mA = \mU \Sigma \trans{\mV},
+$$
+}
+{
+\vspace{-0.3cm}
+\mypic{0.7}{L4_SVD_matrix.png}
+}
+with an orthogonal matrix $\mU=\rowvec{\vec{u}_1 &\cdots &\vec{u}_m } \in \realmm$ and an orthogonal matrix $\mV=\rowvec{\vec{v}_1 &\cdots &\vec{v}_n} \in \realnn.$ Moreoever, $\Sigma$ s an $m \times n$ matrix with $\Sigma_{ii} = \sigma_i \ge 0$ and $\Sigma_{ij} =0, \ i\neq j,$ which is uniquely determined for $\mA.$
+
+\medskip
+\item Note
+\bci
+\item The diagonal entries $\sigma_i, \ i=1,\ldots, r$ are called  \bluef{singular values.}  
+\item $\vec{u}_i$ and $\vec{v}_j$ are called \bluef{left} and \bluef{right singular vectors}, respectively. 
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{SVD: How It Works (for $\mA \in \realnn$)}
+
+\mytwocols{0.75}
+{
+\plitemsep 0.03in
+\small
+\bci 
+\item $\mA \in \realnn$ with rank $r \le n.$ Then, $\trans{\mA}\mA$ is symmetric. 
+
+\item Orthogonal diagonalization of $\trans{\mA}\mA$: 
+$$\trans{\mA}\mA = \mV \mD \trans{\mV}.$$
+\item $\mD = \left(\begin{smallmatrix}
+\lambda_1 & & \cr
+ &\ddots & \cr
+&& \lambda_n
+\end{smallmatrix}\right)$ and an orthogonal matrix $\mV = \rowvec{\vec{v}_1 \cdots \vec{v}_n},$
+where $\lambda_1 \ge \cdots \ge \lambda_r \ge \lambda_{r+1} = \cdots \lambda_n =0$ are the eigenvalues of $\trans{\mA}\mA$ and $\{\vec{v}_i\}$ are orthonormal.
+
+\item \bluef{All $\lambda_i$ are positive}
+\vspace{-0.2cm}
+\aleq{
+\forall \vec{x} \in \realn, \norm{\mA \vec{x}}^2 = \trans{\mA \vec{x}} \mA \vec{x} = \trans{\vec{x}} 
+\trans{\mA} \mA \vec{x} = \lambda_i \norm{\vec{x}}^2
+}
+\eci
+}
+{
+\plitemsep 0.03in
+\small
+\bci
+\item \bluef{\rk{\mA} =\rk{\trans{\mA}\mA} = \rk{D} =r}
+
+\item Choose $\mU' = \rowvec{\vec{u}_1 & \cdots \vec{u}_r},$ where 
+$$\vec{u}_i= \frac{\mA \vec{v}_i}{\sqrt{\lambda_i}}, \ 1\le i \le r.$$
+
+\item We can construct $\{\vec{u}_i\}, \ i = r+1, \cdots, n,$ so that $\mU = \rowvec{\vec{u}_1 & \cdots \vec{u}_n}$ is an orthonormal basis of $\realn.$
+
+\item Define $\Sigma = \left(\begin{smallmatrix}
+\sqrt{\lambda_1} & & \cr
+ &\ddots & \cr
+&& \sqrt{\lambda_n}
+\end{smallmatrix}\right)$
+
+\item Then, we can check that $\mU \Sigma = \mA \mV.$
+
+\item Similar arguments for a general $\mA \realmn$ (see pp. 104) 
+\eci
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\mytwocols{0.72}
+{
+\plitemsep 0.1in
+\small
+\bci 
+\item $\mA = \begin{nmat}
+1 & 0 & 1\cr
+-2 & 1 & 0
+\end{nmat}$
+
+\item $\trans{\mA}\mA = \begin{nmat}
+5 & -2 & 1\cr
+-2 & 1 & 0\cr
+1 & 0 & 1
+\end{nmat}=\mV \mD \trans{\mV},$
+
+\hspace{-0.5cm}$\mD = \begin{nmat}
+6 & 0 & 0\cr
+0 & 1 & 0\cr
+0 & 0 & 0
+\end{nmat},
+\mV = \begin{nmat}
+\frac{5}{\sqrt{30}} & \frac{-2}{\sqrt{30}} &\frac{1}{\sqrt{30}}\cr
+0 & \frac{1}{\sqrt{5}} &\frac{2}{\sqrt{5}}\cr
+\frac{-1}{\sqrt{6}} & \frac{-2}{\sqrt{6}} & \frac{1}{\sqrt{6}}
+\end{nmat}
+$
+\item $\rk{\mA}=2$ because we have two singular values $\sigma_1 = \sqrt{6}$ and $\sigma_2=1$
+
+\item $\Sigma = \begin{nmat}
+\sqrt{6} & 0 & 0\cr
+0 & 1 & 0
+\end{nmat}$
+\eci
+}
+{
+\plitemsep 0.1in
+\small
+\bci
+\item $\vec{u}_1 = \mA \vec{v}_1/\sigma_1 = \colvec{\frac{1}{\sqrt{5}} \\ \frac{-2}{\sqrt{5}}}$
+
+\item $\vec{u}_2 = \mA \vec{v}_2/\sigma_2 = \colvec{\frac{2}{\sqrt{5}} \\ \frac{1}{\sqrt{5}}}$
+
+\item $\mU = \rowvec{\vec{u}_1 & \vec{u}_2} = \frac{1}{\sqrt{5}}
+\begin{nmat}
+1&2 \cr
+-2 & 1
+\end{nmat}$
+
+\item Then, we can see that $\mA = \mU \Sigma \trans{V}.$
+\eci
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{EVD ($\mA = \mP \mD \inv{\mP}$) vs. SVD ($\mA = \mU \msig \trans{\mV}$)}
+
+\plitemsep 0.07in
+
+\bci 
+\item SVD: \bluef{always} exists, EVD: \bluef{square} matrix and exists if we can find \bluef{a basis of eigenvectors} (such as symmetric matrices)
+
+\item $\mP$ in EVD is \bluef{not necessarily orthogonal} (only true for symmetric $\mA$), but $\mU$ and $\mV$ are \bluef{orthogonal} (so representing rotations)
+
+\item Both EVD and SVD: (i) basis change in the domain, (ii) independent scaling of each new basis vector and mapping from domain to codomain, (iii) basis change in the codomain. The difference: for SVD, \bluef{different vector spaces} of domain and codomain. 
+
+\item SVD and EVD are closely related through their projections
+\bci
+\item The left-singular (resp. right-singular) vectors of $\mA$ are eigenvectors of $\mA \trans{\mA}$ (resp. $\trans{\mA} \mA$)
+\item The singular values of $\mA$ are the square roots of eigenvalues of $\mA \trans{\mA}$ and $\trans{\mA} \mA$
+\item When $\mA$ is symmetric, EVD = SVD (from spectral theorem)
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Different Forms of SVD}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item When $\rk{\mA} = r,$ we can construct SVD as the following with only non-zero diagonal entries in $\msig$:
+$$
+\mA = \overbrace{\mU}^{m \times r} \overbrace{\msig }^{r \times r} \overbrace{\trans{\mV}}^{r \times n}
+$$
+
+\item We can even truncate the decomposed matrices, which can be an approximation of $\mA$: for $k < r$
+$$
+\mA \approx \overbrace{\mU}^{m \times k} \overbrace{\msig }^{k \times k} \overbrace{\trans{\mV}}^{k \times n}
+$$
+
+\medskip
+We will cover this in the next slides
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L4(6)}
+\begin{frame}{Matrix Approximation via SVD}
+
+\plitemsep 0.1in
+\mypic{0.5}{L4_matrix_approx.png}
+\vspace{-0.6cm}
+\bci 
+\item $\mA = \sum_{i=1}^r \sigma_i \overbrace{\vec{u}_i \trans{\vec{v}_i}}^{\mA_i}$, where $\mA_i$ is the outer product\footnote{If $\vu$ and $\vv$ are both nonzero, then the outer product matrix $\vu \trans{vv}$ always has matrix rank 1. Indeed, the columns of the outer product are all proportional to the first column.} of $\vu_i$ and $\vv_i$
+
+\item Rank $k$-approximation: $\hat{\mA}(k) = \sum_{i=1}^k \sigma_i \mA_i,$ $k < r$ 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L4(6)}
+\begin{frame}{How Close $\hat{\mA}(k)$ is to $\mA$?}
+
+\plitemsep 0.07in
+\bci 
+\item \defi \bluef{Spectral Norm of a Matrix.} For $\mA \in \realmn,$ 
+$\norm{\mA}_2 \eqdef \max_{\vx} \dfrac{\norm{\mA \vx}_2}{\norm{\vx}_2}$
+\bci
+\item As a concept of length of $\mA$, it measures how long any vector $\vx$ can at most become, when multiplied by $\mA$
+\eci
+\item \thm \bluef{Eckart-Young.} For $\mA \in \realmn$ of rank $r$ and $\mB \in \realmn$ of rank $k,$ for any $k \le r$, we have:
+$$
+\hat{\mA}(k) = \arg \min_{\rk{\mB} = k} \norm{\mA - \mB}_2, \quad \text{and} \quad \norm{\mA - \hat{\mA}(k)}_2 = \sigma_{k+1}
+$$
+\bci
+\item Quantifies how much error is introduced by the SVD-based approximation
+\item $\hat{\mA}(k)$ is optimal in the sense that such SVD-based approximation is the best 
+one among all rank-$k$ approximations. 
+
+\item In other words, it is a projection of the full-rank matrix $\mA$ onto a lower-dimensional space of rank-at-most-$k$ matrices.
+\eci
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L4(7)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Determinant and Trace}
+
+\item \grayf{Eigenvalues and Eigenvectors}
+
+\item \grayf{Cholesky Decomposition}
+
+\item \grayf{Eigendecomposition and Diagonalization}
+
+\item \grayf{Singular Value Decomposition}
+
+\item \grayf{Matrix Approximation}
+
+\item \redf{Matrix Phylogeny}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Phylogenetic Tree of Matrices}
+
+\mypic{0.5}{L4_matrix_tree.png}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\vspace{2cm}
+\LARGE Questions?
+
+
+\end{frame}
+
+\begin{frame}{Review Questions}
+% \tableofcontents
+%\plitemsep 0.1in
+\bce[1)]
+\item 
+
+\ece
+\end{frame}
+
+
+\end{document}

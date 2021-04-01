@@ -1,0 +1,445 @@
+%%%%%%%%%%%% real, integer notation
+\newcommand{\real}{{\mathbb R}}
+\newcommand{\realn}{{\mathbb R}^{n}}
+\newcommand{\realm}{{\mathbb R}^{m}}
+\newcommand{\realD}{{\mathbb R}^{D}}
+\newcommand{\realM}{{\mathbb R}^{M}}
+\newcommand{\realN}{{\mathbb R}^{N}}
+\newcommand{\realnn}{{\mathbb R}^{n \times n}}
+\newcommand{\realmm}{{\mathbb R}^{m \times m}}
+\newcommand{\realmn}{{\mathbb R}^{m \times n}}
+\newcommand{\realnm}{{\mathbb R}^{n \times m}}
+\newcommand{\realDM}{{\mathbb R}^{D \times M}}
+\newcommand{\realMD}{{\mathbb R}^{M \times D}}
+\newcommand{\complex}{{\mathbb C}}
+\newcommand{\integer}{{\mathbb Z}}
+\newcommand{\natu}{{\mathbb N}}
+
+
+%%% set, vector, matrix
+\newcommand{\set}[1]{\ensuremath{\mathcal #1}}
+\newcommand{\sets}[1]{\ensuremath{\{#1 \}}}
+\renewcommand{\vec}[1]{\bm{#1}}
+\newcommand{\mat}[1]{\bm{#1}}
+
+%%%% vector
+\def\vx{\vec{x}}
+\def\vy{\vec{y}}
+\def\vz{\vec{z}}
+\def\vf{\vec{f}}
+\def\ve{\vec{e}}
+\def\vr{\vec{r}}
+\def\vb{\vec{b}}
+\def\vc{\vec{c}}
+\def\vd{\vec{d}}
+\def\vm{\vec{m}}
+\def\vu{\vec{u}}
+\def\vv{\vec{v}}
+\def\vw{\vec{w}}
+\def\vX{\vec{X}}
+\def\vY{\vec{Y}}
+\def\vZ{\vec{Z}}
+\def\vth{\vec{\theta}}
+\def\vmu{\vec{\mu}}
+\def\vnu{\vec{\nu}}
+\def\vlam{\vec{\lambda}}
+\def\vep{\vec{\epsilon}}
+\def\vpi{\vec{\pi}}
+\def\vphi{\vec{\phi}}
+\def\vxi{\vec{\xi}}
+\def\valpha{\vec{\alpha}}
+\def\vgamma{\vec{\gamma}}
+
+%%%% caligraphic fonts
+\def\cL{\ensuremath{{\cal L}}}
+\def\cN{\ensuremath{{\cal N}}}
+\def\cD{\ensuremath{{\cal D}}}
+\def\cC{\ensuremath{{\cal C}}}
+\def\cX{\ensuremath{{\cal X}}}
+\def\cY{\ensuremath{{\cal Y}}}
+
+%%% big parenthesis
+\def\Bl{\Bigl}
+\def\Br{\Bigr}
+\def\lf{\left}
+\def\ri{\right}
+
+
+%%% floor notations
+\newcommand{\lfl}{{\lfloor}}
+\newcommand{\rfl}{{\rfloor}}
+\newcommand{\floor}[1]{{\lfloor #1 \rfloor}}
+
+%%% gradient
+\newcommand{\grad}[1]{\nabla #1}
+\newcommand{\hess}[1]{\text{H} #1}
+
+%%% definition
+%\newcommand{\eqdef}{\ensuremath{\triangleq}}
+\newcommand{\eqdef}{\ensuremath{:=}}
+%%% imply
+\newcommand{\imp}{\Longrightarrow}
+
+
+
+\newcommand{\separator}{
+%  \begin{center}
+    \par\noindent\rule{\columnwidth}{0.3mm}
+%  \end{center}
+}
+
+\newcommand{\mynote}[1]{{\it \color{red} [#1]}}
+
+
+
+
+
+
+
+%%% equation alignment
+\newcommand{\aleq}[1]{\begin{align*}#1\end{align*}}
+
+%%%%%%%%%%%%%%%% colored emphasized font, blanked words
+
+\newcommand{\empr}[1]{{\color{red}\emph{#1}}}
+\newcommand{\empb}[1]{{\color{blue}\emph{#1}}}
+\newcommand{\redf}[1]{{\color{red} #1}}
+\newcommand{\bluef}[1]{{\color{blue} #1}}
+\newcommand{\grayf}[1]{{\color{gray} #1}}
+\newcommand{\magenf}[1]{{\color{magenta} #1}}
+\newcommand{\greenf}[1]{{\color{green} #1}}
+\newcommand{\cyanf}[1]{{\color{cyan} #1}}
+\newcommand{\orangef}[1]{{\color{orange} #1}}
+
+\newcommand{\blk}[1]{\underline{\mbox{\hspace{#1}}}}
+
+
+\newcommand{\redblk}[1]{\framebox{\color{red} #1}}
+\newcommand{\redblank}[2]{\framebox{\onslide<#1->{\color{red} #2}}}
+\newcommand{\blueblk}[1]{\framebox{\color{blue} #1}}
+\newcommand{\blueblank}[2]{\framebox{\onslide<#1->{\color{blue} #2}}}
+
+
+
+\makeatletter
+\newcommand{\mybox}{%
+    \collectbox{%
+        \setlength{\fboxsep}{1pt}%
+        \fbox{\BOXCONTENT}%
+    }%
+}
+\makeatother
+
+\makeatletter
+\newcommand{\lecturemark}{%
+    \collectbox{%
+        \setlength{\fboxsep}{1pt}%
+        \fcolorbox{red}{yellow}{\BOXCONTENT}%
+    }%
+}
+\makeatother
+
+\newcommand{\mycolorbox}[1]{
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black]
+#1
+\end{tcolorbox}
+}
+%%%% figure inclusion
+\newcommand{\mypic}[2]{
+\begin{center}
+\includegraphics[width=#1\textwidth]{#2}
+\end{center}
+}
+
+\newcommand{\myinlinepic}[2]{
+\makebox[0cm][r]{\raisebox{-4ex}{\includegraphics[height=#1]{#2}}}
+}
+
+
+
+
+%%%% itemized and enumerated list
+\newcommand{\bci}{\begin{compactitem}}
+\newcommand{\eci}{\end{compactitem}}
+\newcommand{\bce}{\begin{compactenum}}
+\newcommand{\ece}{\end{compactenum}}
+
+
+%%%% making 0.5/0.5 two columns
+%%%% how to use: first number: length of separation bar
+% \mytwocols{0.6}
+% {
+% contents in the left column
+% }
+% {
+% contents in the right column
+% }
+%%%%
+\newcommand{\mytwocols}[3]{
+\begin{columns}[T] \column{.499\textwidth} #2 \column{.001\textwidth} \rule{.3mm}{{#1}\textheight} \column{.499\textwidth} #3 \end{columns}}
+
+\newcommand{\mythreecols}[4]{
+\begin{columns}[T] \column{.31\textwidth} #2 \column{.001\textwidth} \rule{.3mm}{{#1}\textheight} \column{.31\textwidth} #3 \column{.001\textwidth} \rule{.3mm}{{#1}\textheight} \column{.31\textwidth} #4  \end{columns}}
+
+\newcommand{\mysmalltwocols}[3]{
+\begin{columns}[T] \column{.4\textwidth} #2 \column{.001\textwidth} \rule{.3mm}{{#1}\textheight} \column{.4\textwidth} #3 \end{columns}}
+
+%%%% making two columns with customized ratios
+%%%% how to use: 
+%first parameter: length of separation bar
+%second parameter: ratio of left column
+%third parameter: ratio of right column
+% \mytwocols{0.6}{0.7}{0.29}
+% {
+% contents in the left column
+% }
+% {
+% contents in the right column
+% }
+%%%%
+\newcommand{\myvartwocols}[5]{
+\begin{columns}[T] \column{#2\textwidth} {#4} \column{.01\textwidth} \rule{.3mm}{{#1}\textheight} \column{#3\textwidth} {#5} \end{columns}}
+
+%%% making my block in beamer
+%%% first parameter: title of block
+%%% second parameter: contents of block
+\newcommand{\myblock}[2]{
+\begin{block}{#1} {#2}  \end{block}}
+
+%%% independence notation
+\newcommand{\indep}{\perp \!\!\! \perp}
+
+%%%% probability with different shapes (parenthesis or bracket) and different sizes
+%%% `i' enables us to insert the subscript to the probability 
+\newcommand{\bprob}[1]{\mathbb{P}\Bl[ #1 \Br]}
+\newcommand{\prob}[1]{\mathbb{P}[ #1 ]}
+\newcommand{\cbprob}[1]{\mathbb{P}\Bl( #1 \Br)}
+\newcommand{\cprob}[1]{\mathbb{P}( #1 )}
+\newcommand{\probi}[2]{\mathbb{P}_{#1}[ #2 ]}
+\newcommand{\bprobi}[2]{\mathbb{P}_{#1}\Bl[ #2 \Br]}
+\newcommand{\cprobi}[2]{\mathbb{P}_{#1}( #2 )}
+\newcommand{\cbprobi}[2]{\mathbb{P}_{#1}\Bl( #2 \Br)}
+
+%%%% expectation with different shapes (parenthesis or bracket) and different sizes
+%%% `i' enables us to insert the subscript to the expectation
+\newcommand{\expect}[1]{\mathbb{E}[ #1 ]}
+\newcommand{\cexpect}[1]{\mathbb{E}( #1 )}
+\newcommand{\bexpect}[1]{\mathbb{E}\Bl[ #1 \Br]}
+\newcommand{\cbexpect}[1]{\mathbb{E}\Bl( #1 \Br)}
+\newcommand{\bbexpect}[1]{\mathbb{E}\lf[ #1 \ri]}
+\newcommand{\expecti}[2]{\mathbb{E}_{#1}[ #2 ]}
+\newcommand{\bexpecti}[2]{\mathbb{E}_{#1}\Bl[ #2 \Br]}
+\newcommand{\bbexpecti}[2]{\mathbb{E}_{#1}\lf[ #2 \ri]}
+
+%%%% variance
+\newcommand{\var}[1]{\text{var}[ #1 ]}
+\newcommand{\bvar}[1]{\text{var}\Bl[ #1 \Br]}
+\newcommand{\cvar}[1]{\text{var}( #1 )}
+\newcommand{\cbvar}[1]{\text{var}\Bl( #1 \Br)}
+
+%%%% covariance
+\newcommand{\cov}[1]{\text{cov}( #1 )}
+\newcommand{\bcov}[1]{\text{cov}\Bl( #1 \Br)}
+
+%%% Popular pmf, pdf notation to avoid long typing
+\newcommand{\px}{\ensuremath{p_X(x)}}
+\newcommand{\py}{\ensuremath{p_Y(y)}}
+\newcommand{\pz}{\ensuremath{p_Z(z)}}
+\newcommand{\pxA}{\ensuremath{p_{X|A}(x)}}
+\newcommand{\pyA}{\ensuremath{p_{Y|A}(y)}}
+\newcommand{\pzA}{\ensuremath{p_{Z|A}(z)}}
+\newcommand{\pxy}{\ensuremath{p_{X,Y}(x,y)}}
+\newcommand{\pxcy}{\ensuremath{p_{X|Y}(x|y)}}
+\newcommand{\pycx}{\ensuremath{p_{Y|X}(y|x)}}
+
+\newcommand{\fx}{\ensuremath{f_X(x)}}
+\newcommand{\Fx}{\ensuremath{F_X(x)}}
+\newcommand{\fy}{\ensuremath{f_Y(y)}}
+\newcommand{\Fy}{\ensuremath{F_Y(y)}}
+\newcommand{\fz}{\ensuremath{f_Z(z)}}
+\newcommand{\Fz}{\ensuremath{F_Z(z)}}
+\newcommand{\fxA}{\ensuremath{f_{X|A}(x)}}
+\newcommand{\fyA}{\ensuremath{f_{Y|A}(y)}}
+\newcommand{\fzA}{\ensuremath{f_{Z|A}(z)}}
+\newcommand{\fxy}{\ensuremath{f_{X,Y}(x,y)}}
+\newcommand{\Fxy}{\ensuremath{F_{X,Y}(x,y)}}
+\newcommand{\fxcy}{\ensuremath{f_{X|Y}(x|y)}}
+\newcommand{\fycx}{\ensuremath{f_{Y|X}(y|x)}}
+
+\newcommand{\fth}{\ensuremath{f_\Theta(\theta)}}
+\newcommand{\fxcth}{\ensuremath{f_{X|\Theta}(x|\theta)}}
+\newcommand{\fthcx}{\ensuremath{f_{\Theta|X}(\theta|x)}}
+
+\newcommand{\pkcth}{\ensuremath{p_{X|\Theta}(k|\theta)}}
+\newcommand{\fthck}{\ensuremath{f_{\Theta|X}(\theta|k)}}
+
+
+%%%% indicator
+\newcommand{\indi}[1]{\mathbf{1}_{ #1 }}
+
+%%%% exponential rv.
+\newcommand{\elambdax}{\ensuremath{e^{-\lambda x}}}
+
+%%%% normal  rv.
+\newcommand{\stdnormal}{\ensuremath{\frac{1}{\sqrt{2\pi}} e^{-x^2/2}}}
+\newcommand{\gennormal}{\ensuremath{\frac{1}{\sigma\sqrt{2\pi}} e^{-(x-\mu)^2/2}}}
+
+%%%%%% estimator, estimate
+\newcommand{\hth}{\ensuremath{\hat{\theta}}}
+\newcommand{\hTH}{\ensuremath{\hat{\Theta}}}
+\newcommand{\MAP}{\ensuremath{\text{MAP}}}
+\newcommand{\LMS}{\ensuremath{\text{LMS}}}
+\newcommand{\LLMS}{\ensuremath{\text{L}}}
+\newcommand{\ML}{\ensuremath{\text{ML}}}
+
+%%%% colored text
+\newcommand{\red}[1]{\color{red}#1} 
+\newcommand{\cyan}[1]{\color{cyan}#1} 
+\newcommand{\magenta}[1]{\color{magenta}#1} 
+\newcommand{\blue}[1]{\color{blue}#1} 
+\newcommand{\green}[1]{\color{green}#1} 
+\newcommand{\white}[1]{\color{white}#1} 
+\newcommand{\gray}[1]{\color{gray}#1} 
+
+%%% definition
+\newcommand{\defi}{{\color{red} Definition.} } 
+\newcommand{\exam}{{\color{red} Example.} } 
+\newcommand{\question}{{\color{red} Question.} } 
+\newcommand{\thm}{{\color{red} Theorem.} } 
+\newcommand{\background}{{\color{red} Background.} } 
+\newcommand{\msg}{{\color{red} Message.} } 
+
+
+\def\ml{\text{ML}}
+\def\map{\text{MAP}}
+
+%%%%%%%%%%%%%%%%%%%%%%% old macros that you can ignore %%%%%%%%%%%%%%%%%%%%%%%%
+
+% \def\un{\underline}
+% \def\ov{\overline}
+
+
+% \newcommand{\beq}{\begin{eqnarray*}}
+% \newcommand{\eeq}{\end{eqnarray*}}
+% \newcommand{\beqn}{\begin{eqnarray}}
+% \newcommand{\eeqn}{\end{eqnarray}}
+% \newcommand{\bemn}{\begin{multiline}}
+% \newcommand{\eemn}{\end{multiline}}
+% \newcommand{\beal}{\begin{align}}
+% \newcommand{\eeal}{\end{align}}
+% \newcommand{\beas}{\begin{align*}}
+% \newcommand{\eeas}{\end{align*}}
+
+
+
+% \newcommand{\bd}{\begin{displaymath}}
+% \newcommand{\ed}{\end{displaymath}}
+% \newcommand{\bee}{\begin{equation}}
+% \newcommand{\eee}{\end{equation}}
+
+
+% \newcommand{\vs}{\vspace{0.2in}}
+% \newcommand{\hs}{\hspace{0.5in}}
+% \newcommand{\el}{\end{flushleft}}
+% \newcommand{\bl}{\begin{flushleft}}
+% \newcommand{\bc}{\begin{center}}
+% \newcommand{\ec}{\end{center}}
+% \newcommand{\remove}[1]{}
+
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{corollary}{Corollary}
+% \newtheorem{prop}{Proposition}
+% \newtheorem{lemma}{Lemma}
+% \newtheorem{defi}{Definition}
+% \newtheorem{assum}{Assumption}
+% \newtheorem{example}{Example}
+% \newtheorem{property}{Property}
+% \newtheorem{remark}{Remark}
+
+% \newcommand{\separator}{
+%   \begin{center}
+%     \rule{\columnwidth}{0.3mm}
+%   \end{center}
+% }
+
+% \newenvironment{separation}
+% { \vspace{-0.3cm}
+%   \separator
+%   \vspace{-0.25cm}
+% }
+% {
+%   \vspace{-0.5cm}
+%   \separator
+%   \vspace{-0.15cm}
+% }
+
+% \def\A{\mathcal A}
+% \def\oA{\overline{\mathcal A}}
+% \def\S{\mathcal S}
+% \def\D{\mathcal D}
+% \def\eff{{\rm Eff}}
+% \def\bD{\bm{D}}
+% \def\cU{{\cal U}}
+% \def\bbs{{\mathbb{s}}}
+% \def\bbS{{\mathbb{S} }}
+% \def\cM{{\cal M}}
+% \def\bV{{\bm{V}}}
+% \def\cH{{\cal H}}
+% \def\ch{{\cal h}}
+% \def\cR{{\cal R}}
+% \def\cV{{\cal V}}
+% \def\cA{{\cal A}}
+% \def\cX{{\cal X}}
+% \def\cN{{\cal N}}
+% \def\cJ{{\cal J}}
+% \def\cK{{\cal K}}
+% \def\cL{{\cal L}}
+% \def\cI{{\cal I}}
+% \def\cY{{\cal Y}}
+% \def\cZ{{\cal Z}}
+% \def\cC{{\cal C}}
+% \def\cR{{\cal R}}
+% \def\id{{\rm Id}}
+% \def\st{{\rm st}}
+% \def\cF{{\cal F}}
+% \def\bz{{\bm z}}
+% \def\cG{{\cal G}}
+% \def\N{\mathbb{N}}
+% \def\bbh{\mathbb{h}}
+% \def\bbH{\mathbb{H}}
+% \def\bbi{\mathbb{i}}
+% \def\bbI{\mathbb{I}}
+% \def\R{\mathbb{R}}
+% \def\bbR{\mathbb{R}}
+% \def\bbr{\mathbb{r}}
+% \def\cB{{\cal B}}
+% \def\cP{{\cal P}}
+% \def\cS{{\cal S}}
+% \def\bW{{\bm W}}
+% \def\bc{{\bm c}}
+
+% %\def\and{\quad\mbox{and}\quad}
+% \def\ind{{\bf 1}}
+
+
+% \def\bmg{{\bm{\gamma}}}
+% \def\bmr{{\bm{\rho}}}
+% \def\bmq{{\bm{q}}}
+% \def\bmt{{\bm{\tau}}}
+% \def\bmn{{\bm{n}}}
+% \def\bmcapn{{\bm{N}}}
+% \def\bmrho{{\bm{\rho}}}
+
+% \def\igam{\underline{\gamma}(\lambda)}
+% \def\sgam{\overline{\gamma}(\lambda)}
+% \def\ovt{\overline{\theta}}
+% \def\ovT{\overline{\Theta}}
+% \def\PP{{\mathrm P}}
+% \def\EE{{\mathrm E}}
+% \def\iskip{{\vskip -0.4cm}}
+% \def\siskip{{\vskip -0.2cm}}
+
+% \def\bp{\noindent{\it Proof.}\ }
+% \def\ep{\hfill $\Box$}
+
+

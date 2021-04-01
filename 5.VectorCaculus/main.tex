@@ -1,0 +1,888 @@
+%\pdfminorversion=4
+\documentclass[fleqn,aspectratio=169]{beamer}
+
+\input{../myhead}
+
+
+
+\title[]{Lecture 5: Vector Calculus}
+\author{Yi, Yung (이융)}
+\institute{Mathematics for Machine Learning\\ KAIST EE}
+\date{MONTH DAY, 2021}
+
+\input{../mymath}
+\input{../macro}
+
+\begin{document}
+
+\input{../mydefault}
+
+% START START START START START START START START START START START START START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+\item Differentiation of Univariate Functions
+
+\item Partial Differentiation and Gradients 
+
+\item Gradients of Vector-Valued Functions 
+
+\item Gradients of Matrices 
+
+\item Useful Identities for Computing Gradients 
+
+\item Backpropagation and Automatic Differentiation 
+
+\item Higher-Order Derivatives 
+
+\item Linearization and Multivariate Taylor Series
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Summary}
+
+\plitemsep 0.1in
+
+\bci 
+\item Machine learning is about solving an optimization problem whose variables are the parameters of a given model. 
+
+\item Solving optimization problems require gradient information.  
+
+\item Central to this chapter is the concept of the function, which we often write
+
+\aleq{
+f : \real^{D} \mapsto \real\cr
+\vec{x} \mapsto f(\vec{x})
+}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+\item \redf{Differentiation of Univariate Functions}
+
+\item \grayf{Partial Differentiation and Gradients 
+
+\item Gradients of Vector-Valued Functions 
+
+\item Gradients of Matrices 
+
+\item Useful Identities for Computing Gradients 
+
+\item Backpropagation and Automatic Differentiation 
+
+\item Higher-Order Derivatives 
+
+\item Linearization and Multivariate Taylor Series}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Difference Quotient and Derivative}
+
+\plitemsep 0.3in
+
+\bci 
+\item \redf{Difference Quotient.} The average slope of $f$ between $x$ and $x+\partial x$
+
+\aleq{
+\pd{y}{x} \eqdef \frac{f(x+\partial x) - f(x)}{\partial x}
+}
+
+\item \redf{Derivative.} Pointing in the direction of steepest ascent of $f.$
+
+\aleq{
+\d{f}{x} \eqdef \lim_{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}
+}
+
+\item Unless confusion arises, we often use $f' = \d{f}{x}.$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Taylor Series}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Representation of a function as an infinite sum of terms, using derivatives of evaluated at $x_0.$
+
+\item \redf{Taylor polynomial.} The Taylor polynomial of degree $n$ of $f : \real \mapsto \real$ at $x_0$ is:
+\aleq{
+T_n(x) \eqdef \sum_{k=0}^n \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k, \ \text{where $f^{(k)}(x_0)$ is the $k$th derivative of $f$ at $x_0.$}
+}
+
+\item \redf{Taylor Series.} For a smooth function $f\in \set{C}^{\infty},$ the Taylor series of $f$ at $x_0$ is:
+\aleq{
+T_\infty(x) \eqdef \sum_{k=0}^\infty \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k.
+}
+
+\item If $f(x) = T_\infty(x),$ $f$ is called \bluef{analytic}.
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Differentiation Rules}
+
+\plitemsep 0.25in
+
+\bci 
+
+\item \bluef{Product rule.} $(f(x)g(x))' = f'(x)g(x) + f(x)g'(x)$
+
+\item \bluef{Quotient rule.} $\left(\dfrac{f(x)}{g(x)}\right)' = \dfrac{f'(x)g(x) - f(x)g'(x)}{(g(x))^2} $
+
+\item \bluef{Sum rule.} $(f(x)+g(x))' = f'(x) + g'(x)$
+
+\item \bluef{Chain rule.} $(g(f(x)))' = g'(f(x))f'(x)$
+
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+\item \grayf{Differentiation of Univariate Functions}
+
+\item \redf{Partial Differentiation and Gradients }
+
+\item \grayf{Gradients of Vector-Valued Functions 
+
+\item Gradients of Matrices 
+
+\item Useful Identities for Computing Gradients 
+
+\item Backpropagation and Automatic Differentiation 
+
+\item Higher-Order Derivatives 
+
+\item Linearization and Multivariate Taylor Series}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Gradient}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Now, \bluef{$f: \realn \mapsto \real.$}
+
+\item Gradient of $f$ w.r.t. $\vec{x}$ $\grad_{\vec{x}} f$: Varying one variable at a time and keeping the others constant.
+
+\bigskip
+
+\mytwocols{0.5}
+{
+\redf{Partial Derivative.}  
+For $f : \realn \mapsto \real,$
+
+\aleq{
+\pd{f}{x_1} &= \lim_{h \rightarrow 0} \frac{f(x_1+h,x_2, \ldots, x_n) - f(\vec{x})}{h}\cr
+& \vdots \cr
+\pd{f}{x_n} &= \lim_{h \rightarrow 0} \frac{f(x_1,x_2, \ldots, x_n+h) - f(\vec{x})}{h}
+}
+}
+{
+\redf{Gradient.} Get the partial derivatives and collect them in the row vector. 
+
+\aleq{
+\grad_{\vec{x}} f = \d{f}{\vec{x}} = 
+\rowvec{\pd{f(\vec{x})}{x_1} & \cdots & \pd{f(\vec{x})}{x_n}} \in \real^{1 \times n}
+}
+}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.1in
+
+\bci 
+\item \exam $f(x,y) = (x+2y^3)^2$
+\aleq{
+\pd{f(x,y)}{x} &= 2(x+2y^3) \pd{x+2y^3}{x} = 2(x+2y^3)\cr
+\pd{f(x,y)}{y} &= 2(x+2y^3) \pd{x+2y^3}{y} = 12(x+2y^3)y^2
+}
+
+\item \exam $f(x_1, x_2) = x_1^2 x_2 + x_1 x_2^3$
+\aleq{
+\grad_{(x_1,x_2)}f = \d{f}{x} = \rowvec{\pd{f(x_1,x_2)}{x_1} &\pd{f(x_1,x_2)}{x_2}} = \rowvec{2x_1x_2 + x_2^3 &
+x_1^2 + 3x_1x_2^2} 
+}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Rules for Partial Differentiation}
+
+\plitemsep 0.2in
+
+\bci 
+\item \bluef{Product rule.} $$\pd{}{\vec{x}}(f(\vec{x})g(\vec{x})) = \pd{f}{\vec{x}} g(\vec{x}) + f(\vec{x})\pd{g}{\vec{x}}$$
+
+\item \bluef{Sum rule.} $$\pd{}{\vec{x}} (f(\vec{x})+ g(\vec{x})) = \pd{f}{\vec{x}} + \pd{g}{\vec{x}}$$
+
+\item \bluef{Chain rule.} $$\pd{}{\vec{x}} g(f(\vec{x})) = \pd{g}{f}\pd{f}{\vec{x}}$$
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{More about Chain Rule}
+
+\plitemsep 0.05in
+
+\bci 
+\item $f: \real^2 \mapsto \real$ of two variables $x_1$ and $x_2.$ $x_1(t)$ and $x_2(t)$ are functions of $t.$
+\aleq{
+\d{f}{t} = \rowvec{\pd{f}{x_1} & \pd{f}{x_2}} \colvec{\pd{x_1(t)}{t} \\ \pd{x_2(t)}{t}}
+= \pd{f}{x_1}\pd{x_1}{t} + \pd{f}{x_2}\pd{x_2}{t}
+}
+\item \exam $f(x_1, x_2) = x_1^2 + 2 x_2,$ where $x_1(t) = \sin(t),\ x_2(t)=\cos(t)$
+\aleq{
+\d{f}{t} = \pd{f}{x_1}\pd{x_1}{t} + \pd{f}{x_2}\pd{x_2}{t} = 2\sin(t)\cos(t) - 2\sin{t} = 2\sin(t)(\cos(t)-1) 
+}
+
+\item $f: \real^2 \mapsto \real$ of two variables $x_1$ and $x_2.$ $x_1(s,t)$ and $x_2(s,t)$ are functions of $s,t.$
+
+\myvartwocols{0.2}{0.37}{0.6}
+{
+\small
+\vspace{-0.2cm}
+\aleq{
+\pd{f}{s} &= \pd{f}{x_1}\pd{x_1}{s} + \pd{f}{x_2}\pd{x_2}{s}\cr
+\pd{f}{t} &= \pd{f}{x_1}\pd{x_1}{t} + \pd{f}{x_2}\pd{x_2}{t}
+}
+}
+{
+\aleq{
+\d{f}{(s,t)} = \pd{f}{\vec{x}}\pd{\vec{x}}{(s,t)} = \rowvec{\pd{f}{x_1} & \pd{f}{x_2}}
+\begin{nmat}
+\pd{x_1}{s} & \pd{x_1}{t} \cr
+\pd{x_2}{s} & \pd{x_2}{t} 
+\end{nmat}
+}
+}
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+\item \grayf{Differentiation of Univariate Functions}
+
+\item \grayf{Partial Differentiation and Gradients }
+
+\item \redf{Gradients of Vector-Valued Functions} 
+
+\item \grayf{Gradients of Matrices 
+
+\item Useful Identities for Computing Gradients 
+
+\item Backpropagation and Automatic Differentiation 
+
+\item Higher-Order Derivatives 
+
+\item Linearization and Multivariate Taylor Series}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{$\vec{f}: \realn \mapsto \realm$}
+
+\plitemsep 0.1in
+
+\bci 
+\item For a function $\vec{f}: \realn \mapsto \realm$ and vector $\vec{x}= \trans{\rowvec{x_1 & \ldots & x_n}} \in \realn,$ the vector-valued function is:
+$$
+\vec{f}(\vec{x}) = \colvec{f_1(\vec{x}) \\ \vdots \\ f_m(\vec{x})}
+$$
+\item Partial derivative w.r.t. $x_i$ is a column vector: $\displaystyle \pd{\vec{f}}{x_i} = 
+\colvec{\pd{f_1}{x_i} \\ \vdots \\ \pd{f_m}{x_i}}$
+
+\item Gradient (or Jacobian): $\displaystyle \d{\vec{f}(\vec{x})}{\vec{x}} = \rowvec{\pd{\vec{f}(\vec{x})}{x_1} & \cdots & \pd{\vec{f}(\vec{x})}{x_n} }$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Jacobian}
+
+\aleq{
+\mJ &= \grad_{\vec{x}} \vec{f} = \d{\vec{f}(\vec{x})}{\vec{x}} = 
+\rowvec{\pd{\vec{f}(\vec{x})}{x_1} & \cdots & \pd{\vec{f}(\vec{x})}{x_n} }\cr
+&= \begin{nmat}
+\pd{f_1(\vec{x})}{x_1} & \cdots & \pd{f_1(\vec{x})}{x_n} \cr
+\vdots &  & \vdots \cr
+\pd{f_m(\vec{x})}{x_1} & \cdots & \pd{f_m(\vec{x})}{x_n} 
+\end{nmat}
+}
+
+\bci
+\item For a \bluef{$\realn \mapsto \realm$} function, its Jacobian is a \bluef{$m \times n$} matrix. 
+\eci
+% \plitemsep 0.1in
+% \bci 
+% \item For a function $\vec{f}: \realn \mapsto \realm$ and vector $\vec{x}= \trans{\rowvec{x_1 & \ldots & x_n}} \in \realn,$ the vector-valued function is:
+% $$
+% \vec{f}(\vec{x}) = \colvec{f_1(\vec{x}) \\ \vdots \\ f_m(\vec{x})}
+% $$
+% \item Partial derivative w.r.t. $x_i$ is a column vector: $\displaystyle \pd{\vec{f}}{x_i} = 
+% \colvec{\pd{f_1}{x_i} \\ \vdots \\ \pd{f_m}{x_i}}$
+
+% \item Gradient (or Jacobian): $\displaystyle \d{\vec{f}(\vec{x})}{\vec{x}} = \rowvec{\pd{\vec{f}(\vec{x})}{x_1} & \cdots & \pd{\vec{f}(\vec{x})}{x_n} }$
+% \eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Gradient of Vector-Valued Function}
+
+\bci
+\item $\vf(\vx) = \mA \vx,$ $\vf: \realn \mapsto \realm,$ $\mA \in \realmn,$ $\vx \in \realn$
+
+\item Partial derivatives: 
+$
+\displaystyle
+f_i(\vx) = \sum_{j=1}^n A_{ij} x_j \implies \pd{f_i}{x_j} = A_{ij}
+$
+
+\item Graident
+\aleq{
+\d{\vf}{\vx} = \begin{nmat}
+\pd{f_1}{x_1} & \cdots & \pd{f_1}{x_n} \cr
+\vdots & & \vdots \cr
+\pd{f_m}{x_1} & \cdots & \pd{f_m}{x_n} 
+\end{nmat} = 
+\begin{nmat}
+A_{11} & \cdots & A_{1n} \cr
+\vdots & & \vdots \cr
+A_{m1} & \cdots & A_{mn} 
+\end{nmat} = \mA
+}
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Chain Rule}
+
+\bci
+\item $h: \real \mapsto \real,$ $h(t) = (f\circ g)(t)$ with 
+\aleq{
+f: \real^2 \mapsto \real, \ f(\vx) = \exp(x_1x_2^2), \quad g: \real \mapsto \real^2, \
+\vx = \colvec{x_1 \\ x_2} = g(t) = \colvec{t\cos(t) \\ t\sin(t)}
+}
+
+\item \bluef{(Note)} $\pd{f}{\vx} \in \real^{1 \times 2}$ and $\pd{g}{t} \in \real^{2 \times 1}$
+
+\item Using the chain rule, 
+\aleq{
+\d{h}{t} = \pd{f}{\vx} \pd{\vx}{t} = \rowvec{\pd{f}{x_1} & \pd{f}{x_2}}\colvec{\pd{x_1}{t} \\ \pd{x_2}{t}}
+= \rowvec{\exp(x_1x_2^2)x_2^2 & 2\exp(x_1x_2^2)x_1x_2} \colvec{\cos(t)-t\sin(t) \\ \sin(t)+t\cos(t)} 
+}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Least-Square Loss}
+
+\plitemsep 0.1in
+
+\bci
+\item A linear model: $\vy = \mat{\Phi} \vth$, $\vth \in \real^D$: paramter vector, $\mat{\Phi} \in \real^{N \times D}$: input features, and $\vy \in \real^N$: observations.
+\bci
+\item Goal: Find a good parameter vector that provides the best-fit, formulated by minimizing the following loss $L: \real^D \mapsto \real$ over the parameter vector $\vth$. 
+\aleq{
+L(\ve) \eqdef \norm{\ve}^2, \ \text{where} \ \ve(\vth) = \vy - \mat{\Phi} \vth
+}
+\eci
+
+\item $\pd{L}{\vth} = \pd{L}{\ve} \pd{\ve}{\vth}$ (Note: $\pd{L}{\vth} \in \real^{1 \times D},$ $\pd{L}{\ve} \in \real^{1 \times N},$ $\pd{\ve}{\vth} \in \real^{N \times D}$)
+
+\item Using that $\norm{\ve}^2 = \trans{\ve}\ve$, $\pd{L}{\ve} = 2 \trans{\ve} \in \real ^{1 \times N}$
+
+\item $\pd{\ve}{\vth} = - \mat{\Phi} \in \real^{N \times D}$
+\aleq{
+\text{Finally, we get:} \quad \pd{L}{\vth} = -2\trans{\ve}\mat{\Phi} = -\underbrace{2(\trans{\vy} - \trans{\vth}\trans{\mat{\Phi}})}_{1 \times N} \underbrace{\mat{\Phi}}_{N \times D}
+}
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+\item \grayf{Differentiation of Univariate Functions}
+
+\item \grayf{Partial Differentiation and Gradients }
+
+\item \grayf{Gradients of Vector-Valued Functions} 
+
+\item \redf{Gradients of Matrices 
+
+\item Useful Identities for Computing Gradients} 
+
+\item \grayf{Backpropagation and Automatic Differentiation 
+
+\item Higher-Order Derivatives 
+
+\item Linearization and Multivariate Taylor Series}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+\item \grayf{Differentiation of Univariate Functions}
+
+\item \grayf{Partial Differentiation and Gradients }
+
+\item \grayf{Gradients of Vector-Valued Functions} 
+
+\item \redf{Gradients of Matrices 
+
+\item Useful Identities for Computing Gradients} 
+
+\item \grayf{Backpropagation and Automatic Differentiation 
+
+\item Higher-Order Derivatives 
+
+\item Linearization and Multivariate Taylor Series}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Gradients of matrices}
+
+\plitemsep 0.1in
+
+\bci 
+\item Gradient of matrix $\mA \in \real^{m \times n}$ w.r.t. matrix $\mB \in \real^{p \times q}$ 
+
+\item Jacobian: A four-dimensional tensor\footnote{A multidimensional array} $\mJ = \d{\mA}{\mB} \in \real^{(m \times n) \times (p \times q)}$
+
+\eci
+
+\myvartwocols{0.5}{0.15}{0.83}
+{
+\includegraphics[width=0.9\columnwidth]{L5_grad_matrix_1.png}
+}
+{
+\includegraphics[width=0.47\columnwidth]{L5_grad_matrix_2.png}
+\includegraphics[width=0.47\columnwidth]{L5_grad_matrix_3.png}
+}
+
+
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Gradient of Vectors for Matrices}
+
+\bci
+\item $\vf(\vx) = \mA \vx,$  $\vf \in \realm$, $\mA \in \realmn,$ $\vx \in \realn.$ What is \bluef{$\d{\vf}{\mA}$?}
+
+\item Dimension: If we consider $\vf: \realmn \mapsto \realm,$ $\d{\vf}{\mA} \in \real^{m\times (m \times n)}$
+
+
+\item Partial derivatives: 
+$
+ \pd{f_i}{\mA} \in \real^{1\times (m \times n)}, \quad \d{\vf}{\mA} = \colvec{ \pd{f_1}{\mA} \\ \vdots \\  \pd{f_m}{\mA}} 
+$
+\mytwocols{0.45}
+{
+\small
+\aleq{
+f_i &= \sum_{j=1}^n A_{ij} x_j, \ i=1, \ldots, m \implies \pd{f_i}{A_{iq}} = x_q,\cr    
+\pd{f_i}{A_{i\cdot}} &= \trans{\vx} \in \real^{1\times 1\times n} \ \text{(for $i$th row vector)}\cr
+\pd{f_{i}}{A_{{k\neq i}\cdot}} & = \trans{\vec{0}} \in \real^{1\times 1\times n} \ \text{(for $k$th row vector, $k\neq i$)}
+}
+}
+{
+\small
+\aleq{
+\pd{f_i}{\mA} = \colvec{\trans{\vec{0}} \\ \vdots \\ \trans{\vec{0}} \\ \trans{\vx} \\ \trans{\vec{0}} \\ \vdots \\ \trans{\vec{0}}} \in \real^{1 \times (m \times n)}
+}
+}
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Gradient of Matrices for Matrices}
+
+\bci
+\item $\mR \in \realmn$ and $\vf: \realmn \mapsto \realnn$ with $\vf(\mR) = \mK \eqdef \trans{\mR}\mR \in \realnn.$  What is \bluef{$\d{\mK}{\mR} \in \real^{(n\times n) \times (m\times n)}$?}
+
+\item $\d{K_{pq}}{\mR} \in \real^{1 \times m \times n}.$ Let $\vr_i$ be the $i$th column of $\mR.$ Then
+\(
+K_{pq} = \trans{\vr_p} \vr_q = \sum_{k=1}^m R_{kp} R_{kq}.
+\)
+
+\item Partial derivative $\pd{K_{pq}}{R_{ij}}$
+\aleq{
+\pd{K_{pq}}{R_{ij}} = \sum_{k=1}^m \pd{}{R_{ij}} R_{kp} R_{kq} = \partial_{pqij}, \ 
+\partial_{pqij} = 
+\begin{cases}
+R_{iq} & \text{if} \ j=p, p\neq q \cr
+R_{ip} &  \text{if} \ j=q, p\neq q \cr
+2R_{iq} &  \text{if} \ j=p, p=q \cr
+0 & \text{otherwise}
+\end{cases}
+}
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Useful Identities}
+
+\vspace{-0.6cm}
+\raggedleft
+\includegraphics[width=0.7\columnwidth]{L5_useful.png}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+\item \grayf{Differentiation of Univariate Functions}
+
+\item \grayf{Partial Differentiation and Gradients }
+
+\item \grayf{Gradients of Vector-Valued Functions} 
+
+\item \gray{Gradients of Matrices} 
+
+\item \grayf{Useful Identities for Computing Gradients} 
+
+\item \redf{Backpropagation and Automatic Differentiation} 
+
+\item \grayf{Higher-Order Derivatives 
+
+\item Linearization and Multivariate Taylor Series}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Motivation: Neural Networks with Many Layers (1)}
+
+\plitemsep 0.01in
+
+\bci 
+\item In a neural network with many layers, the function $\vy$ is a many-level function compositions
+$$
+\vy = (f_K \circ f_{K-1} \circ \cdots \circ f_1)(\vx),
+$$
+where, for example,  
+\bci
+\item $\vx$: images as inputs, $\vy$: class labels (e.g., cat or dog) as outputs
+\item each $f_i$ has its own parameters
+\eci
+
+\item In neural networks, with the model parameters $\vth = \{\mA_0, \vb_0, \ldots, \mA_{K-1}, \vb_{K-1} \}$
+
+\smallskip
+\mysmalltwocols{0.4}
+{
+\small
+\vspace{-0.4cm}
+\aleq{
+\begin{cases}
+\vf_0 &\eqdef \vx \cr
+\vf_1 &\eqdef \sigma_1(\mA_{0}\vf_{0} + \vb_{0})\cr
+\vdots& \cr
+\vf_K &\eqdef \sigma_K(\mA_{K-1}\vf_{K-1} + \vb_{K-1})
+\end{cases}
+}
+$\circ$ $\sigma_i$ is called the \bluef{activation function} at $i$-th layer
+}
+{
+\hspace{-0.7cm} $\circ$ Minimizing the loss function over $\vth$:
+\aleq{
+\min_{\vth} L(\vth),
+}
+where 
+$
+L(\vth) = \norm{\vy - \vf_K(\vth,\vx)}^2
+$
+}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Motivation: Neural Networks with Many Layers (2)}
+
+\plitemsep 0.01in
+
+\bci 
+
+\item In neural networks, with the model parameters $\vth = \{\mA_0, \vb_0, \ldots, \mA_{K-1}, \vb_{K-1} \}$
+
+\smallskip
+\mysmalltwocols{0.4}
+{
+\small
+\vspace{-0.4cm}
+\aleq{
+\begin{cases}
+\vf_0 &\eqdef \vx \cr
+\vf_1 &\eqdef \sigma_1(\mA_{0}\vf_{0} + \vb_{0})\cr
+\vdots& \cr
+\vf_K &\eqdef \sigma_K(\mA_{K-1}\vf_{K-1} + \vb_{K-1})
+\end{cases}
+}
+$\circ$ $\sigma_i$ is called the activation function at $i$-th layer
+}
+{
+\hspace{-0.7cm} $\circ$ Minimizing the loss function over $\vth$:
+\aleq{
+\min_{\vth} L(\vth),
+}
+where 
+$
+L(\vth) = \norm{\vy - \vf_K(\vth,\vx)}^2
+$
+}
+
+\medskip
+\item \question \bluef{\large How can we efficiently compute $\displaystyle \d{L}{\vth}$ in computers?}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Backpropagatin: Example (1)}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item $f(x) = \sqrt{x^2 + \exp(x^2)} + \cos\left (x^2 + \exp(x^2)\right)$
+
+
+
+\item Computation graph: Connect via ``elementary'' operations
+
+\smallskip
+\mypic{0.7}{L5_computation_graph.png}
+\aleq{
+\bluef{a} = x^2, \ \bluef{b}=\exp(a), \ \bluef{c}=a+b, \ \bluef{d}=\sqrt{c}, \ \bluef{e}=\cos(c), \ \bluef{f} = d+e
+}
+
+\item Automatic Differentiation
+\bci
+\item  A set of techniques to \bluef{numerically} (not symbolically) evaluate the gradient of a function by working with \bluef{intermediate variables} and applying the \bluef{chain rule}. 
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Backpropagation: Example (2)}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item 
+% $f(x) = \sqrt{x^2 + \exp(x^2)} + \cos\left (x^2 + \exp(x^2)\right)$
+$
+\bluef{a} = x^2, \ \bluef{b}=\exp(a), \ \bluef{c}=a+b, \ \bluef{d}=\sqrt{c}, \ \bluef{e}=\cos(c), \ \bluef{f} = d+e
+$
+\item Derivatives of the intermediate variables with their inputs
+\aleq{
+\bluef{\pd{a}{x}} = 2x, \ \bluef{\pd{b}{a}}=\exp(a), \ \bluef{\pd{c}{a}}=1 = \bluef{\pd{c}{b}}, \ \bluef{\pd{d}{c}}=\frac{1}{2\sqrt{c}}, \ \bluef{\pd{e}{c}}=-\sin(c), \ \bluef{\pd{f}{d}} = 1 = \bluef{\pd{f}{e}}
+}
+\item Compute $\displaystyle \pd{f}{x}$ by working backward from the output
+\mytwocols{0.3}
+{
+\small
+\vspace{-0.3cm}
+\aleq{
+\orangef{\pd{f}{c}} &= \bluef{\pd{f}{d}\pd{d}{c}} + \bluef{\pd{f}{e}\pd{e}{c}}, \ \redf{\pd{f}{b}} =\bluef{\pd{f}{c}\pd{c}{b}}  \cr
+\greenf{\pd{f}{a}} &= \redf{\pd{f}{b}}\bluef{\pd{b}{a}} + \orangef{\pd{f}{c}}\bluef{\pd{c}{a}}, \ \mybox{$\displaystyle \pd{f}{x}$} =\greenf{\pd{f}{a}}\bluef{\pd{a}{x}}  
+}
+}
+{
+\small
+\vspace{-0.3cm}
+\aleq{
+\orangef{\pd{f}{c}} &= 1\cdot \frac{1}{2\sqrt{c}} + 1\cdot (-\sin(c))\cr
+\redf{\pd{f}{b}} &= \orangef{\pd{f}{c}} \cdot 1, \quad \greenf{\pd{f}{a}} = \redf{\pd{f}{b}} \exp(a) + \orangef{\pd{f}{c}}\cdot 1 \cr
+\mybox{$\displaystyle \pd{f}{x}$} &=\greenf{\pd{f}{a}} \cdot 2x
+}
+}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Backpropagation}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Implementation of gradients can be very expensive, unless we are careful. 
+
+\item Using the idea of automatic differentiation, the whole gradient computation is decomposed into a set of gradients of elementary functions and application of the chain rule.
+
+\item Why \bluef{backward}? 
+
+\bci
+\item In neural networks, the input dimensionality is often much higher than the dimensionality of labels.
+\item In this case, the backward computation (than the forward computation) is much cheaper. 
+\eci
+
+\item Works if the target is expressed as a computation graph whose elementary functions are differentiable. If not, some care needs to be taken. 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bci 
+\item \grayf{Differentiation of Univariate Functions}
+
+\item \grayf{Partial Differentiation and Gradients }
+
+\item \grayf{Gradients of Vector-Valued Functions} 
+
+\item \gray{Gradients of Matrices} 
+
+\item \grayf{Useful Identities for Computing Gradients} 
+
+\item \grayf{Backpropagation and Automatic Differentiation} 
+
+\item \redf{Higher-Order Derivatives 
+
+\item Linearization and Multivariate Taylor Series}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Higher-Order Derivatives}
+
+\plitemsep 0.05in
+
+\bci 
+\item Some optimization algorithms (e.g., Newton's method) require second-order derivatives, if they exist. 
+\item (Truncated) Taylor series is often used as an approximation of a function. 
+
+\item For $f: \realn \mapsto \real$ of variable $\vx \in \realn$, $
+\grad_{\vec{x}} f = \d{f}{\vec{x}} = 
+\rowvec{\pd{f(\vec{x})}{x_1} & \cdots & \pd{f(\vec{x})}{x_n}} \in \real^{1 \times n}
+$
+\bci
+\item If $f$ is twice-differentiable, the order doesn't matter. 
+\aleq{
+\hess_{\vec{x}} f = \begin{nmat}
+\pdd{f}{x_1}& \pdda{f}{x_1}{x_2}& \cdots & \pdda{f}{x_1}{x_n}\cr 
+\vdots & & & \vdots\cr
+\pdda{f}{x_1}{x_n} & \pdda{f}{x_2}{x_n} & \cdots & \pdda{f}{x_{n}}{x_n}
+\end{nmat}
+}
+% Gradient $\grad f: \realn \mapsto $
+\eci
+
+\item For $f: \realn \mapsto \realm$, $\grad_{\vec{x}} f \in \realmn$
+\bci
+\item Thus, $\hess_{\vec{x}} f \in \real^{m \times n \times n}$ (a tensor)
+\eci
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Function Approximation: Lineariation and More}
+
+\plitemsep 0.1in
+
+\bci 
+\item First-order approximation of $f(\vx)$ (i.e., linearization by taking the first two terms of Taylor Series)
+$$
+f(\vx) \approx f(\vx_0) + (\grad_{\vx} f)(\vx_0)(\vx-\vx_0)
+$$
+
+\item Multivariate Talyer Series for $f: \real^D \mapsto \real$ at $\vx_0$
+$$
+f(\vx) = \sum_{k=0}^\infty \frac{D^k_{\vx} f(\vx_0)}{k!} \vec{\delta}^k,
+$$
+where $D^k_{\vx} f(\vx_0)$ is the $k$th derivative of $f$ w.r.t. $\vx$, evaluated at $\vx_0,$ and $\vec{\delta} \eqdef \vx - \vx_0.$
+\bci
+\item Partial sum up to, say $n$, can be an approximation of $f(\vx).$
+\item $D^k_{\vx} f(\vx_0)$ and $\vec{\delta}^k$ are $k$th order tensors, i.e., $k$-dimensional array. 
+
+\item $\vec{\delta}^k$ is a $k$-fold outer product $\otimes$. For example, $\vec{\delta}^2 = \vec{\delta} \otimes \vec{\delta} = \vec{\delta}\trans{\vec{\delta}}.$ $\vec{\delta}^3 = \vec{\delta} \otimes \vec{\delta} \otimes \vec{\delta}.$ 
+\eci
+
+\eci
+
+
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\vspace{2cm}
+\LARGE Questions?
+
+
+\end{frame}
+
+\begin{frame}{Review Questions}
+% \tableofcontents
+%\plitemsep 0.1in
+\bce[1)]
+\item 
+
+\ece
+\end{frame}
+
+
+\end{document}

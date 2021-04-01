@@ -1,0 +1,874 @@
+%\pdfminorversion=4
+\documentclass[fleqn,aspectratio=169]{beamer}
+
+\input{../myhead}
+
+
+\title[]{Lecture 3: Analytic Geometry}
+\author{Yi, Yung (이융)}
+\institute{Mathematics for Machine Learning\\ KAIST EE}
+\date{\today}
+
+\input{../mymath}
+\input{../macro}
+
+\begin{document}
+
+\input{../mydefault}
+
+
+% START START START START START START START START START START START START START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item Norms
+
+\item Inner Products
+
+\item Lengths and Distances
+
+\item Angles and Orthogonality
+
+\item Orthonormal Basis
+
+\item Orthogonal Complement
+
+\item Inner Product of Functions
+
+\item Orthogonal Projections
+
+\item Rotations
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(1)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \redf{Norms}
+
+\item \grayf{Inner Products
+
+\item Lengths and Distances
+
+\item Angles and Orthogonality
+
+\item Orthonormal Basis
+
+\item Orthogonal Complement
+
+\item Inner Product of Functions
+
+\item Orthogonal Projections
+
+\item Rotations}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Norm}
+
+\plitemsep 0.1in
+
+\bci 
+\item A notion of the length of vectors
+
+\item \defi A norm on a vector space $V$ is a function $\norm{\cdot}: V \mapsto \real,$ such that for all $\lambda \in \real$ the following hold:
+
+\bci
+\item \bluef{Absolutely homogeneous}: $\norm{\lambda \vec{x}} = |\lambda| \norm{\vec{x}}$
+\item \bluef{Triangle inequality}: $\norm{\vec{x} + \vec{y}} \le \norm{\vec{x}} + \norm{\vec{y}} $
+\item \bluef{Positive definite}: $\norm{\vec{x}} \ge 0$ and $\norm{\vec{x}} \Longleftrightarrow \vec{x} = \vec{0}$
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example for $V \in \real^n$}
+
+\plitemsep 0.1in
+
+\bci 
+\item \bluef{Manhattan Norm} (also called $\ell_1$ norm) For $\vec{x} \in \real^n,$
+$$
+\norm{\vec{x}}_1 \eqdef = \sum_{i=1}^n |x_i|
+$$
+\item \bluef{Euclidean Norm} (also called $\ell_2$ norm) For $\vec{x} \in \real^n,$
+$$
+\norm{\vec{x}}_2 \eqdef = \sqrt{\sum_{i=1}^n x_i^2} = \sqrt{\trans{\vec{x}} \vec{x}}
+$$
+
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Norms}
+
+\item \redf{Inner Products}
+
+\item \grayf{Lengths and Distances
+
+\item Angles and Orthogonality
+
+\item Orthonormal Basis
+
+\item Orthogonal Complement
+
+\item Inner Product of Functions
+
+\item Orthogonal Projections
+
+\item Rotations}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(2)}
+\begin{frame}{Motivation}
+
+\plitemsep 0.1in
+
+\bci 
+\item Need to talk about the length of a vector and the angle or distance between two vectors, where vectors are defined in abstract vector spaces
+
+\item To this end, we define \bluef{inner product} in an abstract manner.
+
+\item Dot product: A kind of inner product in vector space $\real^n$. $\trans{\vec{x}} \vec{y} = \sum_{i=1}^n x_i y_i$ 
+
+
+\bigskip
+\item \question How can we generalize this and do a similar thing in some other vector spaces?
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Formal Definition}
+
+\plitemsep 0.1in
+
+\bci 
+\item An inner product is a mapping $\inner{\cdot}{\cdot}: V \times V \mapsto \real$ that satisfies the following conditions for all vectors $\vec{u},\vec{v},\vec{w} \in V$ and all scalars $\lambda \in \real$:
+
+\medskip
+\bce
+\item $\inner{\vec{u}+ \vec{v}}{\vec{w}} = \inner{\vec{u}}{\vec{w}} + \inner{\vec{v}}{\vec{w}}$
+\item $\inner{\lambda \vec{v}}{\vec{w}} = \lambda \inner{\vec{v}}{\vec{w}}$
+\item $\inner{\vec{v}}{\vec{w}} = \inner{\vec{w}}{\vec{v}}$
+\item $\inner{\vec{v}}{\vec{v}} \ge 0$ and equal iff $\vec{v}=\vec{0}$
+\ece
+\medskip
+
+\item The pair $(V,\inner{\cdot}{\cdot})$ is called an \bluef{inner product space}.
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.3in
+
+\bci 
+
+\item \exam $V=\real^n$ and the dot product $\inner{\vec{x}}{\vec{y}} \eqdef \trans{\vec{x}}\vec{y}$
+
+\item \exam $V=\real^2$ and $\inner{\vec{x}}{\vec{y}} \eqdef x_1y_1 - (x_1y_2 + x_2y_1) + 2x_2y_2$
+
+\item \exam $V=\{\text{continuous functions in $\real$ over $[a,b]$} \},$ $\inner{u}{v} \eqdef \int_a^b u(x)v(x) dx$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Symmetric, Positive Definite Matrix}
+
+\plitemsep 0.1in
+
+\bci 
+\item A square matrix $\mat{A} \in \real^{n \times n}$ that satisfies the following is called \bluef{symmetric, positive definite} (or just positive definite): 
+$$
+\forall \vec{x} \in V \setminus \{\vec{0} \}: \trans{\vec{x}} \mat{A} \vec{x} > 0.
+$$
+If only $\ge$ in the above holds, then $\mat{A}$ is called \bluef{symmetric, positive semidefinite.} 
+
+\bigskip
+\item $\mat{A}_1 = \begin{nmat}
+9 & 6 \cr
+6 & 5
+\end{nmat}
+$ is positive definite.
+
+\item $\mat{A}_2 = \begin{nmat}
+9 & 6 \cr
+6 & 3
+\end{nmat}
+$ is not positive definite.
+
+
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Inner Product and Positive Definite Matrix (1)}
+
+\plitemsep 0.2in
+
+\bci 
+\item Consider an $n$-dimensional vector space $V$ with an inner product $\inner{\cdot}{\cdot}$ and an ordered basis $B=(\vec{b}_1, \ldots, \vec{b}_n)$ of $V.$
+
+\item Any $\vec{x},\vec{y} \in V$ can be represented as: $\vec{x}=\sum_{i=1}^n \psi_i \vec{b}_i$ and $\vec{y}=\sum_{i=j}^n \lambda_j \vec{b}_j$ for some $\psi_i$ and $\lambda_j,$ $i,j=1, \ldots, n.$
+\aleq{
+\inner{\vec{x}}{\vec{y}} = \inner{\sum_{i=1}^n \psi_i\vec{b}_i}{\sum_{i=j}^n \lambda_j \vec{b}_j} = 
+\sum_{i=1}^n \sum_{j=1}^n \psi_i \inner{\vec{b}_i}{\vec{b}_j} \lambda_j = \trans{\hat{\vec{x}}} \mat{A} \hat{\vec{y}},
+}
+where $\mat{A}_{ij} = \inner{\vec{b}_i}{\vec{b}_j}$ and $\hat{\vec{x}}$ and $\hat{\vec{y}}$ are the coordinates w.r.t. $B.$
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Inner Product and Positive Definite Matrix (2)}
+
+\plitemsep 0.2in
+
+\bci 
+
+\item Then, if $\forall \vec{x} \in V \setminus \{\vec{0} \}: \trans{\vec{x}} \mat{A} \vec{x} > 0$ (i.e., $\mat{A}$ is symmetric, positive definite), $\bluef{\trans{\hat{\vec{x}}} \mat{A} \hat{\vec{y}}}$ legitimately defines an inner product (w.r.t. $B$)
+
+\item Properties
+\bci
+\item The kernel of $\mat{A}$ is only $\{\vec{0} \}$, because $\trans{\vec{x}} \mat{A} \vec{x} > 0$ for all $\vec{x} \neq \vec{0}  \implies$ $\mat{A} \vec{x} \neq \vec{0}$ if $\vec{x} \neq \vec{0}.$
+\item The diagonal elements $a_{ii}$ of $\mat{A}$ are all positive, because $a_{ii} = \trans{\vec{e}_i} \mat{A} \vec{e}_i >0.$
+\eci
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(3)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Norms
+
+\item Inner Products}
+
+\item \redf{Lengths and Distances
+
+\item Angles and Orthogonality}
+
+\item \grayf{Orthonormal Basis
+
+\item Orthogonal Complement
+
+\item Inner Product of Functions
+
+\item Orthogonal Projections
+
+\item Rotations}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Length}
+
+\plitemsep 0.2in
+
+\bci 
+
+\item Inner product naturally induces a norm by defining:
+$$
+\norm{x} \eqdef \sqrt{\inner{\vec{x}}{\vec{x}}}
+$$
+
+\item Not every norm is induced by an inner product
+
+\item \redf{Cachy-Schwarz inequality.} For the induced norm by the inner product, 
+$$
+|\inner{\vec{x}}{\vec{y}}| \le \norm{\vec{x}} \ \norm{\vec{y}}
+$$
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Distance}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Now, we can introduce a notion of distance using a norm as:
+
+\medskip
+\redf{Distance}. $d(\vec{x},\vec{y}) \eqdef \norm{\vec{x} - \vec{y}} = \sqrt{\inner{\vec{x}-\vec{y}}{\vec{x}-\vec{y}}} $
+
+\item If the dot product is used as an inner product in $\real^n,$ it is \bluef{Euclidian distance.}
+
+\item \redf{Note.} The distance between two vectors does \bluef{NOT} necessarily require the notion of norm. Norm is just sufficient. 
+
+\item Generally, if the following is satisfied, it is a suitable notion of distance (also called \bluef{metric}). 
+\bci
+\item \bluef{\em Positive definite}. $d(\vec{x},\vec{y}) \ge 0$ for all $\vec{x},\vec{y}$ and $d(\vec{x},\vec{y}) = 0 \Longleftrightarrow \vec{x}=\vec{y}$ 
+\item \bluef{\em Symmetric}. $d(\vec{x},\vec{y}) = d(\vec{y},\vec{x})$
+\item \bluef{\em Triangle inequality}. $d(\vec{x},\vec{z}) \le d(\vec{x},\vec{y}) + d(\vec{y},\vec{z})$
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(4)}
+\begin{frame}{Angle,  Orthogonal, and Orthonormal}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Using C-S inequality, $$-1 \le \frac{\inner{\vec{x}}{\vec{y}}}{\norm{\vec{x}} \ \norm{\vec{y}}} \le 1$$
+
+\item Then, there exists a unique $\omega \in [0,\pi]$ with $$\cos \omega = \frac{\inner{\vec{x}}{\vec{y}}}{\norm{\vec{x}} \ \norm{\vec{y}}}$$
+
+\item We define $\omega$ as the angle between $\vec{x}$ and $\vec{y}.$
+
+\item \defi If $\inner{\vec{x}}{\vec{y}} = 0,$ in other words their angle is $\pi/2,$ we say that they are \bluef{orthogonal}, denoted by $\vec{x} \perp \vec{y}.$ Additionally, if $\norm{x} = \norm{y} =1,$ they are \bluef{orthonormal}.
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Orthogonality is defined by a given inner product. Thus, different inner products may lead to different results about orthogonality. 
+
+\item \exam Consider two vectors $\vec{x}=\colvec{1 \\1 }$ and $\vec{y}=\colvec{-1 \\ 1 }$
+
+\item Using the dot product as the inner product, they are orthogonal.
+
+\item However, using $\inner{\vec{x}}{\vec{y}} = \trans{\vec{x}}
+\begin{nmat}
+2 & 0 \cr
+0 & 1
+\end{nmat} \vec{y}$, they are not orthogonal. 
+\aleq{
+\cos \omega = \frac{\inner{\vec{x}}{\vec{y}}}{\norm{\vec{x}} \ \norm{\vec{y}}} = -\frac{1}{3} \implies \omega \approx 1.91 \text{ rad } \approx 109.5\text{\textdegree}
+}
+\eci
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Orthogonal Matrix}
+
+\plitemsep 0.05in
+
+\bci 
+
+\item \defi A square matrix $\mat{A} \in \real^{n \times n}$ is an \bluef{orthogonal matrix}, iff its columns (or rows) are \bluef{orthonormal} so that 
+$$
+\mat{A} \trans{\mat{A}} = I = \trans{\mat{A}}\mat{A}, \text{ implying } \inv{\mat{A}} = \trans{\mat{A}}.
+$$
+\vspace{-0.3cm}
+\bci
+\item We can use \bluef{$\inv{\mat{A}} = \trans{\mat{A}}$} for the definition of orthogonal matrices. 
+\item Fact 1. $\mA,\mB$: orthogonal $\implies$ $\mA\mB$: orthogonal
+\item Fact 2. $\mA$: orthogonal $\implies$ $\det(\mA) = \pm 1$
+\eci
+
+
+\item The linear mapping $\Phi$ by orthogonal matrices preserve \bluef{length} and \bluef{angle} (for the dot product)
+\aleq{
+\norm{\Phi(\mA)} = \norm{\mat{A}\vec{x}}^2 = \trans{(\mat{A}\vec{\vec{x}})} (\mat{A} \vec{x}) = \trans{\vec{x}} \trans{\mat{A}} \mat{A} \vec{x} = \trans{\vec{x}} \vec{x} = \norm{\vec{x}}^2
+}
+\vspace{-0.7cm}
+\aleq{
+\cos \omega = \frac{\trans{(\mat{A}\vec{x})} (\mat{A}\vec{y})}{\norm{\mat{A}\vec{x}} \ \norm{\mat{A}\vec{y}}} = 
+\frac
+{
+\trans{\vec{x}} \trans{\mat{A}} \mat{A} \vec{y}
+}
+{
+\sqrt{\trans{\vec{x}} \trans{\mat{A}} \mat{A} \vec{x} \trans{\vec{y}} \trans{\mat{A}} \mat{A} \vec{y}
+}
+}
+= \frac{\trans{\vec{x}} \vec{y}}{\norm{\vec{x}} \ \norm{\vec{y}}}
+}
+
+\eci
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(5)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Norms
+
+\item Inner Products
+
+\item Lengths and Distances
+
+\item Angles and Orthogonality}
+
+\item \redf{Orthonormal Basis
+
+\item Orthogonal Complement
+
+\item Inner Product of Functions}
+
+\item \grayf{Orthogonal Projections
+
+\item Rotations}
+
+\ece
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Orthonormal Basis}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Basis that is orthonormal, i.e., they are all orthogonal to each other and their lengths are 1. 
+
+\item Standard basis in $\real^n,$ $\{\vec{e}_1, \ldots, \vec{e}_n \},$ is orthonormal.
+
+
+\item \question How to obtain an orthonormal basis?
+
+\bigskip
+\mycolorbox{
+\item[1.] Use Gaussian elimination to find a basis for a vector space spanned by a set of vectors.
+\bci
+\item Given a set $\{\vec{b}_1, \ldots, \vec{b}_n \}$ of unorthogonal and unnormalized basis vectors. Apply Gaussian elimination to the augmented matrix $(\mat{B}\trans{\mat{B}}|\mat{B})$
+\eci
+
+\item[2.] Constructive way: Gram-Schmidt process (we will cover this later)
+}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(6)}
+\begin{frame}{Orthogonal Complement (1)}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Consider $D$-dimensional vector space $V$ and $M$-dimensional subspace  $W \subset V.$ The \bluef{orthogonal complement} $\ocomp{U}$ is a $(D-M)$-dimensional subspace of $V$ and contains all vectors in $V$ that are orthogonal to every vector in $U.$
+
+\item $U \cap \ocomp{U} = \vec{0}$
+
+\item Any vector $x \in V$ can be uniquely decomposed into:
+\aleq{
+\vec{x} = \sum_{m=1}^M \lambda_m \vec{b}_m + \sum_{j=1}^{D-M} \psi_j \ocomp{\vec{b}}_j, \quad \lambda_m, \psi_j \in \real,
+}
+where $(\vec{b}_1 \ldots, \vec{b}_M)$ and $(\ocomp{\vec{b}}_1, \ldots, \ocomp{\vec{b}}_{D-M} )$ are the \bluef{bases} of $U$ and $\ocomp{U},$ respectively. 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Orthogonal Complement (2)}
+
+\plitemsep 0.1in
+
+\vspace{-0.3cm}
+\begin{center}
+\mypic{0.35}{L3_ocomp.png}
+\end{center}
+\vspace{-0.5cm}
+\bci 
+\item The vector $w$ with $\norm{w}=1,$ which is orthogonal to $U$, is the basis of $\ocomp{U}.$
+\item Such $w$ is called \bluef{normal vector} to $U.$
+
+\item For a linear mapping represented by a matrix $\mat{A} \in \real^{m \times n},$ the solution space of $\mat{A} \vec{x} =0$ is $\ocomp{\text{row}(\mat{A})},$ where $\text{row}(\mat{A})$ is the row space of $\mat{A}$ (i.e., span of row vectors).
+
+In other words, $\ocomp{\text{row}(\mat{A})} = \ker(\mat{A})$
+\eci
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(7)}
+\begin{frame}{Inner Product of Functions}
+
+\plitemsep 0.2in
+
+\bci 
+
+\item Earlier, $V=\{\text{continuous functions in $\real$ over $[a,b]$} \},$ the following is a proper inner product. 
+\bluef{$$\inner{u}{v} \eqdef \int_a^b u(x)v(x) dx$$}
+
+\item \exam Choose $u(x) = \sin(x)$ and $v(x)= \cos(x),$ where we select $a=-\pi$ and $b=\pi.$ Then, since $f(x) = u(x)v(x)$ is odd (i.e., $f(-x) = -f(x)$), 
+$$
+\int_{-\pi}^\pi u(x) v(x) dx =0.
+$$
+
+\item Thus, $u$ and $v$ are orthogonal. 
+
+\item Similarly, $\{1, \cos(x), \cos(2x), \cos(3x), \ldots,  \}$ is orthogonal over $[-\pi,\pi].$
+\eci
+
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(8)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Norms
+
+\item Inner Products
+
+\item Lengths and Distances
+
+\item Angles and Orthogonality
+
+\item Orthonormal Basis
+
+\item Orthogonal Complement
+
+\item Inner Product of Functions}
+
+\item \redf{Orthogonal Projections}
+
+\item \grayf{Rotations}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Projection: Motivation}
+
+\plitemsep 0.05in
+
+\bci 
+
+\item Big data: high dimensional
+
+\item However, most information is contained in a few dimensions
+
+\item \bluef{Projection}: A process of reducing the dimensions (hopefully) without loss of much information
+
+\item \exam Projection of 2D dataset onto 1D subspace
+
+\centering
+\mypic{0.4}{L3_projection_ex.png}
+\eci
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Projection onto Lines (1D Subspaces)}
+
+\plitemsep 0.1in
+
+\bci 
+\item Consider a 1D subspace $U \subset \real^n$ spanned by the basis $\vec{b}.$ 
+
+\item For $\vx \in \realn,$ what is its projection \bluef{$\pi_U(\vec{x})$} onto $U$ (assume the dot product)?
+\myvartwocols{0.3}{0.7}{0.29}
+{
+\small
+\aleq{
+&\inner{\vec{x} - \pi_U(\vec{x})}{\vec{b}} = 0 \xleftrightarrow{\pi_U(\vec{x}) = \lambda \vec{b}} \inner{\vec{x} - \lambda \vec{b}}{\vec{b}}=0\cr
+& \implies \lambda = \frac{\inner{\trans{\vec{b}}}{\vec{x}}}{\norm{\vec{b}}^2} = \frac{\trans{\vec{b}}\vec{x}}{\norm{\vec{b}}^2}, \ \text{and} \ \pi_U(\vec{x}) = \lambda \vec{b} =  \bluef{\frac{\trans{\vec{b}}\vec{x}}{\norm{\vec{b}}^2} \vec{b}}
+}
+}
+{
+\vspace{-0.2cm}
+\mypic{0.8}{L3_projection_1D.png}
+}
+\vspace{-0.5cm}
+\item Projection matrix \redf{$\mat{P}_\pi \in \realnn$}  in $\pi_U(\vec{x}) = \mat{P}_\pi \vec{x}$
+\aleq{
+\pi_U(\vec{x}) = \lambda \vec{b} =  \vec{b} \lambda =  \frac{\vec{b}\trans{\vec{b}}}{\norm{\vec{b}}^2} \vec{x}, \quad \mat{P}_\pi = \bluef{\frac{\vec{b}\trans{\vec{b}}}{\norm{\vec{b}}^2}}
+}
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Inner Product and Projection}
+
+\plitemsep 0.1in
+
+\bci 
+\item We project $\vx$ onto $\vb$, and let $\pi_{\vb}(\vx)$ be the projected vector. 
+
+
+\item \question Understanding the inner project $\inner{\vx}{\vb}$ from the projection perspective?
+\mycolorbox{
+$$
+\inner{\vx}{\vb} = \norm{\pi_{\vb}(\vx)} \times \norm{\vb}
+$$
+}
+\mytwocols{0.4}
+{
+\item In other words, the inner product of $\vx$ and $\vb$ is the product of (\bluef{length of the projection of $\vx$ onto $\vb$}) $\times$ (\bluef{length of $\vb$})
+}
+{
+\vspace{-0.2cm}
+\mypic{0.6}{L3_projection_1D.png}
+}
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.1in
+
+\bci 
+\item $\vec{b} = \colvec{1 \\ 2 \\ 2}$
+\aleq{
+\mat{P}_\pi = \frac{\vec{b}\trans{\vec{b}}}{\norm{\vec{b}}^2} = \frac{1}{9}\colvec{1\\2\\2}\rowvec{1 & 2 & 2} = \frac{1}{9}
+\begin{nmat}
+1&2&2 \cr
+2&4&4 \cr
+2&4&4 
+\end{nmat}
+}
+For $\vec{x} = \colvec{1\\1\\1},$
+\aleq{
+\pi_U(\vec{x}) = \mat{P}_\pi \vec{x} = \frac{1}{9}
+\begin{nmat}
+1&2&2 \cr
+2&4&4 \cr
+2&4&4 
+\end{nmat} \colvec{1\\1\\1} = \frac{1}{9} \colvec{5\\10\\10} \in \spn{\colvec{1\\2\\2}} 
+}
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Projection onto General Subspaces}
+
+\plitemsep 0.1in
+
+
+%\item Compare the results:
+
+\mytwocols{0.4}
+{
+\bci
+\item $\realn \rightarrow$ 1-Dim
+\item A basis vector $\vec{b}$ in 1D subspace
+\eci
+\centering
+$$
+\pi_U(\vec{x}) = \bluef{\frac{\vec{b}\trans{\vec{b}}\vec{x}}{\trans{\vec{b}}\vec{b}}}, \ \lambda = \frac{\trans{\vec{b}}\vec{x}}{\trans{\vec{b}}\vec{b}}
+$$
+$$
+\mat{P}_\pi  = \redf{\frac{\vec{b}\trans{\vec{b}}}{\trans{\vec{b}}\vec{b} }}
+$$
+}
+{
+\bci
+\item $\realn \rightarrow$ $m$-Dim, $(m < n)$
+\item A basis matrix $B=\rowvec{\vec{b}_1, \cdots, \vec{b}_m} \in \real^{n \times m}$ 
+\eci
+$$
+\pi_U(\vec{x}) = \bluef{\mB\inv{(\trans{\mB}\mB)}\trans{\mB} \vec{x}}, \ 
+\vlam = \inv{(\trans{\mB}\mB)}\trans{\mB} \vec{x}
+$$
+$$
+\mat{P}_\pi  = \redf{\mB\inv{(\trans{\mB}\mB)}\trans{\mB} }
+$$
+}
+\vspace{-0.4cm}
+\bci
+\item $\lambda \in \real^{1}$ and $\vlam \in \realm$ are the coordinates in the projected spaces, respectively. 
+\item $\inv{(\trans{\mB}\mB)}\trans{\mB}$ is called \bluef{pseudo-inverse}.
+\item How to derive is analogous to that of lines (see pp. 71).
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Projection onto 2D Subspace}
+
+\plitemsep 0.1in
+\small
+\bci 
+\item $U = \spn{\colvec{1\\1\\1}, \colvec{0\\1\\2}} \subset \real^3$ and $\vec{x} = \colvec{6\\0\\0}$. Check that $\{ \trans{\rowvec{1&1&1}}, \trans{\rowvec{0&1&2}}\}$ is a basis.
+\item Let $\mat{B} = \begin{nmat}
+1&0\cr
+1&1\cr
+1&2
+\end{nmat}.$ Then, $\trans{\mat{B}}\mat{B} = 
+\begin{nmat}
+1&1&2\cr
+0&1&2
+\end{nmat}
+\begin{nmat}
+1&0\cr
+1&1\cr
+1&2
+\end{nmat}
+= 
+\begin{nmat}
+3&3\cr
+3&5
+\end{nmat}
+$
+\item Can see that $\mat{P}_\pi  = \mB\inv{(\trans{\mB}\mB)}\trans{\mB} = \dfrac{1}{6}
+\begin{nmat}
+5&2&-1\cr
+2&2&2\cr
+-1&2&5
+\end{nmat}
+$, and $\pi_U(\vec{x}) = \dfrac{1}{6}
+\begin{nmat}
+5&2&-1\cr
+2&2&2\cr
+-1&2&5
+\end{nmat} \colvec{6\\0\\0} = \colvec{5\\2\\-1}$
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Gram-Schmidt Orthogonalization}
+
+\plitemsep 0.1in
+
+\bci 
+\item 
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Projection onto Affine Subspaces}
+
+\begin{center}
+    \mypic{0.7}{L3_projection_affine.png}
+\end{center}
+
+\plitemsep 0.05in
+\vspace{-0.5cm}
+\bci 
+\item Affine space: $L = \vec{x}_0 + U$
+\item Affine subspaces are not vector spaces
+\item Idea: (i) move $\vec{x}$ to a point in $U$, (ii) do the projection, (iii) move back to $L$
+\bluef{$$\pi_L(\vec{x}) = \vec{x}_0 + \pi_{U}(\vec{x} - \vec{x}_0)$$}
+\eci
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L3(9)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+\item \grayf{Norms
+
+\item Inner Products
+
+\item Lengths and Distances
+
+\item Angles and Orthogonality
+
+\item Orthonormal Basis
+
+\item Orthogonal Complement
+
+\item Inner Product of Functions
+
+\item Orthogonal Projections}
+
+\item \redf{Rotations}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Rotation}
+
+\plitemsep 0.1in
+
+\bci 
+\item A linear mapping that rotates the given coordinate system by an angle $\theta.$
+
+\item Basis change
+\item $\vec{e}_1 = \colvec{1 \\ 0} \rightarrow \colvec{\cos\theta \\ \sin\theta}$ and $\vec{e}_2 = \colvec{0 \\ 1} \rightarrow \colvec{-\sin\theta \\ \cos\theta}$
+
+\item Rotation matrix $\vec{R}(\theta) = \begin{nmat}
+\cos\theta & -\sin\theta \cr
+\sin\theta & \cos\theta 
+\end{nmat}$
+
+\item Properties
+\bci
+\item Preserves distance: $\norm{\vec{x} - \vec{y}} = \norm{\mat{R}_\theta(\vec{x}) - \mat{R}_\theta(\vec{y})}$ 
+\item Preserves angle
+\eci
+\eci
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\vspace{2cm}
+\LARGE Questions?
+
+
+\end{frame}
+
+\begin{frame}{Review Questions}
+% \tableofcontents
+%\plitemsep 0.1in
+\bce[1)]
+\item 
+
+\ece
+\end{frame}
+
+
+\end{document}

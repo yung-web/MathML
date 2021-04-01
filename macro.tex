@@ -1,0 +1,242 @@
+%%%%%%%%%% linear algebra macros %%%%%%%%%%%%%%%%%%%%%%%
+
+%--------linsys
+%  Use as \begin{linsys}{3}
+%           x &+ &3y &+ &a &= &7 \\
+%           x &- &3y &+ &a &= &7
+%         \end{linsys}
+% Remark: TeXbook pp. 167-170 says to put a medmuskip around a +; and that's
+% 4/18-ths of an em.  Why does 2/18-ths of an em work?  I don't know, but
+% comparing to a regular displayed equation suggests it is right.
+% (darseneau says LaTeX puts in half an \arraycolsep.)
+\newenvironment{linsys}[2][m]{%
+\setlength{\arraycolsep}{.1111em} % p. 170 TeXbook; a medmuskip
+\begin{array}[#1]{@{}*{#2}{rc}r@{}}
+}{%
+\end{array}}
+
+\newsavebox\boxofmathplus
+\sbox{\boxofmathplus}{$+$}
+\newcommand{\spaceforemptycolumn}{\makebox[\wd\boxofmathplus]{\ }}
+
+%--------grstep
+% For denoting a Gauss' reduction step.
+% Use as: \grstep{\rho_1+\rho_3} or \grstep[2\rho_5 \\ 3\rho_6]{\rho_1+\rho_3}
+% \newcommand{\grstep}[2][\relax]{%
+%    \ensuremath{\mathrel{
+%        \mathop{\longrightarrow}\limits^{#2\mathstrut}_{
+%                                    \begin{subarray}{l} #1 \end{subarray}}}}}
+
+% Advantage of length formulation is that between adjacent
+% \grstep's you can add \hspace{-\grsteplength} to make it look not too wide
+\newlength{\grsteplength}
+\setlength{\grsteplength}{1.5ex plus .1ex minus .1ex}
+
+\newcommand{\grstep}[2][\relax]{%
+   \ensuremath{\mathrel{
+       \hspace{\grsteplength}\mathop{\longrightarrow}\limits^{#2\mathstrut}_{
+                                     \begin{subarray}{l} #1 \end{subarray}}\hspace{\grsteplength}}}}
+% If two or more \grsteps are in a row then they need to be tightened
+\newcommand{\repeatedgrstep}[2][\relax]{\hspace{-\grsteplength}\grstep[#1]{#2}}
+
+% row swap operation: \rho_1\swap\rho_2
+\newcommand{\swap}{\leftrightarrow}
+
+%-------------amatrix
+% Augmented matrix.  Usage (note the argument does not count the aug col):
+% \begin{amatrix}{2}
+%   1  2  3 \\  4  5  6
+% \end{amatrix}
+\newenvironment{amatrix}[1]{%
+  \left(\begin{array}{@{}*{#1}{c}|c@{}}
+}{%
+  \end{array}\right)
+}
+
+
+
+%-------------pmat
+% For matrices with arguments.
+% Usage: \begin{pmat}{c|c|c} 1 &2 &3 \end{pmat}
+\newenvironment{pmat}[1]{
+  \left(\begin{array}{@{}#1@{}}
+}{\end{array}\right)
+}
+
+
+
+%-------------misc matrices
+% \newenvironment{mat}{\left(\begin{array}}{\end{array}\right)}
+\newenvironment{detmat}{\left|\begin{array}}{\end{array}\right|}
+\newcommand{\deter}[1]{ \mathchoice{\left|#1\right|}{|#1|}{|#1|}{|#1|} }
+\newcommand{\generalmatrix}[3]{ %arg1: low-case letter, arg2: rows, arg3: cols 
+               \left(
+                  \begin{array}{cccc}
+                    #1_{1,1}  &#1_{1,2}  &\ldots  &#1_{1,#2}  \\
+                    #1_{2,1}  &#1_{2,2}  &\ldots  &#1_{2,#2}  \\
+                              &\vdots                         \\
+                    #1_{#3,1} &#1_{#3,2} &\ldots  &#1_{#3,#2}
+                  \end{array}
+               \right)  }
+
+\newcommand{\generaldet}[3]{ %arg1: low-case letter, arg2: rows, arg3: cols 
+               \left|
+                  \begin{array}{cccc}
+                    #1_{11}  &#1_{12}  &\ldots  &#1_{1 #2}  \\
+                    #1_{21}  &#1_{22}  &\ldots  &#1_{2 #2}  \\
+                              &\vdots                         \\
+                    #1_{#3 1} &#1_{#3 2} &\ldots  &#1_{#3 #2}
+                  \end{array}
+               \right|  }
+
+% With mathtools we can have column entries right flushed
+% There is an optional argument \begin{mat}[r]{3} .. \end{mat} for
+% right-flushed columns.  Perhaps the rule is that numbers are better 
+% right-flushed but if there are any letters it is better centered?
+\newenvironment{nmat}[1][c]{\begin{pmatrix*} % disable optional arg [#1] 
+      }{\end{pmatrix*}}
+% If mat starts with &\vdots get an error; why?  No apparent macro fix, according to texexchange
+\newenvironment{vmat}[1][c]{\begin{vmatrix*} % disable optional arg [#1] 
+      }{\end{vmatrix*}}
+\newenvironment{amat}[2][c]{%
+  % disable optional arg \left(\begin{array}{@{}*{#2}{#1}|#1@{}}
+  \left(\begin{array}{@{}*{#2}{c}|#1@{}}
+}{%
+  \end{array}\right)
+}
+% \newcommand\vdotswithin[1]{% Taken from mathtools.dtx because my TL is not 2011
+%   {\mathmakebox[\widthof{\ensuremath{{}#1{}}}][c]{{\vdots}}}}
+
+
+%------------colvec and rowvec
+% Column vector and row vector.  Usage:
+%  \colvec{1  \\ 2 \\ 3 \\ 4} and \rowvec{1  &2  &3}
+% Colvec takes an optional argument \colvec[r]{x_1 \\ 0}.  Perhaps 
+% digits look better right aligned, but if there are any letters it
+% needs to be centered?
+\newcommand{\colvec}[2][c]{\begin{nmat}[#1] #2 \end{nmat}}
+\newcommand{\smallcolvec}[1]{\left(\begin{smallmatrix} #1 \end{smallmatrix}\right)}
+% For row vectors, cannot do \newcommand{\rowvec}[1]{\begin{mat} #1 \end{mat}}
+% since the delimiters come out too large.
+\newcommand{\rowvec}[1]{\setlength{\arraycolsep}{3pt}\left(\begin{matrix} #1 \end{matrix}\right)}
+
+
+
+%-------------making aligned columns
+% Usage: \begin{aligncolondecimal}{2} 1.2 \\ .33 \end{aligncolondecimal}
+% (negative argument centers decimal pt in column).  Also Usage:
+% \begin{aligncolondecimal}[0em]{2} 1.2 \\ .33 \end{aligncolondecimal}
+% to make the left and right LaTeX-array padding disappear.
+\RequirePackage{array}\RequirePackage{dcolumn}
+\newenvironment{aligncolondecimal}[2][.1111em]{%
+\setlength{\arraycolsep}{#1}
+\newcolumntype{.}{D{.}{.}{#2}}\begin{array}{.}}{%
+\end{array}}
+
+% Matrix and vector, with numbers centered on decimal point
+% Usage: \begin{dmat}{D{.}{.}{1}D{.}{.}{3}}  0  &.123 \\ .2 &.456 \end{dmat}
+%  (in the D{.}{.}{number} that is the number of decimal places)
+\newlength{\dmatcolsep}\setlength{\dmatcolsep}{5pt}
+\newenvironment{dmat}[2][\dmatcolsep]{%
+  \setlength{\arraycolsep}{#1}
+  \left(\begin{array}{@{}#2@{}}
+}{%
+  \end{array}\right)}
+% Usage: \dcolvec[2]{1.23 \\ 4.56} where the optional argument is the number
+% of decimal places.
+\newcommand{\dcolvec}[2][-1]{\left(\begin{array}{@{}D{.}{.}{#1}@{}} #2 \end{array}\right)}
+
+%\newcommand{\trans}[1]{ {{#1}^{\mathsf{T}}} } 
+\newcommand{\trans}[1]{ {#1}^{\mathsf{T}} } 
+\newcommand{\inv}[1]{ {{#1}^{-1}} } 
+\newcommand{\spn}[1]{\ensuremath{\text{span}[#1]} } 
+\newcommand{\rk}[1]{\ensuremath{\text{rk}(#1)} } 
+\newcommand{\dimm}[1]{\ensuremath{\text{dim}(#1)} } 
+\newcommand{\img}[1]{\ensuremath{\text{Im}(#1)} } 
+%\newcommand{\norm}[1]{\ensuremath{\left || #1 \right ||} } 
+\newcommand{\norm}[1]{\ensuremath{\left \lVert #1 \right \rVert} } 
+% orthogonal complement
+\newcommand{\ocomp}[1]{\ensuremath{#1^{\bot}} } 
+\newcommand{\inner}[2]{\ensuremath{\left\langle #1, #2 \right\rangle} } 
+\DeclareMathOperator{\tr}{tr}
+
+%%%% Well-used matrices
+\def\mA{\mat{A}}
+\def\mB{\mat{B}}
+\def\mC{\mat{C}}
+\def\mD{\mat{D}}
+\def\mI{\mat{I}}
+\def\mJ{\mat{J}}
+\def\mK{\mat{K}}
+\def\mE{\mat{E}}
+\def\mP{\mat{P}}
+\def\mQ{\mat{Q}}
+\def\mU{\mat{U}}
+\def\mV{\mat{V}}
+\def\mR{\mat{R}}
+\def\mS{\mat{S}}
+\def\mX{\mat{X}}
+\def\msig{\mat{\Sigma}}
+\def\mPhi{\mat{\Phi}}
+
+
+%%%%% vector caculus useful macro
+% ...\d, which typesets a derivative. ex: \d{y}{x}, instead of \frac{dx}{dy}.
+\renewcommand{\d}[2]{\frac{\text{d} #1}{\text{d} #2}}
+
+% ...similar for double-derivatives. ex: \dd{y}{x}.
+\newcommand{\dd}[2]{\frac{\text{d}^2 #1}{\text{d} #2^2}}
+
+% ...similar for partial derivatives. ex: \pd{y}{x}.
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+
+% ...similar for partial double derivatives. ex: \pdd{y}{x}.
+\newcommand{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+% pdd with argument
+\newcommand{\pdda}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+
+\usepackage{xparse}
+
+% \NewDocumentCommand{\grad}{e{_^}}{%
+%   \mathop{}\!% \mathop for good spacing before \nabla
+%   \nabla
+%   \IfValueT{#1}{_{\!#1}}% tuck in the subscript
+%   \IfValueT{#2}{^{#2}}% possible superscript
+% }
+% \begin{equation*}
+%          \begin{nmat}[r]
+% 1 &2 &13 \\
+%           4  &5  &6
+%          \end{nmat}
+%       \end{equation*}
+
+% \begin{equation*}
+%          \begin{amat}{2}
+%           1  &2  &3  \\
+%           4  &5  &6
+%          \end{amat}
+%       \end{equation*}
+       
+%       \begin{equation*}
+%          \begin{pmat}{c|c|c}
+% 1 &2 &3 \\
+%           4  &5  &6
+%          \end{pmat}
+%       \end{equation*}
+
+% \begin{equation*}
+%          \begin{vmat}
+% a &c \\
+%           b  &d
+%          \end{vmat}
+%          =ad-bc
+% \end{equation*}
+
+%  \begin{equation*}
+%   \vec{v}=\colvec{-1  \\ -0.5  \\ 0}
+% \end{equation*}
+
+%  \begin{equation*}
+%   \vec{v}=\rowvec{-1  & -0.5  & 0}
+% \end{equation*}
+

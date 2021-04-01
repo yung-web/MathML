@@ -1,0 +1,1207 @@
+%\pdfminorversion=4
+\documentclass[handout,fleqn,aspectratio=169]{beamer}
+
+\input{../myhead}
+
+\title[]{Lecture 7: Optimization}
+\author{Yi, Yung (이융)}
+\institute{Mathematics for Machine Learning\\ KAIST EE}
+\date{\today}
+
+\input{../mymath}
+\input{../macro}
+
+
+
+%\renewcommand{\baselinestretch}{2.0}
+
+\begin{document}
+
+\input{../mydefault}
+
+% START START START START START START START START START START START START START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+
+\item Optimization Using Gradient Descent 
+\item Constrained Optimization and Lagrange Multipliers 
+\item Convex Sets and Functions
+\item Convex Optimization 
+\item Convex Conjugate
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Summary}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Training machine learning models $=$ finding a good set of parameters 
+
+\item A good set of parameters $=$ Solution (or close to solution) to some optimization problem
+
+\item Directions: Unconstrained optimization, Constrained optimization, Convex optimization
+
+\item High-school math: A necessary condition for the optimal point:  $f'(x)=0$ (stationary point)
+\bci
+\item Gradient will play an important role
+\eci
+\eci
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L7(1)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+
+\item \redf{Optimization Using Gradient Descent} 
+\item \grayf{Constrained Optimization and Lagrange Multipliers 
+
+\item Convex Sets and Functions
+\item Convex Optimization 
+\item Convex Conjugate}
+
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Unconstrained Optimization and Gradient Algorithms}
+
+
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Goal
+$$
+\min f(\vx), \quad f(\vx): \realn \mapsto \real, \quad f \in C^1
+$$
+
+\medskip
+
+\item \bluef{Graident-type} algorithms
+$$
+\vx_{k+1} = \vx_{k} + \gamma_k \vd_k, \quad k = 0,1,2, \ldots
+$$
+
+
+\item \redf{Lemma.} Any direction $\vd \in \real^{n \times 1}$ that satisfies $\grad f(\vx) \cdot \vd <0$ is a
+  descent direction of $f$ at $\vx$. That is, if we let $\vx_{\alpha} = \vx + \alpha
+  \vd,$ $\exists \bar{\alpha} >0,$ such that for
+  all $\alpha \in (0,\bar{\alpha}],$ $f(\vx_\alpha) < f(\vx).$
+
+
+\item \bluef{Steepest gradient descent}\footnote{In some cases, just gradient descent often means this steepest gradient descent.}. $\vd_{k} = - \trans{\grad f(\vx_k)}.$
+
+
+\item Finding a local optimum $f(\vx_{\star}),$ if the step-size $\gamma_k$ is suitably chosen. 
+
+\item \question How do we choose $\vd_k$ for a constrained optimization? 
+ %(Note) For constrained opti that the above is for unconstrained optimizations. But, our
+%   problem is a constrained optimization, so we have to pick $\vx^k$ that
+%   is {\em projected onto} the constraint set, i.e., $p \geq 0.$
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item A quadratic function $f: \real^2 \mapsto \real$.
+$$
+f\left(\colvec{x_1 \\ x_2}\right) = \frac{1}{2} \trans{\colvec{x_1 \\ x_2}} 
+\begin{nmat} 
+2 & 1 \cr
+1 & 20
+\end{nmat} \colvec{x_1 \\ x_2} - \trans{\colvec{5 \\ 3}} \colvec{x_1 \\ x_2},
+$$
+whose gradient is $\trans{\colvec{x_1 \\ x_2}} 
+\begin{nmat} 
+2 & 1 \cr
+1 & 20
+\end{nmat} - \trans{\colvec{5 \\ 3}}$
+\eci
+
+\medskip
+\mysmalltwocols{0.35}
+{
+\small
+\bci
+\item $\vx_0 = \trans{(-3 -1)}$
+\item constant step size $\alpha = 0.085$
+\item Zigzag pattern
+\eci
+}
+{
+\vspace{-0.5cm}
+\mypic{0.95}{L7_gradient_ex.png}
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Taxonomy}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Goal: $\min L(\vth)$ for $n$ training data
+
+\item Based on the \bluef{amount of training data} used for \bluef{each} iteration
+\bci
+\item Batch gradient descent (the entire $n$)
+\item Mini-batch gradient descent($k< n$ data )
+\item Stochastic gradient descent (one sampled data)
+\eci
+
+\item Based on the adaptive method of update
+\bci
+\item Momentum, NAG, Adagrad, RMSprop, Adam, etc
+\eci
+
+\item \url{https://ruder.io/optimizing-gradient-descent/} 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Stochastic Gradient Descent (SGD)}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Assume $L(\vth) = \sum_{i=1}^n L_n(\vth)$ (which happens in many cases in machine learning, e.g., negative log-likelihood in regression)
+
+\item Gradient update
+\aleq{
+\vth_{k+1} = \vth_{k} -\gamma_k \trans{\grad L(\vth_k)} = \vth_{k} -\gamma_k \sum_{n=1}^N \trans{\grad L_n(\vth_k)}
+}
+\bci
+\item Batch gradient: $\sum_{n=1}^N \trans{\grad L_n(\vth_k)}$
+\item Mini-batch gradient: $\sum_{n \in \set{K}} \trans{\grad L_n(\vth_k)}$ for a suitable choice of $\set{K}, |\set{K}| < n$
+\item Stochastic gradient: $\trans{\grad L_n(\vth_i)}$ for some (randomly chosen) $i$. Noisy approximation to the real gradient. 
+\eci
+
+\item Tradeoff: computation burden vs. exactness
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Adaptivity for Better Convergence: Momemtum}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Step size.
+\bci
+\item Too small: slow update, Too big: overshoot, zig-zag, often fail to converge
+\eci
+
+\item Adaptive update: smooth out the erratic behavior and dampens oscillations
+
+\item Gradient descent with \bluef{momentum}
+\aleq{
+\vx_{k+1} & = \vx_k - \gamma_i \trans{\grad f(\vx_k)} + \alpha \Delta \vx_k, \quad \alpha \in [0,1] \cr
+\Delta \vx_k & = \vx_k - \vx_{k-1}
+}
+\vspace{-0.5cm}
+\bci
+\item Memory term: $\alpha \Delta \vx_k,$ where $\alpha$ is the degree of how much we remember the past
+\item Next update $=$ a linear combination of current and previous updates
+\eci
+\eci
+\end{frame}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L7(2)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+
+\item \grayf{Optimization Using Gradient Descent} 
+\item \redf{Constrained Optimization and Lagrange Multipliers} 
+
+\item \grayf{Convex Sets and Functions
+\item Convex Optimization 
+\item Convex Conjugate}
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Standard Constrained Optimization Problem}
+
+\plitemsep 0.2in
+
+\bci 
+
+\item An optimization problem in standard form:
+\aleq{
+\text{minimize} \ & f(\vx) \cr
+\text{subject to} \  & g_{i}(\vx)\leq 0, \;\; i=1, 2, \ldots, m \quad \text{\em (Inequality constraints)}\cr
+& h_{j}(\vx)=0, \;\; j=1,2,\ldots,p \quad \text{\em (Equality constraints)}
+}
+
+\item Variables: $\vx \in\realn$. Assume nonempty feasible set
+
+\item Optimal value: $p^{*}$. Optimizer: $\vx^{*}$
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Problem Solving via Langrange Multipliers}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Duality Mentality
+
+\bci
+\item \bluef{Bound} or \bluef{solve} an optimization problem via a \redf{
+different} optimization problem!
+
+\item We'll develop the basic Lagrange duality theory for a \redf{
+general} optimization problem, then specialize for convex
+optimization
+\eci
+
+\item Idea: augment the objective with a weighted sum of constraints
+
+\bci
+
+\item \bluef{Lagrangian}: $$\cL(\vx,\vlam,\vnu)=f(\vx) +
+\sum_{i=1}^{m}\lambda_{i}g_{i}(\vx) + \sum_{i=1}^{p}\nu_{i}h_{i}(\vx)$$
+
+\item \bluef{Lagrange multipliers (dual variables)}: $\vlam = (\lambda_i: i = 1, \cdots, m)\succeq
+0,$ $\vnu=(\nu_1, \cdots, \nu_p)$
+
+\item \bluef{Lagrange dual function}: $$\cD(\vlam,\vnu)=\inf_{\vx}
+\cL(\vx,\vlam,\vnu)$$
+\eci
+
+\eci
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Lower Bound on the Optimal Value}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item The dual function $\cD(\vlam,\vnu)$ is the \bluef{lower bound} on the optimal value $p^*.$
+
+\item \redf{Theorem}. $\cD(\vlam,\vnu)\leq p^{*}, \;\; \forall \vlam\succeq
+0,\ \vnu$
+
+
+\item \redf{Proof}. Consider feasible $\tilde{\vx}$. Then, 
+\[
+\cL(\tilde{\vx},\vlam,\vnu) = f(\tilde{\vx}) +
+\sum_{i=1}^{m}\lambda_{i}g_{i}(\tilde{\vx}) +
+\sum_{i=1}^{p}\nu_{i}h_{i}(\tilde{\vx}) \leq f(\tilde{\vx})
+\]
+since $f_{i}(\tilde{\vx})\leq 0$ and $\lambda_{i}\geq 0.$
+
+Hence, $\cD(\vlam,\vnu)\leq \cL(\tilde{\vx},\vlam,\vnu) \leq
+f(\tilde{\vx})$ for all feasible $\tilde{\vx}.$
+Therefore, $\cD(\vlam,\vnu)\leq p^{*}.$
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Lagrangian Dual Problem}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Lower bound from Lagrange dual function depends on
+$(\vlam,\vnu)$. 
+
+\item \question What's the best lower bound? 
+\[
+\begin{array}{lll}
+\text{\bf Langrangian dual problem} \quad & \mbox{maximize} & \cD(\vlam,\vnu) \\
+ & \mbox{subject to} & \vlam\succeq 0
+\end{array}
+\]
+
+\item Dual variables: $(\vlam,\vnu)$
+
+\item \redf{Always a convex optimization}, because $\cD(\vlam,\vnu)$ is always concave over $\vlam,\vnu.$
+
+\bci
+\item Infimum over $\vx$ of a family of affine functions in $(\vlam,\vnu)$ (we will see this later)
+\eci
+
+\item Denote the optimal value of Lagrange dual problem by \bluef{$d^{*}$}.
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Weak Duality}
+
+\plitemsep 0.15in
+
+\bci 
+
+\item What's the relationship between $d^{*}$ and $p^{*}$?
+
+\myblock{Weak Duality}
+{
+\[
+d^{*}\leq p^{*}
+\]
+\vspace{-0.3cm}
+}
+
+\item Weak duality \redf{always} hold (even if the primal problem is
+not convex):
+
+\item Optimal duality gap: \bluef{$p^{*}-d^{*}$}
+
+
+\item Efficient generation of the lower bounds through the dual problem
+
+
+\eci
+\end{frame}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L7(3)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+
+\item \grayf{Optimization Using Gradient Descent} 
+\item \grayf{Constrained Optimization and Lagrange Multipliers} 
+
+\item \redf{Convex Sets and Functions}
+\item \grayf{Convex Optimization 
+\item Convex Conjugate}
+
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Convex Optimization}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Convex optimization problem
+\aleq{
+\text{minimize} \quad & f(\vx) \cr
+\text{subject to} \quad  & \vx \in \set{X},
+}
+where $f(\vx): \realn \mapsto \real$ is a convex function, and $\set{X}$ is a convex set. 
+
+\item The watershed between easily solvable problem and
+intractable ones is not `linearity', but {\red `convexity'}
+
+\item Let's overview the background of convex functions, convex sets, and their basic properties. 
+
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Convex Set}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Set $\set{C}$ is a {\blue convex set} if the line segment between any
+two points in $\set{C}$ lies in $\set{C}$, i.e.,  if for any $x_{1},x_{2}\in \set{C}$
+and any $\theta\in[0,1]$, we have $\theta x_{1} + (1-\theta)x_{2} \in \set{C}$
+
+
+\item {\blue Convex hull} of $\set{C}$ is the set of all {\red convex combinations}
+of points in $\set{C}$:
+\[
+\left\{ \sum_{i=1}^{k}\theta_{i}x_{i} \mid x_{i}\in \set{C}, \theta_{i}\geq
+0, i=1,2,\ldots,k, \sum_{i=1}^{k}\theta_{i}=1 \right\}
+\]
+
+- What is $k$? For all $k$? For some $k$?
+
+\item Generalize to infinite sums and integrals:
+
+$$
+\sum_{i=1}^\infty \theta_i x_i \in \set{C},  \quad \int_{\set{C}} p(x) x dx \in \set{C},
+$$
+where $\sum_{i=1}^\infty \theta_i = 1$ and $p(x)$ is a pdf of some random variable.
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Examples}
+
+- Convex and Non-convex sets
+\mypic{0.45}{L7_convex_set_ex1.eps}
+
+
+- Convex hulls
+\mypic{0.45}{L7_convex_set_ex2.eps}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Examples of Convex Sets}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \bluef{Hyperplane} in $\realn$ is a set:
+$\{x \mid \trans{a}x=b\}$ where $a\in\realn, a\neq 0, b\in\real$
+
+In other words, $\{ x \mid \trans{a}(x-x_0) =0\},$ where $x_0$ is any point in
+the hyperplane, i.e., $\trans{a} x_0 = b.$
+
+\mysmalltwocols{0.2}
+{
+\item Divides $\realn$ into two {\blue halfspaces}: 
+$\{x|\trans{a}x\leq b\}$ and $\{x|\trans{a}x>b\}$
+}
+{
+\vspace{-0.3cm}
+\mypic{0.7}{L7_halfspace.png}
+}
+
+\item \bluef{Polyhedron} is the solution set of a finite
+number of linear equalities and inequalities (intersection of
+finite number of halfspaces and hyperplanes)
+\aleq{
+\set{P} = \{ x \mid \trans{a}_jx \leq b_j, j = 1, \ldots, m, \trans{c}_j x = d_j, j
+=1, \ldots, p\}  = \{ x \mid Ax \leq b, Cx = d\}
+}
+
+\item \bluef{Polytope}: a bounded polyhedron
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Separating Hyperplane Theorem}
+
+\mypic{0.3}{L7_separating.png}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item $\set{C}$ and $\set{D}$: non-intersecting convex sets, i.e., 
+$\set{C}\bigcap \set{D}=\phi$. 
+
+\item Then, there exist $a\neq 0$ and $b$ such that
+$\trans{a}x\leq b$ for all $x\in \set{C}$ and $\trans{a}x\geq b$ for all $x\in
+\set{D}$.
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Supporting Hyperplane Theorem}
+
+\mypic{0.25}{L7_supporting.png}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Given a set $\set{C}\in\realn$ and a point $x_{0}$ on its
+  boundary, if $a\neq 0$ satisfies $\trans{a}x \leq \trans{a}x_{0}$ for all
+  $x\in \set{C}$, then $\{x|\trans{a}x=\trans{a}x_{0}\}$ is called a \bluef{
+    supporting hyperplane} to $\set{C}$ at $x_{0}$
+  
+\item For any nonempty convex set $\set{C}$ and \redf{any} $x_{0}$ on
+  boundary of $\set{C}$, there exists a supporting hyperplane to $\set{C}$ at
+  $x_{0}$
+
+\item What happens if $\set{C}$ is non-convex?
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Convex Functions}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item $f:\realn \mapsto \real$ is a {\blue convex function} if
+$\text{dom} \ f$ is a convex set and for all $x,y\in \text{dom} \ f$ and
+$\theta\in[0,1]$, we have
+\[
+f(\theta x+(1-\theta)y) \leq \theta f(x) + (1-\theta)f(y)
+\]
+
+\item $f$ is {\blue strictly convex} if the strict inequality in the above holds for all
+$x\neq y$ and $0<\theta<1.$
+
+\eci
+\mysmalltwocols{0.35}
+{
+\bci
+
+\item $f$ is {\blue concave} if $-f$ is convex
+
+
+\item Affine functions are convex and concave
+
+
+\item \bluef{Jensen's inequality.} For a rv $X,$ $f(\expect{X}) \leq \expect{f(X)}.$
+
+\eci
+}
+{
+\vspace{-0.4cm}
+\mypic{0.8}{L7_convex_fn.png}
+}
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Conditions of Convex Functions (1)}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \bluef{First-order condition.} For differentiable functions, $f$ is convex iff
+\[
+f(y)-f(x)\geq \trans{\grad f(x)}(y-x), \quad \forall x,y\in \text{dom} \ f, \text{and} \ \text{dom} \ f \ \text{is convex}
+\]
+
+\mypic{0.35}{L7_first_condition.png}
+
+\item \exam $f(y) = y^2.$
+
+\item $f(y)\geq \tilde{f}_{x}(y)$ where $\tilde{f}_{x}(y)$ is
+  the first order Taylor expansion of $f(y)$ at $x$.
+
+\item {\red Local} information (first order Taylor
+  approximation) about a convex function provides {\red global}
+  information (global underestimator).
+\item If $\grad f(x)=0$, then $f(y)\geq f(x), \; \forall y.$ Thus, $x$ is a global minimizer of $f$
+
+\eci
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Conditions of Convex Functions (2)}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item \bluef{Second-order condition.} For twice differentiable functions, $f$ is convex iff
+\[
+\grad^{2}f(x)\succeq 0
+\]
+for all $x\in\text{dom} \ f$ (upward slope) and $\text{dom} \ f$ is convex
+
+
+\item Example: $f(x) = x^2.$
+% 3. $f$ is convex iff for all $x\in\dom f$ and all $v$,
+% \[
+% g(t)=f(x+tv)
+% \]
+% is convex on its domain $\{t\in\reals|x+tv\in\dom f\}$
+
+\item Meaning: The graph of the function have positive (upward) curvature at $x.$
+
+\eci
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% Slide 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Examples of Convex or Concave Functions}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item $e^{ax}$ is convex on $\real$, for any $a\in\real$
+
+\item $x^{a}$ is convex on $\real_{++}$ when $a\geq 1$ or
+$a\leq 0$, and concave for $0\leq a\leq 1$
+
+\item $|x|^{p}$ is convex on $\real$ for $p\geq 1$
+
+\item $\log x$ is concave on $\real_{++}$
+
+\item $x\log x$ is strictly convex on $\real_{++}$
+
+\item Every norm on $\realn$ is convex
+
+\item $f(x)=\max\{x_{1},\ldots,x_{n}\}$ is convex on
+$\realn$
+
+\item $f(x)=\log\sum_{i=1}^{n}e^{x_{i}}$ is convex on
+$\realn$
+
+\item $f(x)=\left(\prod_{i=1}^{n}x_{i}\right)^{\frac{1}{n}}$
+is concave on $\real_{++}^{n}$
+
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% Slide 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Convexity-Preserving Operations}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item $f=\sum_{i=1}^{n}w_{i}f_{i}$ convex if $f_{i}$ are all
+convex and $w_{i}\geq 0$
+
+\item $g(x)=f(Ax+b)$ is convex iff $f(x)$ is convex
+
+\item $f(x)=\max\{f_{1}(x),f_{2}(x)\}$ convex if $f_{i}$
+convex, e.g., sum of $r$ largest components is convex
+
+\item $f(x)=h(g(x))$, where $h:\real^{k} \mapsto \real$
+and $g:\realn \mapsto \real^{k}$.
+
+\medskip
+If $k=1$: $f''(x) = h''(g(x))g'(x)^{2} + h'(g(x))g''(x)$. So,
+$f$ is convex if $h$ is convex and nondecreasing and $g$ is
+convex, or if $h$ is convex and nonincreasing and $g$ is concave
+...
+
+\item $g(x)=\inf_{y\in \set{C}} f(x,y)$ is convex if $f$ is convex in $(x,y)$
+and $\set{C}$ is convex
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%% Slide 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Point-wise Supremum}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item If $f(x,y)$ is convex in $x$ for each $y \in \set{A},$ then
+$$g(x) = \sup_{y \in \set{A}} f(x,y)$$
+is \bluef{convex}. Similarly, if $f(x,y)$ is concave in $x$ for each $y \in \set{A},$ then
+$$g(x) = \inf_{y \in \set{A}} f(x,y)$$
+is \bluef{concave}.
+
+\item \exam distance to farthest point in a set $\set{C}$: $f(x) = \sup_{y \in \set{C}} || x-y ||$ is \bluef{convex}.
+
+\item \exam Lagrange dual function 
+$$\cD(\vlam,\vnu)=\inf_{\vx}
+\cL(\vx,\vlam,\vnu)$$
+is \bluef{concave}. 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L7(4)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+
+\item \grayf{Optimization Using Gradient Descent} 
+\item \grayf{Constrained Optimization and Lagrange Multipliers} 
+
+\item \grayf{Convex Sets and Functions}
+\item \redf{Convex Optimization} 
+\item \grayf{Convex Conjugate}
+
+
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%% Slide 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Standard Convex Optimization}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item A {\blue standard convex optimization} problem with variables $\vx$:
+\[
+\begin{array}{ll}
+\mbox{minimize} & f(\vx)\\
+\mbox{subject to} & g_{i}(\vx)\leq 0, \;\; i=1,2,\ldots,m\\
+& \trans{a_{i}}\vx= b_{i}, \;\; i=1,2,\ldots,p
+\end{array}
+\]
+where $f,f_{1},\ldots,f_{m}$ are convex functions.
+
+\item {\red Minimize} {\blue convex} objective function (or
+maximize concave objective function)
+
+\item {\red Upper bound inequality} constraints on {\blue
+convex} functions ($\Rightarrow$ Constraint set is convex)
+
+\item {\red Equality} constraints must be {\blue affine} (Only affine functions leads to a convex set for the 
+equality constraints)
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Properties for Optimality}
+
+\plitemsep 0.05in
+
+\bci 
+
+\item \bluef{Local optimality implies global optimality.}
+
+\bci
+
+\item Given $x$ is {\red locally optimal} for a convex optimization problem, i.e., 
+$\vx$ is feasible and for some $R>0$,
+\[
+f(\vx) = \inf\{f(\vz) \mid \vz \; \text{is feasible}\;,
+\|\vz-\vx\|_{2}\leq R\}
+\]
+
+\item {\red Theorem.} if $\vx$ is locally optimal in convex program, then
+  globally optimal.
+
+\eci
+
+\item \bluef{Optimal condition for differentiable $f$}
+
+\bci
+\item $\vx$ is optimal for a convex optimization problem iff $\vx$ is
+feasible and for all feasible $\vy$:
+\[
+\grad \trans{f(\vx)}(\vy-\vx)\geq 0
+\]
+
+\item $-\grad f(\vx)$ defines a supporting hyperplane to the feasible set
+($\{ \vy \mid - \grad \trans{f(\vx)}\vy \leq - \grad \trans{f(\vx)}\vx \}$). 
+
+\item (Note) Unconstrained convex optimization: condition reduces to: $\grad f(\vx)=0$
+
+\eci
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Strong Duality}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item {\blue Strong duality} (zero optimal duality gap):
+\[
+d^{*}=p^{*}
+\]
+
+\item If strong duality holds, solving dual is `equivalent' to solving
+primal. But strong duality does {\red not} always hold
+
+\item Convexity and {\blue constraint qualifications} $\implies$
+Strong duality
+
+\item A simple constraint qualification: {\blue Slater's condition}
+(there exists strictly feasible primal variables $f_{i}(\vx)<0$ for
+non-affine $f_{i}$) (see Section 5.3.2 of Boyd's book). 
+
+\item Another reason why convex optimization is `easy'
+
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Complementary Slackness}
+
+\plitemsep 0.05in
+
+\bci 
+
+\item Assume {\red strong duality} holds. Then, 
+\aleq{
+f(\vx^{*}) & =  \cD(\vlam^{*},\vnu^{*}) =  \inf_{\vx}\left(f(\vx) + \sum_{i=1}^{m}\lambda_{i}^{*}f_{i}(\vx)
++ \sum_{i=1}^{p}\nu_{i}^{*}h_{i}(\vx) \right)\\
+& \leq  f(\vx^{*}) + \sum_{i=1}^{m}\lambda_{i}^{*}f_{i}(\vx^{*})
++ \sum_{i=1}^{p}\nu_{i}^{*}h_{i}(\vx^{*}) \leq  f(\vx^{*})
+}
+
+\item Thus, the two inequalities must hold with equality, implying:
+$
+\lambda_{i}^{*}f_{i}(\vx^{*}) = 0, \ \forall i
+$
+
+\item \bluef{Complementary slackness} condition:
+\aleq{
+\lambda_{i}^{*}>0 & \implies  f_{i}(\vx^{*})=0 \cr
+f_{i}(\vx^{*})<0 & \implies  \lambda_{i}^{*}=0
+}
+
+\item $i$-th optimal Lagrange multiplier is zero unless the $i$th constraint is
+active at the optimum. 
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{KKT Condition}
+
+\plitemsep 0.05in
+\bci 
+% Assume that all the functions in the objective and the constraint are
+% differentiable. 
+
+\item Since $\vx^{*}$ minimizes $\cL(\vx,\vlam^{*},\vnu^{*})$ over $\vx$, 
+\[
+\grad f(\vx^{*}) + \sum_{i=1}^{m}\lambda_{i}^{*}\nabla
+f_{i}(\vx^{*}) + \sum_{i=1}^{p}\nu_{i}^{*}\grad h_{i}(\vx^{*}) = 0
+\]
+\vspace{-0.3cm}
+\myblock{Karush-Kuhn-Tucker optimality condition}
+{
+\vspace{-0.3cm}
+\begin{eqnarray*}
+& f_{i}(\vx^{*})\leq 0, \;\; h_{i}(\vx^{*})=0, \;\;
+\lambda_{i}^{*}\succeq 0 & \\
+& \lambda_{i}^{*}f_{i}(\vx^{*}) = 0 &\\
+& \grad f(\vx^{*}) + \sum_{i=1}^{m}\lambda_{i}^{*}\grad f_{i}(\vx^{*}) + \sum_{i=1}^{p}\nu_{i}^{*}\grad h_{i}(\vx^{*}) = 0 &
+\end{eqnarray*}
+\vspace{-0.3cm}
+}
+
+\item {\red Any} optimization  with strong duality, KKT condition is necessary for primal-dual optimality
+
+\item {\red Convex} optimization with Slater's condition, KKT is
+also {\red sufficient} for primal-dual optimality. 
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Useful Tips}
+
+\plitemsep 0.03in
+\bci 
+\item Minimization problem ({\red min-min-max} rule)
+\bci
+
+  \item Problem: $\text{min }f(x) \quad \text{s.t.}  \quad f_i(x) \leq 0, \quad
+      g_i(x)  = 0, \quad x$ 
+  \item $f(x)$: convex, $f_i(x)$: convex, $g_i(x)$: affine \medskip
+  \item $L(x,\lambda,\mu) = f(x) + \sum_i \lambda_i f_i(x) + \sum_i
+    \mu_i g_i(x)$
+  \item $\inf_{x} L(x,\lambda,\mu) = \cD(\lambda,\mu)$
+  \item  $\max_{\lambda \geq 0} \cD(\lambda,\mu)$
+
+\eci
+
+\item Maximization problem ({\red max-max-min} rule)
+  
+\bci
+  \item Problem: $\text{max } f(x) \quad \text{s.t.}  \quad f_i(x) \geq 0, \quad
+      g_i(x)  = 0, \quad x$ 
+  \item $f(x)$: concave, $f_i(x)$: concave, $g_i(x)$: affine \medskip
+  \item $L(x,\lambda,\mu) = f(x) + \sum_i \lambda_i f_i(x) + \sum_i
+    \mu_i g_i(x)$
+  \item $\sup_{x} L(x,\lambda,\mu) = \cD(\lambda,\mu)$
+  \item  $\min_{\lambda \geq 0} \cD(\lambda,\mu)$
+\eci
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Linear Programming}
+
+\mysmalltwocols{0.35}
+{
+- Primal problem
+
+$$
+\begin{array}{ll}
+\mbox{min}_{\vx \in \real^d} & \trans{\vc}\vx \\
+\mbox{subject to} & \mA \vx \preceq \vb,  
+\end{array}
+$$
+where $\mA \in \real^{m \times d}$ and $\vb \in \realm.$
+}
+{
+- Dual problem
+
+$$
+\displaystyle
+\begin{array}{ll}
+\text{max}_{\vlam \in \real^m} & -\trans{\vb}\vlam \\
+\mbox{subject to} & \vc + \trans{\mA}\vlam = \vec{0}, \ \vlam \succeq \vec{0},
+\end{array}
+$$
+where $\vlam \in \realm.$
+}
+
+\plitemsep 0.1in
+\bci 
+
+\item The Lagrangian: $\cL(\vx, \vlam) = \trans{(\vc + \trans{\mA}\vlam)}\vx - \trans{\vlam} \vb,$ 
+whose derivative w.r.t. $\vx$ becomes zero, when $\vc + \trans{\mA}\vlam = \vec{0}.$
+
+\item The dual function: $\cD(\vlam) = -\trans{\vlam} \vb$
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Quadratic Programming}
+
+\plitemsep 0.1in
+\bci 
+
+\item Primal problem
+$$
+\begin{array}{ll}
+\mbox{min}_{\vx \in \real^d} & \frac{1}{2} \trans{\vx}\mQ \vx + \trans{c}\vx \\
+\mbox{subject to} & \mA \vx \preceq \vb,  
+\end{array}
+$$
+where $\mA \in \real^{m \times d},$ $\vb \in \realm,$ $\vc \in \real^d,$ the square matrix $\mQ$ is symmetric, positive definite. 
+
+\item Dual problem
+$$
+\begin{array}{ll}
+\text{max}_{\vlam \in \real^m} & \Bigg(-\frac{1}{2}\trans{(\vc + \trans{\mA}\vlam)}\mA\inv{\mQ}(\vc + \trans{\mA}\vlam) -\trans{\vlam}\vb \Bigg )\\
+% & -\trans{\vlam}\vb \Bigg )\\
+\text{subject to} & \vlam \succeq \vec{0},
+\end{array}
+$$
+
+where $\vlam \in \realm.$
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L7(5)}
+\begin{frame}{Roadmap}
+
+\plitemsep 0.1in
+
+\bce[(1)] 
+
+\item \grayf{Optimization Using Gradient Descent} 
+\item \grayf{Constrained Optimization and Lagrange Multipliers} 
+
+\item \grayf{Convex Sets and Functions}
+\item \grayf{Convex Optimization} 
+\item \redf{Convex Conjugate}
+
+
+\ece
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Conjugate Function: Definition and Meaning}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Given $f: \realn \mapsto \real$, the {\blue conjugate function}
+$f^{*}:\realn \mapsto \real$ defined as:
+\[
+f^{*}(\vy) = \sup_{\vx\in\text{dom} \ f}(\trans{\vy}\vx-f(\vx))
+\]
+with domain consisting of $\vy\in\realn$ for which the supremum
+is finite
+
+\eci
+
+\mysmalltwocols{0.5}
+{
+\small
+\bci
+\item Assume $\real^1.$
+\item For a given slope of $y,$ $yx-f(x)$ is the vertical distance between the line $yx$ and $f(x).$
+\item Thus, $f^*(y)$ is the maximum distance
+\eci
+}
+{
+\mypic{0.9}{L7_convex_conjugate.png}
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Conjugate Function: Properties}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item 
+\grayf{Given $f: \realn \mapsto \real$, the conjugate function
+$f^{*}:\realn \mapsto \real$ defined as:
+\[
+f^{*}(\vy) = \sup_{\vx\in\text{dom} \ f}(\trans{\vy}\vx-f(\vx))
+\]
+with domain consisting of $\vy\in\realn$ for which the supremum
+is finite}
+
+\item $f^{*}(\vy)$:  {\red always convex} (the pointwise
+supremum of a family of affine functions of $\vy$)
+
+\item $f^{*}=f$ if $f$ is convex and closed
+
+\item {\blue Fenchel's inequality}: $f(\vx)+f^{*}(\vy)\geq \trans{\vx} \vy$
+for all $\vx,\vy$ (by definition)
+\bci
+\item \exam $f(x) = |x|^2/2$. Then, $f^*(y) = |y|^2/2.$ Thus, F-inequality tells us: 
+$$
+\frac{1}{2}(|x|^2 + |y|^2) \ge xy
+$$
+\eci
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Examples of Conjugate Functions}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item $f(x)=ax+b$, $f^{*}(a)=-b$
+
+\item $f(x)=-\log x$, $f^{*}(y)=-\log(-y)-1$ for $y<0$
+
+\item $f(x)=e^{x}$, $f^{*}(y)=y\log y-y$
+
+\item $f(x)=x\log x$, $f^{*}(y)=e^{y-1}$
+
+\item $f(x)=\frac{1}{2}\trans{x}Qx$,
+$f^{*}(y)=\frac{1}{2}\trans{y}Q^{-1}y$ ($Q$ is positive definite)
+
+\item $f(x)=\log\sum_{i=1}^{n}e^{x_{i}}$,
+\aleq{
+f^{*}(y) = \begin{cases}
+\sum_{i=1}^{n}y_{i}\log y_{i} & \text{if} \ y\succeq 0 \ \text{and} \ \sum_{i=1}^{n}y_{i}=1, \cr
+\infty & \text{otherwise}
+\end{cases}
+}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Conjugate Function and Lagrangian Dual Function}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item They are closely related. Consider the following problem:
+\[
+\begin{array}{ll}
+\mbox{minimize} & f(\vx)\\
+\mbox{subject to} & \mA \vx \preceq \vb, \\
+& \mC \vx = \vd
+\end{array}
+\]
+
+\item Using the conjugate of $f,$ we can write the dual function as:
+\aleq{
+\cD(\vlam,\vnu) &= \inf_{\vx}\left( f(\vx) + \trans{\vlam}(\mA \vx - \vb) + 
+\trans{\vnu}(\mC \vx - \vd) \right) \cr
+&= -\trans{\vb}\vlam - \trans{\vd}\vnu + \inf_{\vx} \left(f(\vx) + 
+\trans{(\trans{\mA}\vlam + \trans{\mC} \vnu)}\vx \right )\cr
+&= -\trans{\vb}\vlam - \trans{\vd}\vnu -f^{*}\left(-\trans{\mA}\vlam
+- \trans{\mC}\vnu \right)
+}
+\eci
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\vspace{2cm}
+\LARGE Questions?
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Review Questions}
+% \tableofcontents
+%\plitemsep 0.1in
+\bce[1)]
+\item 
+
+\ece
+\end{frame}
+
+
+\end{document}
