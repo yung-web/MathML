@@ -7,8 +7,10 @@
 
 \title[]{Lecture 1: Introduction}
 \author{Yi, Yung (이융)}
-\institute{Mathematics for Machine Learning\\ KAIST EE}
-\date{MONTH DAY, 2021}
+\institute{Mathematics for Machine Learning\\ 
+\url{https://yung-web.github.io/home/courses/mathml.html}
+\\KAIST EE}
+\date{\today}
 
 \input{../mymath}
 \input{../mymacro}
@@ -19,59 +21,247 @@
 
 % START START START START START START START START START START START START START
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Outline}
+\begin{frame}{Textbook}
 
-\plitemsep 0.1in
+ \begin{center}
+ \begin{tabular}{ccc}
+ \includegraphics[width=2.0cm]{mathmlbook.png} & 
+ \includegraphics[width=2.1cm]{cvxbook.png} &
+ \includegraphics[width=2.4cm]{probcover-2nd.png} 
+\end{tabular}
+ \end{center}
+
+%\small
+\vspace{-0.4cm}
+\plitemsep 0.02in
 
 \bci 
-\item 
+\item Mathematics for Machine Learning\footnote{The entire textbook can be downloaded at \url{https://mml-book.github.io/}}, Cambridge University Press,   Marc Peter Deisenroth, A. Aldo Faisal, and Cheng Soon Ong
+\item Other books
+\bci
+\item Convex Optimization, Cambridge University Press, by Stephen Boyd and Lieven Vandenberghe
+\item Introduction to Probability, 2nd edition, Athena Scientific, by Dimitri P. Bertsekas and John N. Tsitsiklis
+\eci
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Organization}
+
+\plitemsep 0.03in
+
+\bci 
+\item Part I: Math 
+\bce
+\item Linear Algebra
+\item Analytic Geometry
+\item  Matrix Decomposition
+\item Vector Calculus
+\item Probability and Distributions
+\item Optimization
+\ece
+
+\medskip
+\item Part II: 4 Basic Machine Learning Problems
+\bce
+\item When Models Meet Data
+
+\item Dimensionality Reduction with Principal Component Analysis
+
+\item Density Estimation with Gaussian Mixture Models
+
+\item Classification with Support Vector Machines
+\ece
 
 \eci
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Basic Notations}
+\begin{frame}{Suggestions on Course Schedules}
+
+Total 16 weeks
+\vspace{-0.2cm}
+\plitemsep 0.01in
+
+\bci 
+\item Part I: Math 
+\bce
+\item Linear Algebra \hfill (2 weeks)
+\item Analytic Geometry \hfill (1 week)
+\item  Matrix Decomposition \hfill(1 week)
+\item Vector Calculus \hfill(1 week)
+\item Probability and Distributions \hfill(2 weeks)
+\item Optimization \hfill(2 weeks)
+\ece
+
+\item Part II: 4 Basic Machine Learning Problems
+\bce
+\item When Models Meet Data \hfill(1 week)
+
+\item Dimensionality Reduction with Principal Component Analysis \hfill(1 week)
+
+\item Density Estimation with Gaussian Mixture Models \hfill(1 week)
+
+\item Classification with Support Vector Machines \hfill(1 week)
+\ece
+
+\item Total 13 weeks + Midterm (1 week) + Final (1 week) + Extra (1 week)
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Target Audience}
 
 \plitemsep 0.1in
 
 \bci 
-\item Scalars: $a,b,c,\alpha,\beta,\gamma$
 
-\item Vectors: $\vec{x},\vec{y},\vec{z}$
+\item Undergraduate
+\bci 
+\item They may have partial backgrounds on the math (e.g., only vector calculus + linear algebra). Depending on the students' background, the amount of time for math can be adjusted. 
 
-\item Matrices: $\mat{X},\mat{Y},\mat{Z}$
+\item Some mathematical parts may need to be provided with the full proofs. 
+\eci 
 
-\item Sets: $\set{A}, \set{B}, \set{C}$
-
-\item (Ordered) tuple: $B=(\bm{b}_1, \bm{b}_2, \bm{b}_3)$
-
-\item Matrix of column vectors: $\mat{B} = [\vec{b}_1, \vec{b}_2, \vec{b}_3]$
-
-\item Set of vectors:  $\set{B} = \sets{\vec{b}_1, \vec{b}_2, \vec{b}_3}$
-
-\item $\real,$ $\complex,$ $\integer,$ $\natu,$ $\real^n$
+\item Graduate
+\bci
+\item When graduate students took the basic math courses on linear algebra, vector calculus, probability, optimization, but they don't have almost no background on machine learning.
+\item Math parts can be just reviewed without proofs, but additional ML problems can be added to the course.
+\eci
 \eci
 \end{frame}
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% \vspace{2cm}
+% \LARGE How to use the downloaded latex source files
+
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{File Organization}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item In each chapter, there is a {\tt main.tex} which you can compile.
+
+\item Common files for all chapters
+\bci
+\item {\tt myhead.tex}: common headers, e.g., including necessary packages
+\item {\tt mydefault.tex}: default values of many latex environments
+\item {\tt mymacro.tex}: macros related to linear algebra, e.g., matrix, transpose, inverse, etc
+\item {\tt mymath.tex}: other misc. math macros
+\item {\tt compile.sh}: shell script which compiles and generate the pdfs of all chapters
+\item {\tt print.sh}: shell script which generates the pdfs of 2/1, 4/1 printed formats
+\eci
+
+\item Just type "./compile.sh" if you want to get all the pdfs\footnote{Please make compile.sh and print.sh executable, if not, by typing {\tt chmod u+x compile.sh}}. 
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Slide vs. Handout}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Handout
+
+\begin{verbatim}
+\documentclass[handout,fleqn,aspectratio=169]{beamer}
+\end{verbatim}
+
+\item Slide
+\begin{verbatim}
+\documentclass[fleqn,aspectratio=169]{beamer}
+\end{verbatim}
+
+\item Difference between Handout and Slide? If you use the functionality of ``beamer overlay" to add animations to pdfs, you need to compile without handout option. Please visit the following url if you are interested. 
+
+\medskip
+\url{https://youtu.be/kkM_VPSM8kA}
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Letter vs. A4}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item A4
+In the {\tt myhead.tex} file:
+
+\begin{verbatim}
+\usepackage{pgfpages}
+\pgfpagesuselayout{resize to}[a4paper,landscape,border shrink=5mm]
+\end{verbatim}
+
+\item Letter
+In the {\tt myhead.tex} file:
+
+\begin{verbatim}
+\usepackage{pgfpages}
+\pgfpagesuselayout{resize to}[letterpaper,landscape,border shrink=5mm]
+\end{verbatim}
+
+
+\eci
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{Basic Notations}
+
+% \plitemsep 0.1in
+
+% \bci 
+% \item Scalars: $a,b,c,\alpha,\beta,\gamma$
+
+% \item Vectors: $\vec{x},\vec{y},\vec{z}$
+
+% \item Matrices: $\mat{X},\mat{Y},\mat{Z}$
+
+% \item Sets: $\set{A}, \set{B}, \set{C}$
+
+% \item (Ordered) tuple: $B=(\bm{b}_1, \bm{b}_2, \bm{b}_3)$
+
+% \item Matrix of column vectors: $\mat{B} = [\vec{b}_1, \vec{b}_2, \vec{b}_3]$
+
+% \item Set of vectors:  $\set{B} = \sets{\vec{b}_1, \vec{b}_2, \vec{b}_3}$
+
+% \item $\real,$ $\complex,$ $\integer,$ $\natu,$ $\real^n$
+% \eci
+% \end{frame}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 \vspace{2cm}
-\LARGE Questions?
+\LARGE Enjoy!
 
 
 \end{frame}
 
-\begin{frame}{Review Questions}
-% \tableofcontents
-%\plitemsep 0.1in
-\bce[1)]
-\item 
+% \begin{frame}{Review Questions}
+% % \tableofcontents
+% %\plitemsep 0.1in
+% \bce[1)]
+% \item 
 
-\ece
-\end{frame}
+% \ece
+% \end{frame}
 
 
 \end{document}
