@@ -1,44 +1,48 @@
-pdfjam --nup 1x2 01.intro.pdf --outfile 01.intro-2.pdf
-pdfjam --nup 2x2 01.intro.pdf --outfile 01.intro-4.pdf --landscape
+(cd 01.Introduction;
+ pdfjam --nup 1x2 1.intro.pdf --outfile 1.intro-2.pdf;
+ pdfjam --nup 2x2 1.intro.pdf --outfile 1.intro-4.pdf --landscape)
 
-pdfjam --nup 1x2 02.nf-pure.pdf --outfile 02.nf-pure-2.pdf
-pdfjam --nup 2x2 02.nf-pure.pdf --outfile 02.nf-pure-4.pdf --landscape
+(cd 02.LinearAlgebra;
+ pdfjam --nup 1x2 2.LA.pdf --outfile 2.LA-2.pdf;
+ pdfjam --nup 2x2 2.LA.pdf --outfile 2.LA-4.pdf --landscape)
 
-pdfjam --nup 1x2 03.nf-mixed.pdf --outfile 03.nf-mixed-2.pdf
-pdfjam --nup 2x2 03.nf-mixed.pdf --outfile 03.nf-mixed-4.pdf --landscape
+(cd 03.Geometry;
+ pdfjam --nup 1x2 3.AG.pdf --outfile 3.AG-2.pdf;
+ pdfjam --nup 2x2 3.AG.pdf --outfile 3.AG-4.pdf --landscape)
 
-pdfjam --nup 1x2 04.nf-eff-cont.pdf --outfile 04.nf-eff-cont-2.pdf
-pdfjam --nup 2x2 04.nf-eff-cont.pdf --outfile 04.nf-eff-cont-4.pdf --landscape
+(cd 04.MatrixDecomposition;
+ pdfjam --nup 1x2 4.MD.pdf --outfile 4.MD-2.pdf;
+ pdfjam --nup 2x2 4.MD.pdf --outfile 4.MD-4.pdf --landscape)
 
-pdfjam --nup 1x2 05.Potential.pdf --outfile 05.Potential-2.pdf
-pdfjam --nup 2x2 05.Potential.pdf --outfile 05.Potential-4.pdf --landscape
+(cd 05.VectorCaculus;
+ pdfjam --nup 1x2 5.VC.pdf --outfile 5.VC-2.pdf;
+ pdfjam --nup 2x2 5.VC.pdf --outfile 5.VC-4.pdf --landscape)
 
-pdfjam --nup 1x2 05.Potential.pdf --outfile 05.Potential-2.pdf
-pdfjam --nup 2x2 05.Potential.pdf --outfile 05.Potential-4.pdf --landscape
+(cd 06.Probability;
+ pdfjam --nup 1x2 6.PD.pdf --outfile 6.PD-2.pdf;
+ pdfjam --nup 2x2 6.PD.pdf --outfile 6.PD-4.pdf --landscape)
 
-pdfjam --nup 1x2 06.playingwitheq.pdf --outfile 06.playingwitheq-2.pdf
-pdfjam --nup 2x2 06.playingwitheq.pdf --outfile 06.playingwitheq-4.pdf --landscape
+(cd 07.Optimization;
+ pdfjam --nup 1x2 7.OPT.pdf --outfile 7.OPT-2.pdf;
+ pdfjam --nup 2x2 7.OPT.pdf --outfile 7.OPT-4.pdf --landscape)
 
-pdfjam --nup 1x2 07.ef.pdf --outfile 07.ef-2.pdf
-pdfjam --nup 2x2 07.ef.pdf --outfile 07.ef-4.pdf --landscape
+(cd 08.Model_Data;
+ pdfjam --nup 1x2 8.MMD.pdf --outfile 8.MMD-2.pdf;
+ pdfjam --nup 2x2 8.MMD.pdf --outfile 8.MMD-4.pdf --landscape)
 
-pdfjam --nup 1x2 08.Stackelberg.pdf --outfile 08.Stackelberg-2.pdf
-pdfjam --nup 2x2 08.Stackelberg.pdf --outfile 08.Stackelberg-4.pdf --landscape
+(cd 09.LinearRegression;
+ pdfjam --nup 1x2 9.LR.pdf --outfile 9.LR-2.pdf;
+ pdfjam --nup 2x2 9.LR.pdf --outfile 9.LR-4.pdf --landscape)
 
-pdfjam --nup 1x2 09.repeated.pdf --outfile 09.repeated-2.pdf
-pdfjam --nup 2x2 09.repeated.pdf --outfile 09.repeated-4.pdf --landscape
+(cd 10.PCA;
+ pdfjam --nup 1x2 10.PCA.pdf --outfile 10.PCA-2.pdf;
+ pdfjam --nup 2x2 10.PCA.pdf --outfile 10.PCA-4.pdf --landscape)
 
-pdfjam --nup 1x2 10.Bayesian.pdf --outfile 10.Bayesian-2.pdf
-pdfjam --nup 2x2 10.Bayesian.pdf --outfile 10.Bayesian-4.pdf --landscape
+(cd 11.DensityEstimation;
+ pdfjam --nup 1x2 11.GMM.pdf --outfile 11.GMM-2.pdf;
+ pdfjam --nup 2x2 11.GMM.pdf --outfile 11.GMM-4.pdf --landscape)
 
-pdfjam --nup 1x2 11.PE.pdf --outfile 11.PE-2.pdf
-pdfjam --nup 2x2 11.PE.pdf --outfile 11.PE-4.pdf --landscape
+(cd 12.SVM;
+ pdfjam --nup 1x2 12.SVM.pdf --outfile 12.SVM-2.pdf;
+ pdfjam --nup 2x2 12.SVM.pdf --outfile 12.SVM-4.pdf --landscape)
 
-pdfjam --nup 1x2 12.NBS.pdf --outfile 12.NBS-2.pdf
-pdfjam --nup 2x2 12.NBS.pdf --outfile 12.NBS-4.pdf --landscape
-
-pdfjam --nup 1x2 13.SV.pdf --outfile 13.SV-2.pdf
-pdfjam --nup 2x2 13.SV.pdf --outfile 13.SV-4.pdf --landscape
-
-pdfjam --nup 1x2 14.learning.pdf --outfile 14.learning-2.pdf
-pdfjam --nup 2x2 14.learning.pdf --outfile 14.learning-4.pdf --landscape     
