@@ -17,6 +17,32 @@
 
 \input{../mydefault}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Basic Notations}
+
+\plitemsep 0.1in
+
+\bci 
+\item Scalars: $a,b,c,\alpha,\beta,\gamma$
+
+\item Vectors: $\vec{x},\vec{y},\vec{z}$
+
+\item Matrices: $\mat{X},\mat{Y},\mat{Z}$
+
+\item Sets: $\set{A}, \set{B}, \set{C}$
+
+\item (Ordered) tuple: $B=(\bm{b}_1, \bm{b}_2, \bm{b}_3)$
+
+\item Matrix of column vectors: $\mat{B} = [\vec{b}_1, \vec{b}_2, \vec{b}_3]$ or 
+$\mB = \rowvec{\vb_1 & \vb_2 & \vb_3}$
+
+\item Set of vectors:  $\set{B} = \sets{\vec{b}_1, \vec{b}_2, \vec{b}_3}$
+
+\item $\real,$ $\complex,$ $\integer,$ $\natu,$ $\real^n$, etc
+\eci
+\end{frame}
+
+
 % START START START START START START START START START START START START START
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -70,30 +96,6 @@
 \ece
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Basic Notations}
-
-\plitemsep 0.1in
-
-\bci 
-\item Scalars: $a,b,c,\alpha,\beta,\gamma$
-
-\item Vectors: $\vec{x},\vec{y},\vec{z}$
-
-\item Matrices: $\mat{X},\mat{Y},\mat{Z}$
-
-\item Sets: $\set{A}, \set{B}, \set{C}$
-
-\item (Ordered) tuple: $B=(\bm{b}_1, \bm{b}_2, \bm{b}_3)$
-
-\item Matrix of column vectors: $\mat{B} = [\vec{b}_1, \vec{b}_2, \vec{b}_3]$ or 
-$\mB = \rowvec{\vb_1 & \vb_2 & \vb_3}$
-
-\item Set of vectors:  $\set{B} = \sets{\vec{b}_1, \vec{b}_2, \vec{b}_3}$
-
-\item $\real,$ $\complex,$ $\integer,$ $\natu,$ $\real^n$, etc
-\eci
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Linear Algebra}
@@ -138,7 +140,7 @@ $\mB = \rowvec{\vb_1 & \vb_2 & \vb_3}$
 
 
 \bci 
-\item For unknown variables $(x_1, \cdots, x_n) \in \real^n,$
+\item For unknown variables $(x_1, \cdots, x_n) \in \realn,$
 \aleq{
 a_{11} x_1 + \cdots &+ a_{1n}x_n = b_1 \cr
 &\vdots \cr
@@ -178,7 +180,7 @@ x_1 &- &x_2 &+ &2x_3 &= &2 \cr
 \end{linsys}
 $$
 }
-\item Question: Under what conditions, one of the above three cases occur.
+\item \question Under what conditions, one of the above three cases occur?
 \eci
 \end{frame}
 
@@ -285,7 +287,7 @@ $, compute $\mat{AB}$ and $\mat{BA}.$
 
 \bci 
 \item A square matrix\footnote{\# of rows = \# of cols} $\mat{I}_n$ with $I_{ii} = 1$ and $I_{ij=0}$ for $i \neq j,$ where $n$ is the number of rows and columns. For example, 
-\aleq{
+$$
 \mat{I}_2 = 
 \begin{nmat} 
  1 &0 \\
@@ -299,7 +301,7 @@ $, compute $\mat{AB}$ and $\mat{BA}.$
  0  &0 & 1 & 0 \\
  0  &0 & 0 & 1
 \end{nmat}
-}
+$$
 
 \bigskip
 \item \bluef{Associativity}: For $\mat{A} \in \real^{m \times n}$, $\mat{B} \in \real^{n \times p},$ $\mat{C} \in \real^{p \times q},$ $(\mat{AB})\mat{C} = \mat{A}(\mat{BC})$
@@ -324,9 +326,7 @@ $, compute $\mat{AB}$ and $\mat{BA}.$
 
 \item If it exists, it is unique. 
 
-\item \redf{(Q)}. How to compute?
-
-\item For $2\times 2$ matrix, 
+\item How to compute?  For $2\times 2$ matrix, 
 \aleq{
 \inv{\mat{A}} = \frac{1}{a_{11}a_{22} - a_{12}a_{21}} 
 \begin{nmat} 
@@ -339,7 +339,7 @@ $, compute $\mat{AB}$ and $\mat{BA}.$
 {
 \plitemsep 0.1in
 \bci 
-\item For a matrix $\mat{A} \in \real^{m \times n},$ the $\mat{B} \in \real^{n \times m}$ with $b_{ij} = a_{ji}$ is the \redf{transpose} of $\mat{A},$ which we denote by $\trans{\mat{A}}.$ 
+\item For a matrix $\mat{A} \in \real^{m \times n},$ $\mat{B} \in \real^{n \times m}$ with $b_{ij} = a_{ji}$ is the \redf{transpose} of $\mat{A},$ which we denote by $\trans{\mat{A}}.$ 
 
 \item \exam For 
 $\mat{A} = 
@@ -412,7 +412,7 @@ $
 \bci
 \item $(\lambda \psi) \mC = \lambda (\psi \mC)$
 \item $\lambda(\mB \mC) = (\lambda \mB) \mC = \mB (\lambda \mC) = (\mB \mC) \lambda$
-\item $\trans{(\lambda C)} = \trans{\mC} \trans{\lambda} = \trans{\mC} \lambda = \lambda \trans{\mC}$
+\item $\trans{(\lambda \mC)} = \trans{\mC} \trans{\lambda} = \trans{\mC} \lambda = \lambda \trans{\mC}$
 \eci
 
 \item \bluef{Distributivity}
@@ -495,6 +495,7 @@ $
 The two nonzero rows give
 $-3x+2z=-1$ and $-2y+(8/3)z=-2$.
 
+\footnotetext{Examples from this slide to the next several slides come from Jim Hefferson's Linear Algebra book.}
 
 \end{frame}
 
@@ -888,11 +889,11 @@ However, the set of invertible matrices in $\real^{n \times n}$ with matrix mult
 
 \defi A real-valued vector space $V=(\set{V},+,\cdot)$ is a set $\set{V}$ with two operations
 \aleq{
-+ &: \set{V} \times \set{V} \mapsto \set{V} \quad \text{(vector addition)}\cr
-\cdot &:  \real \times \set{V} \mapsto \set{V} \quad \text{(scalar multiplication)},
+(a) \quad + &: \set{V} \times \set{V} \mapsto \set{V} \quad \text{(vector addition)}\cr
+(b) \quad \ \cdot &:  \real \times \set{V} \mapsto \set{V} \quad \text{(scalar multiplication)},
 }
 where
-\vspace{-0.5cm}
+\vspace{-0.2cm}
 \bce
 \item  $(\set{V},+)$ is an Abelian group
 \item \bluef{Distributivity.} 
@@ -1422,7 +1423,7 @@ a basis of \bluef{$U$} (resp. \bluef{$W$}) can be found by Gauss elimination of 
 
 \item We call $\vec{\alpha} = \colvec{\alpha_1 \\ \vdots \\ \alpha_n}$ the coordinate of $\vec{x}$ with respect to $B =(\vec{b}_1, \vec{b}_2, \ldots, \vec{b}_n) .$
 
-
+\item Basis change $\implies$ Coordinate change
 \eci
 
 \end{frame}
@@ -1649,7 +1650,7 @@ $$
 \begin{frame}{Linear vs. Affine Function}
 
 \plitemsep 0.1in
-\mytwocols{0.4}
+\mytwocols{0.5}
 {
 \bci 
 \item \redf{linear function}: $f(x) = ax$ 
@@ -1673,7 +1674,7 @@ $$
 
 \item \defi Consider a vector space $V,$ $\vec{x}_0 \in V$ and a subspace $U \subset V.$ Then, the subset $L  = \vec{x_0} + U \eqdef \{\vec{x_0} + \vec{u} : \vec{u} \in U \}$ is called \bluef{affine subspace} or \bluef{linear manifold} of $V.$
 
-\item $U$ is called \bluef{direction} or \bluef{direction space}, and $\vec{x}_0$ is \bluef{support}. point.
+\item $U$ is called \bluef{direction} or \bluef{direction space}, and $\vec{x}_0$ is \bluef{support} point.
 
 \item An affine subspace is not a vector subspace of $V$ for $\vec{x}_0 \notin U.$
 
