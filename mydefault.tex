@@ -29,3 +29,11 @@
 
 \logo{\pgfputat{\pgfxy(0.11, 7.4)}{\pgfbox[right,base]{\tikz{\filldraw[fill=dianablue, draw=none] (0 cm, 0 cm) rectangle (50 cm, 1 cm);}\mbox{\hspace{-8 cm}\includegraphics[height=0.7 cm]{../kaist_ee.png}
 }}}}
+
+% rule color - gray
+\makeatletter
+\let\old@rule\@rule
+\def\@rule[#1]#2#3{\textcolor{gray}{\old@rule[#1]{#2}{#3}}}
+\makeatother
+
+

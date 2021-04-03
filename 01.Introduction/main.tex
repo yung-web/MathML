@@ -121,13 +121,13 @@ Total 16 weeks
 \bci 
 \item They may have partial backgrounds on the math (e.g., only vector calculus + linear algebra). Depending on the students' background, the amount of time for math can be adjusted. 
 
-\item Some mathematical parts may need to be provided with the full proofs. 
+\item Some mathematical parts may need to be provided with some degree of rigorous proofs. 
 \eci 
 
 \item Graduate
 \bci
-\item When graduate students took the basic math courses on linear algebra, vector calculus, probability, optimization, but they don't have almost no background on machine learning.
-\item Math parts can be just reviewed without proofs, but additional ML problems can be added to the course.
+\item Graduate students have already taken the basic math courses on linear algebra, vector calculus, probability, optimization, but they don't have almost no background on machine learning.
+\item Math parts can be just reviewed by minimizing the proofs, but additional ML problems can be added to the course, so that they can have more exposure to the ML part. 
 \eci
 \eci
 \end{frame}
@@ -180,10 +180,17 @@ Total 16 weeks
 \documentclass[fleqn,aspectratio=169]{beamer}
 \end{verbatim}
 
-\item Difference between Handout and Slide? If you use the functionality of ``beamer overlay" to add animations to pdfs, you need to compile without handout option. Please visit the following url if you are interested. 
-
+\item Difference between Handout and Slide? If you want to use the functionality of ``beamer overlay" to add animations to the slides, you need to compile without handout option. Please visit the following url if you are interested. 
 \medskip
 \url{https://youtu.be/kkM_VPSM8kA}
+
+% \item Using shell scripts: run {\tt make_slide.sh} or {\tt make_handout.sh}
+
+% \item Using mode.tex file
+% \begin{verbatim}
+% \documentclass[fleqn,aspectratio=169]{beamer}
+% \end{verbatim}
+
 
 \eci
 \end{frame}
@@ -191,26 +198,31 @@ Total 16 weeks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{Letter vs. A4}
 
-\plitemsep 0.1in
+\plitemsep 0.3in
 
 \bci 
 
 \item A4
 In the {\tt myhead.tex} file:
 
+\medskip
+{\scriptsize
 \begin{verbatim}
 \usepackage{pgfpages}
 \pgfpagesuselayout{resize to}[a4paper,landscape,border shrink=5mm]
 \end{verbatim}
+}
 
 \item Letter
 In the {\tt myhead.tex} file:
 
+\medskip
+{\scriptsize
 \begin{verbatim}
 \usepackage{pgfpages}
 \pgfpagesuselayout{resize to}[letterpaper,landscape,border shrink=5mm]
 \end{verbatim}
-
+}
 
 \eci
 \end{frame}
@@ -251,7 +263,8 @@ In the {\tt myhead.tex} file:
 \vspace{2cm}
 \LARGE Enjoy!
 
-
+\bigskip
+\large When you modify the latex files for your convenience, if you have any question on macros or pdf generation, feel free to send an email to \url{yiyung@gmail.com}.
 \end{frame}
 
 % \begin{frame}{Review Questions}
