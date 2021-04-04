@@ -98,7 +98,7 @@
 \plitemsep 0.1in
 
 \bci 
-\item \bluef{Manhattan Norm} (also called $\ell_1$ norm) For $\vec{x} \in \real^n,$
+\item \bluef{Manhattan Norm} (also called $\ell_1$ norm) For $\vec{x}= [x_1, \cdots, x_n] \in \real^n,$
 $$
 \norm{\vec{x}}_1 \eqdef = \sum_{i=1}^n |x_i|
 $$
@@ -147,7 +147,7 @@ $$
 \bci 
 \item Need to talk about the length of a vector and the angle or distance between two vectors, where vectors are defined in abstract vector spaces
 
-\item To this end, we define \bluef{inner product} in an abstract manner.
+\item To this end, we define the notion of \bluef{inner product} in an abstract manner.
 
 \item Dot product: A kind of inner product in vector space $\real^n$. $\trans{\vec{x}} \vec{y} = \sum_{i=1}^n x_i y_i$ 
 
@@ -327,7 +327,7 @@ $$
 
 \item \redf{Note.} The distance between two vectors does \bluef{NOT} necessarily require the notion of norm. Norm is just sufficient. 
 
-\item Generally, if the following is satisfied, it is a suitable notion of distance (also called \bluef{metric}). 
+\item Generally, if the following is satisfied, it is a suitable notion of distance, called \bluef{metric}. 
 \bci
 \item \bluef{\em Positive definite}. $d(\vec{x},\vec{y}) \ge 0$ for all $\vec{x},\vec{y}$ and $d(\vec{x},\vec{y}) = 0 \Longleftrightarrow \vec{x}=\vec{y}$ 
 \item \bluef{\em Symmetric}. $d(\vec{x},\vec{y}) = d(\vec{y},\vec{x})$
@@ -348,7 +348,7 @@ $$
 
 \item Then, there exists a unique $\omega \in [0,\pi]$ with $$\cos \omega = \frac{\inner{\vec{x}}{\vec{y}}}{\norm{\vec{x}} \ \norm{\vec{y}}}$$
 
-\item We define $\omega$ as the angle between $\vec{x}$ and $\vec{y}.$
+\item We define $\omega$ as the \bluef{angle} between $\vec{x}$ and $\vec{y}.$
 
 \item \defi If $\inner{\vec{x}}{\vec{y}} = 0,$ in other words their angle is $\pi/2,$ we say that they are \bluef{orthogonal}, denoted by $\vec{x} \perp \vec{y}.$ Additionally, if $\norm{x} = \norm{y} =1,$ they are \bluef{orthonormal}.
 \eci
@@ -357,7 +357,7 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Example}
 
-\plitemsep 0.1in
+\plitemsep 0.15in
 
 \bci 
 
@@ -509,8 +509,8 @@ where $(\vec{b}_1 \ldots, \vec{b}_M)$ and $(\ocomp{\vec{b}}_1, \ldots, \ocomp{\v
 \end{center}
 \vspace{-0.5cm}
 \bci 
-\item The vector $w$ with $\norm{w}=1,$ which is orthogonal to $U$, is the basis of $\ocomp{U}.$
-\item Such $w$ is called \bluef{normal vector} to $U.$
+\item The vector $\vw$ with $\norm{\vw}=1,$ which is orthogonal to $U$, is the basis of $\ocomp{U}.$
+\item Such $\vw$ is called \bluef{normal vector} to $U.$
 
 \item For a linear mapping represented by a matrix $\mat{A} \in \real^{m \times n},$ the solution space of $\mat{A} \vec{x} =0$ is $\ocomp{\text{row}(\mat{A})},$ where $\text{row}(\mat{A})$ is the row space of $\mat{A}$ (i.e., span of row vectors).
 
@@ -524,11 +524,11 @@ In other words, $\ocomp{\text{row}(\mat{A})} = \ker(\mat{A})$
 \section{L3(7)}
 \begin{frame}{Inner Product of Functions}
 
-\plitemsep 0.2in
+\plitemsep 0.15in
 
 \bci 
 
-\item Earlier, $V=\{\text{continuous functions in $\real$ over $[a,b]$} \},$ the following is a proper inner product. 
+\item \redf{Remind:} $V=\{\text{continuous functions in $\real$ over $[a,b]$} \},$ the following is a proper inner product. 
 \bluef{$$\inner{u}{v} \eqdef \int_a^b u(x)v(x) dx$$}
 
 \item \exam Choose $u(x) = \sin(x)$ and $v(x)= \cos(x),$ where we select $a=-\pi$ and $b=\pi.$ Then, since $f(x) = u(x)v(x)$ is odd (i.e., $f(-x) = -f(x)$), 
@@ -585,7 +585,7 @@ $$
 
 \item However, most information is contained in a few dimensions
 
-\item \bluef{Projection}: A process of reducing the dimensions (hopefully) without loss of much information
+\item \bluef{Projection}: A process of reducing the dimensions (hopefully) without loss of much information\footnote{In \lecturemark{L10}, we will formally study this with the topic of PCA (Principal Component Analysis).}
 
 \item \exam Projection of 2D dataset onto 1D subspace
 
@@ -610,7 +610,7 @@ $$
 \small
 \aleq{
 &\inner{\vec{x} - \pi_U(\vec{x})}{\vec{b}} = 0 \xleftrightarrow{\pi_U(\vec{x}) = \lambda \vec{b}} \inner{\vec{x} - \lambda \vec{b}}{\vec{b}}=0\cr
-& \implies \lambda = \frac{\inner{\trans{\vec{b}}}{\vec{x}}}{\norm{\vec{b}}^2} = \frac{\trans{\vec{b}}\vec{x}}{\norm{\vec{b}}^2}, \ \text{and} \ \pi_U(\vec{x}) = \lambda \vec{b} =  \bluef{\frac{\trans{\vec{b}}\vec{x}}{\norm{\vec{b}}^2} \vec{b}}
+& \implies \lambda = \frac{\inner{\vec{b}}{\vec{x}}}{\norm{\vec{b}}^2} = \frac{\trans{\vec{b}}\vec{x}}{\norm{\vec{b}}^2}, \ \text{and} \ \pi_U(\vec{x}) = \lambda \vec{b} =  \bluef{\frac{\trans{\vec{b}}\vec{x}}{\norm{\vec{b}}^2} \vec{b}}
 }
 }
 {
@@ -721,7 +721,7 @@ $$
 \bci
 \item $\lambda \in \real^{1}$ and $\vlam \in \realm$ are the coordinates in the projected spaces, respectively. 
 \item $\inv{(\trans{\mB}\mB)}\trans{\mB}$ is called \bluef{pseudo-inverse}.
-\item How to derive is analogous to that of lines (see pp. 71).
+\item How to derive is analogous to the case of 1-D lines (see pp. 71).
 \eci
 \end{frame}
 
@@ -770,14 +770,57 @@ $, and $\pi_U(\vec{x}) = \dfrac{1}{6}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Gram-Schmidt Orthogonalization}
+\begin{frame}{Gram-Schmidt Orthogonalization Method (G-S method)}
 
-\plitemsep 0.1in
+\plitemsep 0.05in
 
 \bci 
-\item 
-\eci
+\item Constructively transform any basis $(\vb_1, \ldots, \vb_n)$ of $n$-dimensional vector space $V$ into an orthogonal/orthonormal basis $(\vu_1, \ldots, \vu_n)$ of $V$ 
 
+\item Iteratively construct as follows
+\mycolorbox{
+\vspace{-0.2cm}
+\aleq{
+\vu_1 &\eqdef \vb_1 \cr
+\vu_k &\eqdef \vb_k - \pi_{\text{span}[\vu_1, \ldots, \vu_{k-1}]}(\vb_k), \ k=2, \ldots, n \qquad \qquad (*)
+}
+}
+%\item In $(*)$
+% \mytwocols{0.3}
+% {
+% \bci
+% \item $\pi_{\text{span}[\vu_1, \ldots, \vu_{k-1}]}(\vb_k)$: projection of $\vb_k$ onto the subspace spanned by $[\vu_1, \ldots, \vu_{k-1}]$
+% \item Then, $\vu_k$ becomes orthogonal to $\text{span}[\vu_1, \ldots, \vu_{k-1}]$
+% \eci
+% }
+% {
+% }
+\eci
+\vspace{-0.3cm}
+\mypic{0.9}{L3_gramschmidt.png}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: G-S method}
+
+\plitemsep 0.15in
+
+\bci 
+\item A basis $(\vb_1, \vb_2) \in \real^2,$ $\vb_1 = \colvec{2 \\ 0}$ and $\vb_2 = \colvec{1 \\1}$
+
+\item $\vu_1 = \vb_1 = \colvec{2 \\ 0}$ and
+\aleq{
+\vu_2 = \vb_2 - \pi_{\text{span}[\vu_1]}(\vb_2) = \frac{\vu_1\trans{\vu_2}}{\norm{\vu_1}} \vb_2
+= \colvec{1\\1} - \begin{nmat}
+1 & 0 \cr
+0 & 0
+\end{nmat}
+\colvec{1 \\1} = \colvec{0 \\1}
+}
+
+\item $\vu_1$ and $\vu_2$ are orthogonal. If we want them to be orthonormal, then just normaliation would do the job. 
+\eci
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -831,9 +874,11 @@ $, and $\pi_U(\vec{x}) = \dfrac{1}{6}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Rotation}
 
-\plitemsep 0.1in
+\plitemsep 0.07in
 
 \bci 
+\item Length and angle preservation: two properties of linear mappings with \bluef{orthogonal matrices}. Let's look at some of their special cases. 
+
 \item A linear mapping that rotates the given coordinate system by an angle $\theta.$
 
 \item Basis change
