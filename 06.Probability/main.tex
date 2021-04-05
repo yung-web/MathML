@@ -3,8 +3,6 @@
 
 \input{../myhead}
 
-
-
 \title[]{Lecture 6: Probability and Distributions}
 \author{Yi, Yung (이융)}
 \institute{Mathematics for Machine Learning\\ \url{https://yung-web.github.io/home/courses/mathml.html}
@@ -1491,18 +1489,69 @@ $$
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Data Covariance Matrix}
+\begin{frame}{Data Matrix and Data Covariance Matrix }
 
-{\Large \red 뒤에 나올 data covariance matrix를 여기서 한번 보여준다.}
+\plitemsep 0.05in
+
+\bci 
+\item $N$: number of samples, $D$: number of measurements (or original features)
+\item iid dataset $\cX = \{\vx_1, \ldots, \vx_N \}$ whose mean is $\vec{0}$ (well-centered), where each $\vx_i \in \realD,$ and its corresponding data matrix 
+$$\mX = \rowvec{\vx_1 & \cdots & \vx_N} =\generalmatrix{x}{N}{D}
+\in \real^{D \times N}$$
+
+\item \bluef{(data) covariance matrix}  \hfill \lecturemark{L10(1)}
+\mycolorbox{
+$$\mS = \dfrac{1}{N} \mX\trans{\mX} = \dfrac{1}{N} \sum_{n=1}^N \vx_n \trans{\vx}_n \in \real^{D\times D}$$
+}
+
+\eci
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Covariance Matrix and Data Covariance Matrix}
 
 \plitemsep 0.1in
 
-\bci 
+\bci
+\item \question Relation between covariance matrix and data covariance matrix?
+\item Covaiance matrix for a random vector $\vY = \trans{(Y_1, \ldots, Y_D)},$ 
+$$
+\msig_{\vY}  = \begin{nmat}
+\cov{Y_1,Y_1} & \cov{Y_1,Y_2} & \cdots \cov{Y_1,Y_D} \cr
+\vdots & \vdots & \vdots \cr
+\cov{Y_D,Y_1} & \cov{Y_n,Y_2} & \cdots \cov{Y_D,Y_D} \cr
+\end{nmat}
+$$
 
-\item 
+\item Data convariance matrix $\mS \in \real^{D\times D}$
+
+\bci
+\item Each $Y_i$ has $N$ samples $\rowvec{x_{i,1} & \cdots & x_{i,N}}$
+\eci
+\begin{eqnarray*}
+\mS_{ij}= \cov{Y_i, Y_j} &=& \frac{1}{N}\sum_{k=1}^N x_{i,k} \cdot x_{j,k} \cr
+&=&\text{ average covariance (over samples) btwn feastures $i$ and $j$}
+\end{eqnarray*}
 
 \eci
+
 \end{frame}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{\redf{Data} Covariance Matrix}
+
+% {\Large \red 뒤에 나올 data covariance matrix를 여기서 한번 보여준다.}
+
+% \plitemsep 0.1in
+
+% \bci 
+
+% \item 
+
+% \eci
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Properties}
@@ -1710,12 +1759,9 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Formula: Conditional and Marginal Gaussians}
 
-{\Large \red Bishop책에서 공식을 찾아서, 여기에 한 페이지로 정리해 놓는다}
+\mypic{0.5}{L6_gaussian_formula.png}
 
-\plitemsep 0.1in
-\bci 
-\item 
-\eci
+\footnotetext{Source: Pattern Recognition and Machine Learning, Springer by Christopher M. Bishop}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
