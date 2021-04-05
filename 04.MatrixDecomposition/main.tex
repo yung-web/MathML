@@ -44,7 +44,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Summary}
 
-\plitemsep 0.1in
+\plitemsep 0.3in
 
 \bci 
 \item How to summarize matrices: determinants and eigenvalues
@@ -112,7 +112,7 @@ a_{21} & a_{22} & a_{23} \cr
 a_{31} & a_{32} & a_{33} 
 \end{vmat}
 &= a_{11}a_{22}a_{33} + a_{21} a_{32}a_{13} + a_{31}a_{12}a_{23} \cr
-& - a_{31}a_{22}a_{13} - a_{11}a_{32}a_{23} - a_{21} a_{12} a_{33}
+& \hspace{2cm} - a_{31}a_{22}a_{13} - a_{11}a_{32}a_{23} - a_{21} a_{12} a_{33}
 }
 \eci
 \end{frame}
@@ -290,11 +290,13 @@ p_{\mA}(\lambda) =
 \plitemsep 0.1in
 
 \bci
-\item \defi Consider a square matrix $\mA \in \real^{n \times n}.$ Then, $\lambda \in real$ is an eigenvalue of $\mA$ and $\vec{x} \in \real^n \setminus \{0 \}$ is the corresponding eigenvector of $\mA$ if 
+\item \defi Consider a square matrix $\mA \in \real^{n \times n}.$ Then, $\lambda \in \real$ is an eigenvalue of $\mA$ and $\vec{x} \in \real^n \setminus \{0 \}$ is the corresponding eigenvector of $\mA$ if 
+\mycolorbox{
+\vspace{-0.2cm}
 $$
 \mA \vec{x} = \lambda \vec{x}
 $$
-
+}
 \item Equivalent statements
 \bci
 \item $\lambda$ is an eigenvalue.
@@ -390,6 +392,7 @@ E_5 = \spn{\colvec{2 \\ 1}}
 \eci
 
 \mycolorbox{
+\centering
 determinant, trace, eigenvalues: all \bluef{invariant} under basis change 
 }
 
@@ -520,14 +523,16 @@ determinant, trace, eigenvalues: all \bluef{invariant} under basis change
 
 \item \redf{Determinant}. For (possibly repeated) eigenvalues $\lambda_i$ of $\mA \in \real^{n \times n},$ 
 \mycolorbox{
+\centering
 $
-\det(\mA) = \prod_{i=1}^n \lambda_i.
+\det(\mA) = \prod_{i=1}^n \lambda_i
 $
 }
 \item \redf{Trace}. For (possibly repeated) eigenvalues $\lambda_i$ of $\mA \in \real^{n \times n},$ 
 \mycolorbox{
+\centering
 $
-\tr(\mA) = \sum_{i=1}^n \lambda_i.
+\tr(\mA) = \sum_{i=1}^n \lambda_i
 $
 }
 \item \msg $\det(\mA)$ is the \bluef{area scaling} and $\tr(\mA)$ is the \bluef{circumference scaling}
@@ -803,7 +808,7 @@ d_1^k & \cdots & 0 \cr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Example}
 
-\plitemsep 0.1in
+\plitemsep 0.2in
 
 \bci
 
@@ -1168,7 +1173,7 @@ $$
 $$
 
 \medskip
-We will cover this in the next slides
+We will cover this in the next slides.
 \eci
 \end{frame}
 
