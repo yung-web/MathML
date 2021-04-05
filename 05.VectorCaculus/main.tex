@@ -9,7 +9,7 @@
 \author{Yi, Yung (이융)}
 \institute{Mathematics for Machine Learning\\ \url{https://yung-web.github.io/home/courses/mathml.html}
 \\KAIST EE}
-\date{MONTH DAY, 2021}
+\date{\today}
 
 \input{../mymath}
 \input{../mymacro}
@@ -24,7 +24,7 @@
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 \item Differentiation of Univariate Functions
 
 \item Partial Differentiation and Gradients 
@@ -41,7 +41,7 @@
 
 \item Linearization and Multivariate Taylor Series
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,7 +69,7 @@ f : \real^{D} \mapsto \real\cr
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)]
 \item \redf{Differentiation of Univariate Functions}
 
 \item \grayf{Partial Differentiation and Gradients 
@@ -86,7 +86,7 @@ f : \real^{D} \mapsto \real\cr
 
 \item Linearization and Multivariate Taylor Series}
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -158,7 +158,7 @@ T_\infty(x) \eqdef \sum_{k=0}^\infty \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k.
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)]
 \item \grayf{Differentiation of Univariate Functions}
 
 \item \redf{Partial Differentiation and Gradients }
@@ -175,7 +175,7 @@ T_\infty(x) \eqdef \sum_{k=0}^\infty \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k.
 
 \item Linearization and Multivariate Taylor Series}
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -216,7 +216,7 @@ For $f : \realn \mapsto \real,$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Example}
 
-\plitemsep 0.1in
+\plitemsep 0.2in
 
 \bci 
 \item \exam $f(x,y) = (x+2y^3)^2$
@@ -239,11 +239,11 @@ x_1^2 + 3x_1x_2^2}
 \plitemsep 0.2in
 
 \bci 
-\item \bluef{Product rule.} $$\pd{}{\vec{x}}(f(\vec{x})g(\vec{x})) = \pd{f}{\vec{x}} g(\vec{x}) + f(\vec{x})\pd{g}{\vec{x}}$$
+\item \bluef{Product rule} $$\pd{}{\vec{x}}\big(f(\vec{x})g(\vec{x})\big) = \pd{f}{\vec{x}} g(\vec{x}) + f(\vec{x})\pd{g}{\vec{x}}$$
 
-\item \bluef{Sum rule.} $$\pd{}{\vec{x}} (f(\vec{x})+ g(\vec{x})) = \pd{f}{\vec{x}} + \pd{g}{\vec{x}}$$
+\item \bluef{Sum rule} $$\pd{}{\vec{x}} \big(f(\vec{x})+ g(\vec{x})\big) = \pd{f}{\vec{x}} + \pd{g}{\vec{x}}$$
 
-\item \bluef{Chain rule.} $$\pd{}{\vec{x}} g(f(\vec{x})) = \pd{g}{f}\pd{f}{\vec{x}}$$
+\item \bluef{Chain rule} $$\pd{}{\vec{x}} g\big(f(\vec{x})\big) = \pd{g}{f}\pd{f}{\vec{x}}$$
 
 \eci
 \end{frame}
@@ -293,7 +293,7 @@ x_1^2 + 3x_1x_2^2}
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 \item \grayf{Differentiation of Univariate Functions}
 
 \item \grayf{Partial Differentiation and Gradients }
@@ -310,7 +310,7 @@ x_1^2 + 3x_1x_2^2}
 
 \item Linearization and Multivariate Taylor Series}
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -403,33 +403,46 @@ f: \real^2 \mapsto \real, \ f(\vx) = \exp(x_1x_2^2), \quad g: \real \mapsto \rea
 
 \item Using the chain rule, 
 \aleq{
-\d{h}{t} = \pd{f}{\vx} \pd{\vx}{t} = \rowvec{\pd{f}{x_1} & \pd{f}{x_2}}\colvec{\pd{x_1}{t} \\ \pd{x_2}{t}}
-= \rowvec{\exp(x_1x_2^2)x_2^2 & 2\exp(x_1x_2^2)x_1x_2} \colvec{\cos(t)-t\sin(t) \\ \sin(t)+t\cos(t)} 
+\d{h}{t} = \pd{f}{\vx} \pd{\vx}{t} &= \rowvec{\pd{f}{x_1} & \pd{f}{x_2}}\colvec{\pd{x_1}{t} \\ \pd{x_2}{t}}\cr
+&= \rowvec{\exp(x_1x_2^2)x_2^2 & 2\exp(x_1x_2^2)x_1x_2} \colvec{\cos(t)-t\sin(t) \\ \sin(t)+t\cos(t)} 
 }
 \eci
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Example: Least-Square Loss}
+\begin{frame}{Example: Least-Square Loss (1)}
 
 \plitemsep 0.1in
 
 \bci
-\item A linear model: $\vy = \mat{\Phi} \vth$, $\vth \in \real^D$: paramter vector, $\mat{\Phi} \in \real^{N \times D}$: input features, and $\vy \in \real^N$: observations.
-\bci
+\item A linear model: $\vy = \mat{\Phi} \vth$
+\item $\vth \in \real^D$: parameter vector
+\item $\mat{\Phi} \in \real^{N \times D}$: input features
+\item $\vy \in \real^N$: observations
+
 \item Goal: Find a good parameter vector that provides the best-fit, formulated by minimizing the following loss $L: \real^D \mapsto \real$ over the parameter vector $\vth$. 
-\aleq{
-L(\ve) \eqdef \norm{\ve}^2, \ \text{where} \ \ve(\vth) = \vy - \mat{\Phi} \vth
+\mycolorbox{
+\vspace{-0.2cm}
+$$
+L(\ve) \eqdef \norm{\ve}^2, \quad \text{where} \ \ve(\vth) = \vy - \mat{\Phi} \vth
+$$
 }
 \eci
+\end{frame}
 
-\item $\pd{L}{\vth} = \pd{L}{\ve} \pd{\ve}{\vth}$ (Note: $\pd{L}{\vth} \in \real^{1 \times D},$ $\pd{L}{\ve} \in \real^{1 \times N},$ $\pd{\ve}{\vth} \in \real^{N \times D}$)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Example: Least-Square Loss (2)}
 
-\item Using that $\norm{\ve}^2 = \trans{\ve}\ve$, $\pd{L}{\ve} = 2 \trans{\ve} \in \real ^{1 \times N}$
+\plitemsep 0.2in
 
-\item $\pd{\ve}{\vth} = - \mat{\Phi} \in \real^{N \times D}$
+\bci
+
+\item $\displaystyle \pd{L}{\vth} = \greenf{\pd{L}{\ve}} \orangef{\pd{\ve}{\vth}}$ 
+\item \redf{Note.} $\displaystyle \pd{L}{\vth} \in \real^{1 \times D},$ $\displaystyle \greenf{\pd{L}{\ve}} \in \real^{1 \times N},$ $\displaystyle \orangef{\pd{\ve}{\vth}} \in \real^{N \times D}$
+
+\item Using that $\norm{\ve}^2 = \trans{\ve}\ve$, $\displaystyle \greenf{\pd{L}{\ve}} = 2 \trans{\ve} \in \real ^{1 \times N}$ and $\displaystyle \orangef{\pd{\ve}{\vth}} = - \mat{\Phi} \in \real^{N \times D}$
 \aleq{
-\text{Finally, we get:} \quad \pd{L}{\vth} = -2\trans{\ve}\mat{\Phi} = -\underbrace{2(\trans{\vy} - \trans{\vth}\trans{\mat{\Phi}})}_{1 \times N} \underbrace{\mat{\Phi}}_{N \times D}
+\text{Finally, we get:} \quad \pd{L}{\vth} = \greenf{2\trans{\ve}}\orangef{(-\mat{\Phi})} = -\underbrace{2(\trans{\vy} - \trans{\vth}\trans{\mat{\Phi}})}_{1 \times N} \underbrace{\mat{\Phi}}_{N \times D}
 }
 \eci
 \end{frame}
@@ -440,7 +453,7 @@ L(\ve) \eqdef \norm{\ve}^2, \ \text{where} \ \ve(\vth) = \vy - \mat{\Phi} \vth
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 \item \grayf{Differentiation of Univariate Functions}
 
 \item \grayf{Partial Differentiation and Gradients }
@@ -457,32 +470,7 @@ L(\ve) \eqdef \norm{\ve}^2, \ \text{where} \ \ve(\vth) = \vy - \mat{\Phi} \vth
 
 \item Linearization and Multivariate Taylor Series}
 
-\eci
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Roadmap}
-
-\plitemsep 0.1in
-
-\bci 
-\item \grayf{Differentiation of Univariate Functions}
-
-\item \grayf{Partial Differentiation and Gradients }
-
-\item \grayf{Gradients of Vector-Valued Functions} 
-
-\item \redf{Gradients of Matrices 
-
-\item Useful Identities for Computing Gradients} 
-
-\item \grayf{Backpropagation and Automatic Differentiation 
-
-\item Higher-Order Derivatives 
-
-\item Linearization and Multivariate Taylor Series}
-
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -512,7 +500,7 @@ L(\ve) \eqdef \norm{\ve}^2, \ \text{where} \ \ve(\vth) = \vy - \mat{\Phi} \vth
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Example: Gradient of Vectors for Matrices}
+\begin{frame}{Example: Gradient of Vectors for Matrices (1)}
 
 \bci
 \item $\vf(\vx) = \mA \vx,$  $\vf \in \realm$, $\mA \in \realmn,$ $\vx \in \realn.$ What is \bluef{$\d{\vf}{\mA}$?}
@@ -524,7 +512,7 @@ L(\ve) \eqdef \norm{\ve}^2, \ \text{where} \ \ve(\vth) = \vy - \mat{\Phi} \vth
 $
  \pd{f_i}{\mA} \in \real^{1\times (m \times n)}, \quad \d{\vf}{\mA} = \colvec{ \pd{f_1}{\mA} \\ \vdots \\  \pd{f_m}{\mA}} 
 $
-\mytwocols{0.45}
+\mytwocols{0.4}
 {
 \small
 \aleq{
@@ -545,7 +533,7 @@ f_i &= \sum_{j=1}^n A_{ij} x_j, \ i=1, \ldots, m \implies \pd{f_i}{A_{iq}} = x_q
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Example: Gradient of Matrices for Matrices}
+\begin{frame}{Example: Gradient of Matrices for Matrices (2)}
 
 \bci
 \item $\mR \in \realmn$ and $\vf: \realmn \mapsto \realnn$ with $\vf(\mR) = \mK \eqdef \trans{\mR}\mR \in \realnn.$  What is \bluef{$\d{\mK}{\mR} \in \real^{(n\times n) \times (m\times n)}$?}
@@ -584,7 +572,7 @@ R_{ip} &  \text{if} \ j=q, p\neq q \cr
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)]
 \item \grayf{Differentiation of Univariate Functions}
 
 \item \grayf{Partial Differentiation and Gradients }
@@ -601,7 +589,7 @@ R_{ip} &  \text{if} \ j=q, p\neq q \cr
 
 \item Linearization and Multivariate Taylor Series}
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -784,7 +772,7 @@ $
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 \item \grayf{Differentiation of Univariate Functions}
 
 \item \grayf{Partial Differentiation and Gradients }
@@ -801,7 +789,7 @@ $
 
 \item Linearization and Multivariate Taylor Series}
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

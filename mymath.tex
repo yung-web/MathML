@@ -70,15 +70,18 @@
 \def\mPhi{\mat{\Phi}}
 
 
+\usepackage{amsmath}
 %%%%% vector caculus useful macro
 % ...\d, which typesets a derivative. ex: \d{y}{x}, instead of \frac{dx}{dy}.
 \renewcommand{\d}[2]{\frac{\text{d} #1}{\text{d} #2}}
+
 
 % ...similar for double-derivatives. ex: \dd{y}{x}.
 \newcommand{\dd}[2]{\frac{\text{d}^2 #1}{\text{d} #2^2}}
 
 % ...similar for partial derivatives. ex: \pd{y}{x}.
 \newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+
 
 % ...similar for partial double derivatives. ex: \pdd{y}{x}.
 \newcommand{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}}
