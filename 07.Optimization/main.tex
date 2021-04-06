@@ -1020,9 +1020,8 @@ whose derivative w.r.t. $\vx$ becomes zero, when $\vc + \trans{\mA}\vlam = \vec{
 \bci 
 
 \item Primal problem
-$$
-\begin{array}{ll}
-\mbox{min}_{\vx \in \real^d} & \frac{1}{2} \trans{\vx}\mQ \vx + \trans{c}\vx \\
+$$\begin{array}{ll}
+\mbox{min}_{\vx \in \real^d} & \dfrac{1}{2} \trans{\vx}\mQ \vx + \trans{c}\vx \\
 \mbox{subject to} & \mA \vx \preceq \vb,  
 \end{array}
 $$
@@ -1031,7 +1030,7 @@ where $\mA \in \real^{m \times d},$ $\vb \in \realm,$ $\vc \in \real^d,$ the squ
 \item Dual problem
 $$
 \begin{array}{ll}
-\text{max}_{\vlam \in \real^m} & \Bigg(-\frac{1}{2}\trans{(\vc + \trans{\mA}\vlam)}\mA\inv{\mQ}(\vc + \trans{\mA}\vlam) -\trans{\vlam}\vb \Bigg )\\
+\text{max}_{\vlam \in \real^m} & \Bigg(-\dfrac{1}{2}\trans{(\vc + \trans{\mA}\vlam)}\mA\inv{\mQ}(\vc + \trans{\mA}\vlam) -\trans{\vlam}\vb \Bigg )\\
 % & -\trans{\vlam}\vb \Bigg )\\
 \text{subject to} & \vlam \succeq \vec{0},
 \end{array}
