@@ -2224,30 +2224,50 @@ Pseudo Code of getting a random sample with the distribution $F(\cdot).$
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Change-of-Variables Technique}
+\begin{frame}{Change-of-Variables Technique: Univariate}
 
-\plitemsep 0.1in
+\plitemsep 0.07in
 
 \bci 
 
-\item 
+\item Chain rule of calculus: $\displaystyle \int f(g(x))g'(x)\text{d}x = \int f(u)\text{d}u,$ where $u = g(x).$
 
+\item Consider a rv $X \in [a,b]$ and an invertible, strictly increasing function $U.$
+\aleq{
+\Fy &= \cprob{Y \le y} = \cprob{U(X) \le y} = \cprob{X \le U^{-1}(y)} = \int_{a}^{U^{-1}(y)} \fx \text{d} x \cr 
+\fy & = \d{}{y} \int_{a}^{U^{-1}(y)} \fx \text{d} x = \d{}{y} \int_{a}^{U^{-1}(y)} f_X(U^{-1}(y))U^{-1'}(y) \text{d} y \cr
+& = f_X(U^{-1}(y)) \cdot \d{}{y}U^{-1}(y)
+}
+\item Including the case when $U$ is strcitly decreasing, 
+\aleq{
+\fy = f_X(U^{-1}(y)) \cdot \left | \d{}{y}U^{-1}(y) \right |
+}
 \eci
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Figuring Out Distributions: Change of Variables}
+\begin{frame}{Change-of-Variables Technique: Multivariate}
 
-\plitemsep 0.1in
+\plitemsep 0.07in
 
 \bci 
 
-\item 
+\item \thm Let $f_{\vX}(\vx)$ is the pdf of multivariate continuous random vector $\vX.$ If $\vY = U(\vX)$ is differentiable and invertible, the pdf of $\vY$ is given as:
+$$
+f(\vy) = f_{\vX}(U^{-1}(\vy)) \cdot \left | \text{det} \left( \d{}{\vy}U^{-1}(\vy) \right )\right |
+$$
 
+\item \exam For a bivariate rv $\vX$ with its pdf $f(\colvec{x_1 \\ x_2}) = \frac{1}{2\pi} 
+\exp\left( -\frac{1}{2} \trans{\colvec{x_1 \\ x_2}} \colvec{x_1 \\ x_2}\right),$ consider $\vY = \mA \vX,$ where $\mA = \begin{nmat}
+a & b \cr
+c & d
+\end{nmat}$. Then, we have the following pdf of $\vY$:
+\aleq{
+f_{\vY}(\vy) = \frac{1}{2\pi} \exp \left(-\frac{1}{2}\trans{\vy}\trans{(\inv{\mA})} \inv{\mA}\vy\right )
+\inv{|ad-bc|}
+}
 \eci
 \end{frame}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
