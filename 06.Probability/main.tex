@@ -2058,13 +2058,13 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Exponential Family: Definition} 
 
-\myblock{Exponential Family}
+\mycolorbox
 {
-An exponential family if a family of probability distributions, parameterized by $\vth \in \real^D$, of the form
+An \bluef{exponential family} if a family of probability distributions, parameterized by $\vth \in \real^D$, has the form
 $$
 p_{\vX} (\vx;\vth) = h(\vx) \exp\Big(\inner{\vth}{T(\vx)} - A(\vth)\Big),
 $$
-where $\vX \in \realn$ and $T(\vx): \realn \mapsto \real^{D} is a vector of sufficient statistics.$
+where $\vX \in \realn$ and $T(\vx): \realn \mapsto \real^{D}$ is a vector of sufficient statistics.
 }
 
 \vspace{-0.4cm}
@@ -2148,7 +2148,7 @@ p(\vx \mid \vth) \propto \exp\Big(\trans{\vth}T(\vx)\Big) = \exp\left(\frac{\mu 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Distributions of Functions of RVs}
+\begin{frame}{Knowing Distributions of Functions of RVs}
 
 \plitemsep 0.1in
 
@@ -2157,11 +2157,74 @@ p(\vx \mid \vth) \propto \exp\Big(\trans{\vth}T(\vx)\Big) = \exp\left(\frac{\mu 
 \item If $X \sim \cN(0,1)$, what is the distribution of $Y = X^2$?
 
 \item If $X_1, X_2 \sim \cN(0,1)$, what is the distribution of $Y = \frac{1}{2}(X_1 + X_2)$?
+
+\item Two techniques
+\bci
+
+\item CDF-based technique
+
+\item Change-of-Variable technique
+\eci
+
+\item In this lecture note, we focus on the case of univarate random variables for simplicity. 
 \eci
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Distributions of Functions of RVs: Change of Variables}
+\begin{frame}{CDF-based Technique}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item[\bf S1.] Find the CDF: $\Fy = \cprob{Y \le y}$
+
+\item[\bf S2.] Differentiate the CDF to get the pdf $\fy$: $\fy = \d{}{y}\Fy $
+
+\item \exam $\fx = - 3x^2, \ 0 \le x \le 1.$ What is the pdf of $Y = X^2$?
+\aleq{
+\Fy &= \cprob{Y \le y} = \cprob{X^2 \le y} = \cprob{X \le \sqrt{y}} = F_X(\sqrt{y})\cr
+& = \int_{0}^{\sqrt{y}} 3t^2 \text{d}t = y^{\frac{3}{2}}, \quad 0 \le y \le 1\cr
+\fy &= \d{}{y}\Fy = \frac{3}{2} \sqrt{y}, \quad 0 \le y \le 1
+}
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{How to Get Random Samples of a Given Distribution? (1)}
+
+\plitemsep 0.1in
+
+\bci 
+
+\item Assume that $X \sim \exp(1),$ i.e., $\fx = e^{-x}$ and $\Fx = 1-e^{-x}.$ How to make a programming code that gives random samples following the distribution $X$? 
+\item \thm \bluef{Probability Integral Theorem.} Let $X$ be a continuous rv with a \bluef{strictly monotonic} CDF $F(\cdot)$. Then, if we define a new rv $U$ as \redblk{$U \eqdef  F(X)$}, then $U$ follows the uniform distribution over $[0.1].$
+
+\item \redf{Proof.} Will show that $F_U(u) = u$, which is the CDF of a standard uniform rv. 
+\aleq{
+F_U(u) = \cprob{U \le u} = \cprob{F(X) \le u} \stackrel{(*)}{=} \cprob{X \le F^{-1}(u)} = F(F^{-1}(u)) = u,
+}
+where $(*)$ is due to the strict monotonicity of $F(\cdot).$
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{How to Get Random Samples of a Given Distribution? (2)}
+
+Pseudo Code of getting a random sample with the distribution $F(\cdot).$
+
+\plitemsep 0.1in
+
+\bce[\bf Step 1.] 
+
+\item Get a random sample $u$ over $[0,1]$ (most of software packages include this capability of generating a random number generation)
+
+\item Get a value $x = F^{-1}(u).$
+\ece
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Change-of-Variables Technique}
 
 \plitemsep 0.1in
 
