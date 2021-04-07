@@ -7,7 +7,7 @@
 \author{Yi, Yung (이융)}
 \institute{Mathematics for Machine Learning\\ \url{https://yung-web.github.io/home/courses/mathml.html}
 \\KAIST EE}
-\date{MONTH DAY, 2021}
+\date{\today}
 
 
 \input{../mymath}
@@ -21,6 +21,18 @@
 \input{../mydefault}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Warm-Up}
+
+{\Large Please watch this tutorial video by Luis Serrano on PCA.}
+
+\bigskip
+
+\bigskip
+
+\url{https://www.youtube.com/watch?v=wYPUhge9w5c}
+
+\end{frame}
 
 % START START START START START START START START START START START START START
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,7 +40,7 @@
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 
 \item  Problem Formulation 
 \item  Parameter Estimation: ML 
@@ -36,15 +48,16 @@
 \item  Bayesian Linear Regression 
 \item  Maximum Likelihood as Orthogonal Projection 
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L9(1)}
 \begin{frame}{Roadmap}
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 
 \item  \redf{Problem Formulation}
 \item  \grayf{Parameter Estimation: ML 
@@ -52,7 +65,7 @@
 \item  Bayesian Linear Regression 
 \item  Maximum Likelihood as Orthogonal Projection }
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,24 +92,30 @@
 
 \bci 
 
-\item Linear regression, Gaussian noise
 
-\item Notation for simplification (this is how the textbook uses)
+\item[] 
+{\small
+Notation for simplification (this is how the textbook uses)
 \aleq{
 \redf{p(y|\vx)} = p_{Y|\vX}(y | \vx), \quad Y \sim \set{N}(\mu,\sigma^2) \xrightarrow{\text{simplifies}} \set{N}(y \mid f(\vx), \sigma^2)
 }
-
-\item Likelihood: for $\vx \in \real^D$ and $y \in \real,$ $p(y \mid \vx) = \set{N}(y \mid f(\vx), \sigma^2)$ 
+}
+\item Assume: \bluef{linear} regression, \bluef{Gaussian} noise
 
 \item $y = f(\vx) + \epsilon,$ where $\epsilon \sim \set{N}(0,\sigma^2)$
 
-\item Linear regression with the parameter $\vth \in \realD$
+
+\item Likelihood: for $\vx \in \real^D$ and $y \in \real,$ $p(y \mid \vx) = \set{N}(y \mid f(\vx), \sigma^2)$ 
+
+
+\item Linear regression with the parameter $\vth \in \realD,$ i.e., $f(\vx) = \trans{\vx}\vth$
 $$
 p(y \mid \vx) = \set{N}(y \mid \trans{\vx}\vth, \sigma^2) \Longleftrightarrow y = \trans{\vx}\vth + \epsilon, \quad \epsilon \sim \set{N}(0,\sigma^2)
 $$
 
 \mycolorbox
 {
+\centering
 Prior with Gaussian nose: $p(y \mid \vx) = \set{N}(y \mid \trans{\vx}\vth, \sigma^2)$
 }
 
@@ -113,22 +132,23 @@ Prior with Gaussian nose: $p(y \mid \vx) = \set{N}(y \mid \trans{\vx}\vth, \sigm
 \item Training set $\set{D} = \{(\vx_1, y_1), \ldots, (\vx_N,y_N) \}$\hspace{3cm} 
 \myinlinepic{2.5cm}{L9_LR_gmodel.png}
 
-\item Assuming iid of $N$ data, the likelihood is factorized into:
+\item Assuming iid $N$ data samples, the likelihood is factorized into:
 $$
 p(\set{Y} \mid \set{X},\vth) = \prod_{n=1}^N p(y_n \mid \vx_n, \vth) = \prod_{n=1}^N 
 \set{N}(y_n \mid \trans{\vx}_n, \sigma^2),
 $$
 where $\set{X} = \{\vx_1,\ldots,\vx_n \}$ and $\set{Y} = \{y_1,\ldots,y_n \}$
-\item ML and MAP
+\item Estimation methods: ML and MAP
 \eci
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L9(2)}
 \begin{frame}{Roadmap}
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 
 \item  \grayf{Problem Formulation}
 \item  \redf{Parameter Estimation: ML} 
@@ -136,7 +156,7 @@ where $\set{X} = \{\vx_1,\ldots,\vx_n \}$ and $\set{Y} = \{y_1,\ldots,y_n \}$
 \item  Bayesian Linear Regression 
 \item  Maximum Likelihood as Orthogonal Projection }
 
-\eci
+\ece
 \end{frame}
 
 
@@ -158,9 +178,9 @@ where $\set{X} = \{\vx_1,\ldots,\vx_n \}$ and $\set{Y} = \{y_1,\ldots,y_n \}$
 {
 Negative-log likelihood for $f(\vx) = \trans{\vx}\vth + \set{N}(0,\sigma^2)$:
 \vspace{-0.1cm}
-\aleq{
+$$
 -\log p(\cY \mid \cX, \vth) = \frac{1}{2\sigma^2} \norm{\vy - \mX \vth}^2 + \ \text{const}
-}
+$$
 }
 \eci
 \end{frame}
@@ -169,7 +189,7 @@ Negative-log likelihood for $f(\vx) = \trans{\vx}\vth + \set{N}(0,\sigma^2)$:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{MLE (Maximum Likelihood Estimation) (2)}
 
-\plitemsep 0.05in
+\plitemsep 0.2in
 
 \bci 
 
@@ -178,10 +198,20 @@ Negative-log likelihood for $f(\vx) = \trans{\vx}\vth + \set{N}(0,\sigma^2)$:
 \vth_\ml  = \arg \min_{\vth} \frac{1}{2\sigma^2} \norm{\vy - \mX \vth}^2, \quad L(\vth) = \frac{1}{2\sigma^2} \norm{\vy - \mX \vth}^2
 }
 
-\item In this special case of Gaussian noise, finding MLE is equivalent to finding $\vth$ that minimizes the empirical risk with squared loss function
+\item In case of Gaussian noise, $\vth_{\ml}= \vth$ that minimizes the empirical risk with the squared loss function
 \bci
 \item Models as functions $=$ Model as probabilistic models
 \eci
+
+\eci
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{MLE (Maximum Likelihood Estimation) (3)}
+
+\plitemsep 0.2in
+
+\bci 
 
 \item We find $\vth$ such that $\d{L}{\vth}=0$ 
 \aleq{
@@ -202,7 +232,7 @@ Negative-log likelihood for $f(\vx) = \trans{\vx}\vth + \set{N}(0,\sigma^2)$:
 
 \bci 
 
-\item Linear regression: Linear in the parameters
+\item Linear regression: Linear in terms of \bluef{the parameters}
 \bci
 \item $\trans{\phi(\vx)} \vth$ is also fine, where $\phi(\vx)$ can be non-linear (we will cover this later)
 \item $\phi(\vx)$ are the features
@@ -237,7 +267,7 @@ $$
 \vdots & \cdots & \vdots \cr
 \phi_0(\vx_N) & \cdots & \phi_{K-1}(\vx_N) 
 \end{nmat}
-\in \real^{N \times K}, \quad \Phi_{ij} = \phi_j(\vx_i), \ \phi_j: \realD \mapsto \real
+\in \real^{N \times K}, \ \mPhi_{ij} = \phi_j(\vx_i), \ \phi_j: \realD \mapsto \real
 }
 \item Negative log-likelihood: Similarly to the case of $\vy = \mX \vth,$
 \mycolorbox
@@ -305,11 +335,12 @@ $
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L9(3)}
 \begin{frame}{Roadmap}
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 
 \item  \grayf{Problem Formulation}
 \item  \grayf{Parameter Estimation: ML} 
@@ -317,7 +348,7 @@ $
 \item  \grayf{Bayesian Linear Regression 
 \item  Maximum Likelihood as Orthogonal Projection }
 
-\eci
+\ece
 \end{frame}
 
 
@@ -354,7 +385,7 @@ p(\vth \mid \set{X},\set{Y}) = \frac{p(\set{Y} \mid \set{X}, \vth) p(\vth)}{p(\s
 
 \item \exam A (conjugate) Gaussian prior $p(\vth) \sim \set{N}(\vec{0}, b^2 \mI)$
 \bci
-\item For Gaussian likelihood, Gaussian prior $\implies$ Gaussian posterior
+\item For Gaussian likelihood, Gaussian prior $\implies$ Gaussian posterior \hfill \lecturemark{L6(6)}
 \eci
 
 \item Negative log-posterior
@@ -364,9 +395,9 @@ p(\vth \mid \set{X},\set{Y}) = \frac{p(\set{Y} \mid \set{X}, \vth) p(\vth)}{p(\s
 {
 Negative-log posterior for $f(\vx) = \trans{\phi}(\vx)\vth + \set{N}(0,\sigma^2)$ and $p(\vth) \sim \set{N}(\vec{0}, b^2 \mI)$:
 \vspace{-0.1cm}
-\aleq{
--\log p(\vth | \set{X},\set{Y}) &= \frac{1}{2\sigma^2} \trans{(\vy - \mPhi\vth)} (\vy - \mPhi\vth) + \frac{1}{2b^2}\trans{\vth}\vth + \text{const}
-}
+$$
+-\log p(\vth | \set{X},\set{Y}) = \frac{1}{2\sigma^2} \trans{(\vy - \mPhi\vth)} (\vy - \mPhi\vth) + \frac{1}{2b^2}\trans{\vth}\vth + \text{const}
+$$
 }
 \item Gradient
 \aleq{
@@ -418,7 +449,7 @@ $$
 Negative-log posterior for $f(\vx) = \trans{\phi}(\vx)\vth + \set{N}(0,\sigma^2)$ and $p(\vth) \sim \set{N}(\vm_0, \mS_0)$:
 \vspace{-0.1cm}
 \aleq{
--\log p(\vth | \set{X},\set{Y}) &= \frac{1}{2\sigma^2} \trans{(\vy - \mPhi\vth)} (\vy - \mPhi\vth) + \bluef{\frac{1}{2}\trans{(\vth - \vm_0)}\inv{\mS_0}(\vth-\vm_0)}  + \text{const}
+-\log p(\vth | \set{X},\set{Y}) &= \frac{1}{2\sigma^2} \trans{(\vy - \mPhi\vth)} (\vy - \mPhi\vth) + \bluef{\frac{1}{2}\trans{(\vth - \vm_0)}\inv{\mS}_0(\vth-\vm_0)}  + \text{const}
 }
 \end{tcolorbox}
 
@@ -462,11 +493,12 @@ $$
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L9(4)}
 \begin{frame}{Roadmap}
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 
 \item  \grayf{Problem Formulation}
 \item  \grayf{Parameter Estimation: ML} 
@@ -474,7 +506,7 @@ $$
 \item  \redf{Bayesian Linear Regression} 
 \item  \grayf{Maximum Likelihood as Orthogonal Projection }
 
-\eci
+\ece
 \end{frame}
 
 
@@ -487,7 +519,7 @@ $$
 
 \bci 
 
-\item Earlier, ML and MAP. Now, \bluef{fully Bayesian} 
+\item Earlier, ML and MAP. Now, \bluef{fully Bayesian} \hfill \lecturemark{L8(4)}
 
 \item Model 
 \mysmalltwocols{0.25}
@@ -503,12 +535,14 @@ $$
 \vspace{-0.2cm}
 \mypic{0.4}{L9_bayesian_regression.png}
 }
-\item Goal: For an input $\vx_*,$ we want to compute the following \bluef{posterior predictive distribution} of $y_*$:
+\item Goal: For an input $\vx_*,$ we want to compute the following \bluef{posterior predictive distribution}\footnote{\lecturemark{Chapter 9.3.4} For ease of understanding, I've slightly changed the organization of these lecture slides from that of the textbook.} of $y_*$:
+\vspace{-0.3cm}
 $$
 \displaystyle
  p(y_* | x_*, \set{X},\set{Y}) = \int \overbrace{p(y_* | \vx_*, \vth)}^{\text{likelihood}} 
  \overbrace{p(\vth | \set{X},\set{Y})}^{(*)}\text{d}\vth
 $$
+\vspace{-0.3cm}
 \bci
 \item $(*)$: parameter posterior distribution that needs to be computed
 \eci
@@ -551,25 +585,25 @@ $$
 
 \bci 
 
-\item \bluef{Parameter posterior distribution}
+\item \bluef{Parameter posterior distribution}\hfill \lecturemark{Chapter 9.3.3}
 \mycolorbox{
 $$
 \redf{p(\vth \mid \set{X},\set{Y}) = \set{N}(\vth \mid \vm_N,\mS_N)}, \quad \text{where}  
 $$
 $$
 \redf{
-\mS_N = \inv{\big(\inv{\mS_0} + \sigma^2 \trans{\mPhi}\mPhi \big)}, \quad \vm_N = \mS_N 
-\big(\inv{\mS_0}\vm_0 + \sigma^{-2}\trans{\mPhi}\vy \big)}
+\mS_N = \inv{\big(\inv{\mS}_0 + \sigma^2 \trans{\mPhi}\mPhi \big)}, \quad \vm_N = \mS_N 
+\big(\inv{\mS}_0\vm_0 + \sigma^{-2}\trans{\mPhi}\vy \big)}
 $$
 }
 \eci
-(Proof of Sketch)
+(Proof Sketch)
 \small
 \bci 
 
 \item From the negative-log posterior for general Gaussian prior,
 \aleq{
--\log p(\vth | \set{X},\set{Y}) &= \frac{1}{2\sigma^2} \trans{(\vy - \mPhi\vth)} (\vy - \mPhi\vth) + \bluef{\frac{1}{2}\trans{(\vth - \vm_0)}\inv{\mS_0}(\vth-\vm_0)}  + \text{const}
+-\log p(\vth | \set{X},\set{Y}) &= \frac{1}{2\sigma^2} \trans{(\vy - \mPhi\vth)} (\vy - \mPhi\vth) + \bluef{\frac{1}{2}\trans{(\vth - \vm_0)}\inv{\mS}_0(\vth-\vm_0)}  + \text{const}
 }
 
 \eci
@@ -585,12 +619,12 @@ $$
 \aleq{
 &= \frac{1}{2} \Big( 
 \sigma^{-2}\trans{\vy}\vy - \orangef{2\sigma^{-2}\trans{\vy}\mPhi\vth} + \cyanf{\trans{\vth}\sigma^{-2} 
-\trans{\mPhi}\mPhi\vth} + \cyanf{\trans{\vth}\inv{\mS_0}\vth} -\orangef{2\trans{\vm}_0\inv{\mS_0}\vth} 
-+\trans{\vm}_0\inv{\mS_0}\vm_0
+\trans{\mPhi}\mPhi\vth} + \cyanf{\trans{\vth}\inv{\mS}_0\vth} -\orangef{2\trans{\vm}_0\inv{\mS}_0\vth} 
++\trans{\vm}_0\inv{\mS}_0\vm_0
 \Big ) \cr
 &=\frac{1}{2} \Big( 
-\cyanf{\trans{\vth}(\sigma^{-2}\trans{\mPhi}\mPhi + \inv{\mS_0})\vth} 
--\orangef{2\trans{(\sigma^{-2}\trans{\mPhi}\vy + \inv{\mS_0}\vm_0)}\vth}
+\cyanf{\trans{\vth}(\sigma^{-2}\trans{\mPhi}\mPhi + \inv{\mS}_0)\vth} 
+-\orangef{2\trans{(\sigma^{-2}\trans{\mPhi}\vy + \inv{\mS}_0\vm_0)}\vth}
 \Big) + \text{const}
 }
 \item \cyanf{cyan color}: quadratic term, \orangef{orange color}: linear term
@@ -598,16 +632,18 @@ $$
 \item $p(\vth|\cX,\cY) \propto \exp(\text{ quadratic in $\vth$ })$ $\implies$ Gaussian distribution
 \item Assume that $p(\vth|\cX,\cY) = \set{N}(\vth|\vm_N, \mS_N),$ and find $\vm_N$ and $\mS_N.$
 \aleq{
-- \log\set{N}(\vth|\vm_N,\mS_N) &= \frac{1}{2}\trans{(\vth-\vm_N)}\inv{\mS_N}(\vth-\vm_N) + \text{const} \cr
+- \log\set{N}(\vth|\vm_N,\mS_N) &= \frac{1}{2}\trans{(\vth-\vm_N)}\inv{\mS}_N(\vth-\vm_N) + \text{const} \cr
 &= \frac{1}{2}\Big( 
-\cyanf{\trans{\vth}\inv{\mS_N}\vth} - \orangef{2\trans{\vm_N}\inv{\mS_N}\vth} + \trans{\vm}_N\inv{\mS_N}\vm_N  
+\cyanf{\trans{\vth}\inv{\mS}_N\vth} - \orangef{2\trans{\vm_N}\inv{\mS}_N\vth} + \trans{\vm}_N\inv{\mS}_N\vm_N  
 \Big) + \text{const}
 }
-Thus, 
-\aleq{
-\cyanf{\inv{\mS_N} = \sigma^{-2}\trans{\mPhi}\mPhi + \inv{\mS_0}} \quad \text{and} \quad 
-\orangef{\trans{\vm_N}\inv{\mS_N} = \trans{(\sigma^{-2}\trans{\mPhi}\vy + \inv{\mS_0}\vm_0})}
+\item Thus, 
+$
+\cyanf{\inv{\mS}_N = \sigma^{-2}\trans{\mPhi}\mPhi + \inv{\mS}_0} \quad \text{and} \quad 
+\orangef{
+\trans{\vm}_N\inv{\mS}_N = \trans{(\sigma^{-2}\trans{\mPhi}\vy + \inv{\mS}_0\vm_0)}
 }
+$
 \eci
 
 \end{frame}
@@ -619,7 +655,7 @@ Thus,
 
 \bci 
 
-\item \bluef{Posterior predictive distribution}
+\item \bluef{Posterior predictive distribution} \hfill \lecturemark{L6(5)}
 \red{
 \aleq{
  p(y_* | x_*, \set{X},\set{Y}) &= \int p(y_* | \vx_*, \vth)p(\vth | \set{X},\set{Y})\text{d}\vth \cr
@@ -676,11 +712,12 @@ p(\cY | \cX) &= \int p(\cY | \cX,\vth)p(\vth)\text{d}\vth = \int \set{N}(\vy | \
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{L9(5)}
 \begin{frame}{Roadmap}
 
 \plitemsep 0.1in
 
-\bci 
+\bce[(1)] 
 
 \item  \grayf{Problem Formulation}
 \item  \grayf{Parameter Estimation: ML} 
@@ -688,7 +725,7 @@ p(\cY | \cX) &= \int p(\cY | \cX,\vth)p(\vth)\text{d}\vth = \int \set{N}(\vy | \
 \item  \grayf{Bayesian Linear Regression} 
 \item  \redf{Maximum Likelihood as Orthogonal Projection}
 
-\eci
+\ece
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -746,7 +783,7 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Summary and Other Issues (2)}
 
-\plitemsep 0.07in
+\plitemsep 0.1in
 
 \bci 
 
@@ -759,9 +796,9 @@ $$
 
 \item Gaussian likelihood, but non-Gaussian prior
 \bci
-\item When $N << D$ (small training data)
+\item When $N \ll D$ (small training data)
 \item Prior that enforces sparsity, e.g., Laplace prior 
-\item A linear regression with teh Laplace prior $=$ linear regression with LASSO (L1 regularization)
+\item A linear regression with the Laplace prior $=$ linear regression with LASSO (L1 regularization)
 \eci
 \eci
 \end{frame}
